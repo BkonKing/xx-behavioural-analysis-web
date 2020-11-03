@@ -23,6 +23,7 @@ import IconSelector from '@/components/IconSelector'
 import TagSelect from '@/components/TagSelect'
 import StandardFormRow from '@/components/StandardFormRow'
 import AnalysisHeader from '@/components/AnalysisHeader'
+import Summary from '@/components/Summary'
 
 import Dialog from '@/components/Dialog'
 
@@ -49,5 +50,6 @@ export {
   TagSelect,
   StandardFormRow,
   AnalysisHeader,
-  Dialog
+  Dialog,
+  Summary
 }
