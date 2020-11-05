@@ -25,6 +25,30 @@ export const asyncRouterMap = [
           component: () => import('@/views/userAnalyse/trend'),
           meta: { title: '用户趋势', icon: 'tool', keepAlive: true }
         }]
+      },
+      {
+        path: '/usingBehavior',
+        name: 'usingBehavior',
+        component: BlankLayout,
+        meta: { title: '使用行为' },
+        children: [{
+          path: '/usingBehavior/event',
+          name: 'event',
+          component: () => import('@/views/usingBehavior/event'),
+          meta: { title: '事件分析', icon: 'tool', keepAlive: true }
+        },
+        {
+          path: '/usingBehavior/pagesAnalysis',
+          name: 'pagesAnalysis',
+          component: () => import('@/views/usingBehavior/pages-analysis'),
+          meta: { title: '页面分析', icon: 'tool', keepAlive: true }
+        },
+        {
+          path: '/usingBehavior/usingHabit',
+          name: 'usingHabit',
+          component: () => import('@/views/usingBehavior/using-habit'),
+          meta: { title: '使用习惯', icon: 'tool', keepAlive: true }
+        }]
       }
     ]
   },

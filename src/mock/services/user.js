@@ -482,6 +482,36 @@ const menu = options => {
           }
         }
       ]
+    },
+    {
+      path: '/usingBehavior',
+      meta: {
+        title: '使用行为',
+        icon: 'https://test.tosolomo.com//library/bootstrap/img/logo/logo-bs4.png'
+      },
+      children: [
+        {
+          path: '/usingBehavior/event',
+          name: 'event',
+          meta: {
+            title: '事件分析'
+          }
+        },
+        {
+          path: '/usingBehavior/pagesAnalysis',
+          name: 'pagesAnalysis',
+          meta: {
+            title: '页面分析'
+          }
+        },
+        {
+          path: '/usingBehavior/usingHabit',
+          name: 'usingHabit',
+          meta: {
+            title: '使用习惯'
+          }
+        }
+      ]
     }
   ]
   const json = builder(menuArray)

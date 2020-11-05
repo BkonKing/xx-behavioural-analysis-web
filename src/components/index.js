@@ -26,6 +26,7 @@ import AnalysisHeader from '@/components/AnalysisHeader'
 import Summary from '@/components/Summary'
 
 import Dialog from '@/components/Dialog'
+import PopoverTip from '@/components/PopoverTip'
 
 export {
   Bar,
@@ -51,5 +52,6 @@ export {
   StandardFormRow,
   AnalysisHeader,
   Dialog,
-  Summary
+  Summary,
+  PopoverTip
 }
