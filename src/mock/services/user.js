@@ -468,6 +468,14 @@ const info = options => {
 const menu = options => {
   const menuArray = [
     {
+      path: '/overview/index',
+      name: 'overviewIndex',
+      meta: {
+        title: '应用概况',
+        icon: 'https://test.tosolomo.com//library/bootstrap/img/logo/logo-bs4.png'
+      }
+    },
+    {
       path: '/userAnalyse',
       meta: {
         title: '用户分析',
@@ -479,6 +487,41 @@ const menu = options => {
           name: 'UserTrend',
           meta: {
             title: '用户趋势'
+          }
+        },
+        {
+          path: '/userAnalyse/activitydegree',
+          name: 'UserActivitydegree',
+          meta: {
+            title: '活跃用户'
+          }
+        },
+        {
+          path: '/userAnalyse/region',
+          name: 'UserRegion',
+          meta: {
+            title: '地域分布'
+          }
+        },
+        {
+          path: '/userAnalyse/terminal',
+          name: 'UserTerminal',
+          meta: {
+            title: '终端分析'
+          }
+        },
+        {
+          path: '/userAnalyse/version',
+          name: 'UserVersion',
+          meta: {
+            title: '版本分析'
+          }
+        },
+        {
+          path: '/userAnalyse/sample',
+          name: 'UserSample',
+          meta: {
+            title: '实时访客'
           }
         }
       ]
@@ -509,6 +552,29 @@ const menu = options => {
           name: 'usingHabit',
           meta: {
             title: '使用习惯'
+          }
+        }
+      ]
+    },
+    {
+      path: '/retain',
+      meta: {
+        title: '留存分析',
+        icon: 'https://test.tosolomo.com//library/bootstrap/img/logo/logo-bs4.png'
+      },
+      children: [
+        {
+          path: '/retain/user/newfirst',
+          name: 'RetainUserNew',
+          meta: {
+            title: '新用户留存'
+          }
+        },
+        {
+          path: '/retain/user/active',
+          name: 'RetainUserActive',
+          meta: {
+            title: '活跃用户留存'
           }
         }
       ]

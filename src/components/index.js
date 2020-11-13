@@ -1,15 +1,10 @@
 // chart
+import ColorPiece from '@/components/Charts/ColorPiece'
+import aMap from '@/components/Charts/Map'
+import aLine from '@/components/Charts/Line'
 import Bar from '@/components/Charts/Bar'
-import ChartCard from '@/components/Charts/ChartCard'
-import Liquid from '@/components/Charts/Liquid'
-import MiniArea from '@/components/Charts/MiniArea'
-import MiniSmoothArea from '@/components/Charts/MiniSmoothArea'
-import MiniBar from '@/components/Charts/MiniBar'
-import MiniProgress from '@/components/Charts/MiniProgress'
-import Radar from '@/components/Charts/Radar'
-import RankList from '@/components/Charts/RankList'
-import TransferBar from '@/components/Charts/TransferBar'
-import TagCloud from '@/components/Charts/TagCloud'
+import StackedLine from '@/components/Charts/StackedLine'
+import StackedArea from '@/components/Charts/StackedArea'
 
 // pro components
 import Ellipsis from '@/components/Ellipsis'
@@ -29,17 +24,12 @@ import Dialog from '@/components/Dialog'
 import PopoverTip from '@/components/PopoverTip'
 
 export {
+  aMap,
+  aLine,
+  StackedArea,
   Bar,
-  ChartCard,
-  Liquid,
-  MiniArea,
-  MiniSmoothArea,
-  MiniBar,
-  MiniProgress,
-  Radar,
-  TagCloud,
-  RankList,
-  TransferBar,
+  StackedLine,
+  ColorPiece,
   Trend,
   Ellipsis,
   FooterToolbar,

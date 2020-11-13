@@ -112,6 +112,11 @@ const vueConfig = {
         pathRewrite: {
           '^/api': ''
         }
+      },
+      'https://webapi.amap.com': {
+        target: 'https://webapi.amap.com',
+        ws: false,
+        changeOrigin: true
       }
     }
   },

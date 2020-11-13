@@ -11,9 +11,21 @@ export const asyncRouterMap = [
     path: '/',
     name: 'index',
     component: BasicLayout,
-    meta: { title: '首页' },
-    redirect: '/userAnalyse/trend',
+    meta: { title: '应用概况' },
+    redirect: '/overview/index',
     children: [
+      {
+        path: '/overview',
+        name: 'overview',
+        component: BlankLayout,
+        meta: { title: '应用概况' },
+        children: [{
+          path: '/overview/index',
+          name: 'overviewIndex',
+          component: () => import('@/views/user/overview'),
+          meta: { title: '应用概况' }
+        }]
+      },
       {
         path: '/userAnalyse',
         name: 'userAnalyse',
@@ -23,7 +35,32 @@ export const asyncRouterMap = [
           path: '/userAnalyse/trend',
           name: 'UserTrend',
           component: () => import('@/views/userAnalyse/trend'),
-          meta: { title: '用户趋势', icon: 'tool', keepAlive: true }
+          meta: { title: '用户趋势' }
+        }, {
+          path: '/userAnalyse/activitydegree',
+          name: 'UserActivitydegree',
+          component: () => import('@/views/userAnalyse/activitydegree'),
+          meta: { title: '活跃用户' }
+        }, {
+          path: '/userAnalyse/region',
+          name: 'UserRegion',
+          component: () => import('@/views/userAnalyse/region'),
+          meta: { title: '地域分布' }
+        }, {
+          path: '/userAnalyse/terminal',
+          name: 'UserTerminal',
+          component: () => import('@/views/userAnalyse/terminal'),
+          meta: { title: '终端分析' }
+        }, {
+          path: '/userAnalyse/version',
+          name: 'UserVersion',
+          component: () => import('@/views/userAnalyse/version'),
+          meta: { title: '版本分析' }
+        }, {
+          path: '/userAnalyse/sample',
+          name: 'UserSample',
+          component: () => import('@/views/userAnalyse/sample'),
+          meta: { title: '实时访客' }
         }]
       },
       {
@@ -35,19 +72,36 @@ export const asyncRouterMap = [
           path: '/usingBehavior/event',
           name: 'event',
           component: () => import('@/views/usingBehavior/event'),
-          meta: { title: '事件分析', icon: 'tool', keepAlive: true }
+          meta: { title: '事件分析', keepAlive: true }
         },
         {
           path: '/usingBehavior/pagesAnalysis',
           name: 'pagesAnalysis',
           component: () => import('@/views/usingBehavior/pages-analysis'),
-          meta: { title: '页面分析', icon: 'tool', keepAlive: true }
+          meta: { title: '页面分析', keepAlive: true }
         },
         {
           path: '/usingBehavior/usingHabit',
           name: 'usingHabit',
           component: () => import('@/views/usingBehavior/using-habit'),
-          meta: { title: '使用习惯', icon: 'tool', keepAlive: true }
+          meta: { title: '使用习惯', keepAlive: true }
+        }]
+      },
+      {
+        path: '/retain',
+        name: 'retain',
+        component: BlankLayout,
+        meta: { title: '留存分析' },
+        children: [{
+          path: '/retain/user/newfirst',
+          name: 'RetainUserNew',
+          component: () => import('@/views/retain/user'),
+          meta: { title: '新用户留存' }
+        }, {
+          path: '/retain/user/active',
+          name: 'RetainUserActive',
+          component: () => import('@/views/retain/user'),
+          meta: { title: '活跃用户留存' }
         }]
       }
     ]

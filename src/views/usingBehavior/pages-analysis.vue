@@ -1,6 +1,6 @@
 <template>
   <div>
-    <analysis-header ref="a" reportTip="sss" :showSearchList="['rangeDate', 'channel', 'versions']">
+    <analysis-header ref="a" reportTip="sss">
     </analysis-header>
     <div class="antd-pro-pages-dashboard-analysis-twoColLayout">
       <a-card>

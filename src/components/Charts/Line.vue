@@ -1,9 +1,11 @@
 <template>
   <a-card :loading="loading" :bordered="false">
     <v-chart :forceFit="true" :height="height" :data="data" :scale="scale" :padding="[50, 50]">
-      <v-tooltip />
+      <v-tooltip></v-tooltip>
       <v-axis />
-      <v-bar :position="position" />
+      <v-line :position="position" color="#1890ff" />
+      <v-legend></v-legend>
+      <v-point :position="position" shape="circle" />
     </v-chart>
   </a-card>
 </template>
@@ -14,7 +16,7 @@ const AProp = {
   default: () => []
 }
 export default {
-  name: 'Bar',
+  name: 'ALine',
   props: {
     data: AProp,
     scale: AProp,
@@ -26,7 +28,7 @@ export default {
     },
     position: {
       type: String,
-      default: 'year*sales'
+      default: 'date*value'
     }
   },
   data () {
@@ -48,7 +50,9 @@ export default {
   },
   watch: {
     data (value) {
-      this.loadingChange()
+      setTimeout(() => {
+        this.loadingChange()
+      })
     }
   }
 }
