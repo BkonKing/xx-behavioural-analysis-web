@@ -75,10 +75,22 @@ export const asyncRouterMap = [
           meta: { title: '事件分析', keepAlive: true }
         },
         {
+          path: '/usingBehavior/eventDetail',
+          name: 'eventDetail',
+          component: () => import('@/views/usingBehavior/event-detail'),
+          meta: { title: '事件分析2', keepAlive: true }
+        },
+        {
           path: '/usingBehavior/pagesAnalysis',
           name: 'pagesAnalysis',
           component: () => import('@/views/usingBehavior/pages-analysis'),
           meta: { title: '页面分析', keepAlive: true }
+        },
+        {
+          path: '/usingBehavior/pagesDetail',
+          name: 'pagesDetail',
+          component: () => import('@/views/usingBehavior/pages-detail'),
+          meta: { title: '页面分析2', keepAlive: true }
         },
         {
           path: '/usingBehavior/usingHabit',
@@ -138,6 +150,12 @@ export const constantRouterMap = [
   {
     path: '/404',
     component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
+  },
+
+  {
+    path: '/dashboard/index',
+    name: 'dashboard',
+    component: () => import('@/views/user/dashboard')
   }
 
 ]

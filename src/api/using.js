@@ -8,10 +8,11 @@ const usingApi = {
 }
 
 // 事件分析
-export function getEventList () {
+export function getEventList (parameter) {
   return request({
     url: usingApi.event,
-    method: 'post'
+    method: 'post',
+    data: parameter
   })
 }
 

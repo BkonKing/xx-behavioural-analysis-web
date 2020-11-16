@@ -1,0 +1,406 @@
+<template>
+  <div class="body-cont">
+    <div class="antd-pro-pages-dashboard-analysis-twoColLayout">
+      <a-card>
+        <div class="table-lsit dashboard-container">
+          <div v-for="(item, i) in tableList" :key="i" v-if="i == 0" class="table-item">
+            <div class="item-line1">
+              <popover-tip :tip-name="tipName" :tip-list="tipList"></popover-tip>
+            </div>
+            <div class="item-line2">{{ item.today }}</div>
+            <div class="item-line3">{{ item.yesterday }}</div>
+          </div>
+          <div v-else class="table-item">
+            <div class="item-line1">{{ item.text }}</div>
+            <div class="item-line2">{{ item.today }}</div>
+            <div class="item-line3">{{ item.yesterday }}</div>
+          </div>
+        </div>
+        <div class="dashboard-container">
+          <div>
+            <span>指标：</span>
+            <a-select class="select-indicator" v-model="indicator" size="small" style="width: 120px" @change="loadChartData">
+              <a-select-option v-for="(item, i) in indicatorList" :key="i" :value="item.value">
+                {{ item.text }}
+              </a-select-option>
+            </a-select>
+            <a-range-picker
+              v-model="rangeDate"
+              size="small"
+              :inputReadOnly="true"
+              :disabled-date="disabledDate"
+              :ranges="{
+                今天: [moment(), moment()],
+                昨天: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                最近7天: [moment().subtract(6, 'days'), moment()],
+                最近30天: [moment().subtract(29, 'days'), moment()],
+                最近60天: [moment().subtract(59, 'days'), moment()]
+              }"
+              format="YYYY-MM-DD"
+              style="width: 220px;"
+              @change="loadChartData"
+            />
+          </div>
+          <a-line :data="data" :scale="scale" :height="height"></a-line>
+          <div class="toggle-btn" @click="toggleChart"><a-icon :type="isDown ? 'down' : 'up'" /></div>
+        </div>
+      </a-card>
+
+      <div class="dashboard-container">
+        <div class="flex-list flex-list-tit">
+          <div class="flex-name">应用名称</div>
+          <div class="flex-right">
+            <div class="list-flex">
+              <div></div>
+              <div>新用户数</div>
+              <div>启动用户数</div>
+              <div>启动次数</div>
+              <div>累计启动用户</div>
+              <div class="text-center">操作</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dashboard-container">
+        <div class="flex-list flex-list-c">
+          <div class="flex-name">美好生活家园</div>
+          <div class="flex-right">
+            <div class="list-flex">
+              <div class="text-center">
+                <div class="icon-block">
+                  <div class="tel-icon"><a-icon type="android" theme="filled" /></div>
+                  <div>
+                    <span>今日</span>
+                    <span>昨天</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <span>10</span>
+                <span>20</span>
+              </div>
+              <div>
+                <span>10</span>
+                <span>20</span>
+              </div>
+              <div>
+                <span>10</span>
+                <span>20</span>
+              </div>
+              <div>
+                <span>10</span>
+                <span>20</span>
+              </div>
+              <div class="text-center">
+                <a-button type="primary" ghost @click="goLink(1,2)">查看报告</a-button>
+              </div>
+            </div>
+            <div class="list-flex">
+              <div class="text-center">
+                <div class="icon-block">
+                  <div class="tel-icon"><a-icon type="apple" theme="filled" /></div>
+                  <div>
+                    <span>今日</span>
+                    <span>昨天</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <span>10</span>
+                <span>20</span>
+              </div>
+              <div>
+                <span>10</span>
+                <span>20</span>
+              </div>
+              <div>
+                <span>10</span>
+                <span>20</span>
+              </div>
+              <div>
+                <span>10</span>
+                <span>20</span>
+              </div>
+              <div class="text-center">
+                <a-button type="primary" ghost @click="goLink(1,2)">查看报告</a-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">福建线下信息科技有限公司</div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { PopoverTip, AnalysisHeader, aLine } from '@/components'
+import moment from 'moment'
+import { DASHBOARD_TIP } from '../userAnalyse/const'
+// import { getEventList } from '@/api/using'
+export default {
+  name: 'dashboard',
+  components: {
+    PopoverTip,
+    AnalysisHeader,
+    aLine
+  },
+  data () {
+    return {
+      tipName: DASHBOARD_TIP.tipName,
+      tipList: DASHBOARD_TIP.tipList,
+      tableList: [
+        {
+          text: '汇总数据',
+          today: '今天',
+          yesterday: '昨天'
+        },
+        {
+          text: '新用户数',
+          today: 1,
+          yesterday: 2
+        },
+        {
+          text: '启动用户数',
+          today: 456,
+          yesterday: 2
+        },
+        {
+          text: '启动次数',
+          today: 1,
+          yesterday: 2
+        },
+        {
+          text: '累计启动用户',
+          today: 3,
+          yesterday: 2
+        }
+      ],
+      indicator: 0,
+      indicatorList: [],
+      rangeDate: [moment().subtract(2, 'days'), moment()], // 时间范围，默认为近三天
+      isDown: true,
+      data: [],
+      scale: [],
+      height: 200
+    }
+  },
+  mounted () {
+    this.getSummary()
+  },
+  methods: {
+    moment,
+    // 不能选择今天之后的日期
+    disabledDate (current) {
+      return current && current > moment().endOf('day')
+    },
+    // 获取汇总数据
+    getSummary () {
+      this.indicatorList = [
+        {
+          text: '新用户数',
+          value: 0
+        },
+        {
+          text: '启动用户数',
+          value: 1
+        },
+        {
+          text: '启动次数',
+          value: 2
+        }
+      ]
+      this.loadChartData(0)
+    },
+    // 刷新图表数据
+    loadChartData (index) {
+      this.scale = [
+        {
+          dataKey: 'value',
+          alias: this.indicatorList[index].text,
+          min: 0
+        }
+      ]
+      this.data = [
+        { date: '2020/10/28', value: 3 },
+        { date: '2020/10/29', value: 4 },
+        { date: '2020/10/30', value: 3.5 },
+        { date: '2020/10/31', value: 5 },
+        { date: '2020/11/01', value: 4.9 },
+        { date: '2020/11/02', value: 6 },
+        { date: '2020/11/03', value: 7 },
+        { date: '2020/11/04', value: 9 },
+        { date: '2020/11/05', value: 13 }
+      ]
+    },
+    // 图标高度修改
+    toggleChart () {
+      this.isDown = !this.isDown
+      this.height = this.isDown ? 200 : 400
+    },
+    // 跳转 os_type
+    goLink (osType, projectId) {
+      if (osType === 1) {
+        console.log(osType)
+      }
+      this.$router.push({
+        path: '/overview/index'
+      })
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+@lineHeight50: 50px;
+@fontSize: 12px;
+@color808492: #808492;
+@color343437: #343437;
+@bg: #fff;
+.flex {
+  display: flex;
+}
+.flex-center {
+  .flex();
+  justify-content: center;
+  align-items: center;
+}
+.flex-end {
+  .flex();
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.mb20 {
+  margin-bottom: 20px;
+}
+.body-cont {
+  min-height: 100%;
+  background-color: #F3F4F9;
+}
+.dashboard-container {
+  width: 1180px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.table-lsit {
+  display: flex;
+  .table-item {
+    flex: 1;
+    text-align: right
+  }
+  .table-item:nth-child(1) {
+    text-align: left;
+  }
+  .table-item:nth-child(1) .item-line2,
+  .table-item:nth-child(1) .item-line3 {
+    font-size: @fontSize;
+    color: @color808492;
+  }
+
+  .item-line1 {
+    font-size: @fontSize;
+    color: @color808492;
+    padding-top: 25px;
+    .mb20();
+  }
+  .item-line2 {
+    color: @color343437;
+    font-size: 26px;
+    min-height: 30px;
+    line-height: 30px;
+    .mb20();
+  }
+  .item-line3 {
+    font-size: 16px;
+    color: @color808492;
+    .mb20();
+    line-height: 1;
+  }
+}
+.select-indicator {
+  margin-right: 15px;
+}
+.flex-list {
+  min-height: @lineHeight50;
+  background-color: @bg;
+  display: flex;
+  .flex-name {
+    flex-basis: 25%;
+    text-align: center;
+    line-height: @lineHeight50;
+  }
+  .flex-right {
+    flex-basis: 75%;
+    .list-flex:nth-child(2) {
+      border-top: 1px solid #f3f4f9;
+    }
+  }
+  .list-flex {
+    .flex();
+    min-height: @lineHeight50;
+  }
+}
+.flex-list-tit {
+  margin: 10px 0;
+  .list-flex {
+    div {
+      line-height: @lineHeight50;
+      flex: 1;
+      text-align: right;
+    }
+  }
+}
+.flex-list-c {
+  margin-bottom: 30px;
+  .flex-name {
+    .flex-center();
+  }
+  .flex-right {
+    border-left: 1px solid #f3f4f9;
+  }
+  .list-flex {
+    >div {
+      color: @color343437;
+      font-size: @fontSize;
+      .flex-end();
+      flex: 1;
+      padding: 8px;
+      line-height: 20px;
+      span:nth-child(2) {
+        color: @color808492;
+      }
+    }
+  }
+  .list-flex:nth-child(2) {
+    .tel-icon {
+      color: #06f;
+    }
+  }
+}
+.text-center {
+  text-align: center !important;
+  align-items: center !important;
+}
+.icon-block {
+  .tel-icon {
+    .flex-center();
+    font-size: 16px;
+    color: #396;
+    margin-right: 20px;
+  }
+  .flex();
+  div:nth-child(2) {
+    .flex-end();
+  }
+}
+.toggle-btn {
+  height: 30px;
+  width: 60px;
+  cursor: pointer;
+  margin: 0 auto;
+  .flex-center();
+  font-size: 16px;
+}
+</style>

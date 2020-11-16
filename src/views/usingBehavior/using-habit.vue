@@ -10,14 +10,8 @@
         </a-tabs>
         <!-- end -->
         <bar :data="chartData" :scale="scale" position="time*value" :height="300"></bar>
-        <a-row :gutter="24" type="flex" justify="space-between" align="middle" style="margin-bottom: 20px;">
-          <a-col :span="12" type="flex">
-            <popover-tip :tip-name="tipName" :tip-list="tipList"></popover-tip>
-          </a-col>
-          <a-col :span="12">
-            <span style="float: right"><a-icon type="upload" :style="{ marginRight: '8px' }" />导出</span>
-          </a-col>
-        </a-row>
+        <a-divider></a-divider>
+        <popover-tip :tip-list="tipList"></popover-tip>
         <s-table
           ref="table"
           size="default"

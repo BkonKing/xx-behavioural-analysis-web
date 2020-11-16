@@ -2,19 +2,17 @@
   <analysis-header ref="AnalysisHeader" :reportTip="reportTip" @change="loadAllData">
     <div class="antd-pro-pages-dashboard-analysis-twoColLayout">
       <a-card>
-        <a-row :gutter="24" type="flex" justify="space-between" align="middle" style="margin-bottom: 20px;">
-          <a-col :span="12" type="flex">
+        <popover-tip :tip-list="tipList">
+          <template v-slot:search>
             <a-input-search
+              size="small"
+              placeholder="请输入页面名称"
               v-model="queryParam.id"
-              @search="loadAllData"
+              @search="$refs.table.refresh(true)"
               style="margin-right: 16px; width: 272px;"
             />
-            <popover-tip :tip-list="tipList"></popover-tip>
-          </a-col>
-          <a-col :span="12">
-            <span style="float: right"><a-icon type="upload" :style="{ marginRight: '8px' }" />导出</span>
-          </a-col>
-        </a-row>
+          </template>
+        </popover-tip>
         <s-table
           ref="table"
           size="default"

@@ -4,25 +4,27 @@
       <div class="ant-pro-grid-content">
         <div class="ant-page-header ant-page-header-ghost">
           <div class="ant-page-header-heading">
-            <!-- 用折叠面板实现的tip说明 -->
-            <a-collapse class="analysis-header-collapse" v-model="activeKey" :bordered="false">
-              <a-collapse-panel key="1" :showArrow="false" :disabled="true">
-                <template slot="header">
-                  <!-- 标题 -->
-                  <span class="ant-page-header-heading-title">{{ title || $route.meta.title }}</span>
-                  <!-- 问号，控制tip说明的显示隐藏 -->
-                  <a-icon
-                    v-if="$slots.reportTip || reportTip"
-                    class="report-btn"
-                    type="question-circle"
-                    @click="handleTipClick"
-                  />
-                  <div class="tip-arrow" style="left: 71px;"></div>
-                </template>
-                <!-- 统计模块说明，可以为props或者slot -->
-                <slot name="reportTip">{{ reportTip }}</slot>
-              </a-collapse-panel>
-            </a-collapse>
+            <slot name="eventlist">
+              <!-- 用折叠面板实现的tip说明 -->
+              <a-collapse class="analysis-header-collapse" v-model="activeKey" :bordered="false">
+                <a-collapse-panel key="1" :showArrow="false" :disabled="true">
+                  <template slot="header">
+                    <!-- 标题 -->
+                    <span class="ant-page-header-heading-title">{{ title || $route.meta.title }}</span>
+                    <!-- 问号，控制tip说明的显示隐藏 -->
+                    <a-icon
+                      v-if="$slots.reportTip || reportTip"
+                      class="report-btn"
+                      type="question-circle"
+                      @click="handleTipClick"
+                    />
+                    <div class="tip-arrow" style="left: 71px;"></div>
+                  </template>
+                  <!-- 统计模块说明，可以为props或者slot -->
+                  <slot name="reportTip">{{ reportTip }}</slot>
+                </a-collapse-panel>
+              </a-collapse>
+            </slot>
           </div>
           <div class="ant-page-header-content">
             <div :class="`${prefixedClassName}-detail`">
