@@ -1,19 +1,18 @@
 <template>
   <analysis-header ref="AnalysisHeader" :reportTip="reportTip">
     <a-card>
-      <a-row :gutter="20">
-        <a-col :span="16">
+      <a-row type="flex" :gutter="20">
+        <a-col flex="650px">
           <a-map></a-map>
         </a-col>
-        <a-col :span="8">
+        <a-col flex="auto">
           <s-table
             ref="table"
             size="small"
             rowKey="key"
             :columns="columns"
             :data="loadData"
-            style="margin-top: 20px;"
-          >
+            style="margin-top: 20px;">
           </s-table>
         </a-col>
       </a-row>
@@ -25,8 +24,7 @@
         rowKey="key"
         :columns="columns"
         :data="loadData"
-        style="margin-top: 20px;"
-      >
+        style="margin-top: 20px;">
       </s-table>
     </a-card>
   </analysis-header>
@@ -76,8 +74,8 @@ export default {
             {
               key: '1',
               name: 'John Brown',
-              age: 32,
-              address: 'New York No. 1 Lake Park',
+              age: 1232322,
+              address: '12.123%',
               tags: ['nice', 'developer']
             }
           ]

@@ -5,7 +5,7 @@
     </slot>
     <div id="Summary" ref="Summary" class="summary-container">
       <a-tabs class="summary data-link" v-model="activeIndex" @change="handleChange">
-        <a-tab-pane v-for="(item, index) in summaryList" :key="index">
+        <a-tab-pane v-for="(item, index) in data" :key="index">
           <span slot="tab">
             <div class="summary-item">
               <span class="text">{{ item.text }}</span>
@@ -30,7 +30,7 @@ export default {
       type: String,
       default: '汇总数据'
     },
-    summaryList: {
+    data: {
       type: Array,
       default: () => [],
       required: true
@@ -49,14 +49,16 @@ export default {
     // 获取active所在的index
     findIndex () {
       if (this.value) {
-        this.activeIndex = this.summaryList.findIndex(obj => {
+        this.activeIndex = this.data.findIndex(obj => {
           return obj.value === this.value
         })
       }
     },
     handleChange (activeIndex) {
-      this.active = this.summaryList[activeIndex].value
-      this.$emit('change', this.active, activeIndex)
+      this.active = this.data[activeIndex].value
+      this.$nextTick(() => {
+        this.$emit('change', this.active, activeIndex)
+      })
     }
   },
   watch: {
@@ -144,6 +146,9 @@ export default {
           overflow: hidden;
           text-overflow: ellipsis;
         }
+      }
+      /deep/ .ant-tabs-tab {
+        padding-left: 0;
       }
       /deep/ .ant-tabs-tab-active .summary-item {
         .value,

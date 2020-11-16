@@ -1,6 +1,6 @@
 <template>
   <div class="v-container">
-    <v-chart :forceFit="true" :height="400" :padding="padding" :data="geoData">
+    <v-chart :width="650" :height="500" :padding="padding" :data="geoData">
       <v-tooltip :htmlContent="htmlContent" />
       <v-view :data="geoData"><div></div></v-view>
       <v-view :data="data">
@@ -67,7 +67,7 @@ export default {
   data () {
     return {
       data: [],
-      padding: ['auto', 'auto', 0, 0],
+      padding: ['auto', 'auto', 0, 50],
       geoData: {},
       polygonOpts,
       name: '',
@@ -79,7 +79,7 @@ export default {
         for (var i = 0; i < items.length; i++) {
           var item = items[i]
           var itemDom =
-            '<li data-index={index}>' +
+            '<li>' +
             '<span style="background-color:' +
             item.color +
             ';width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>' +
@@ -240,7 +240,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .g2-tooltip-list {
   margin: 0;
   padding: 0;

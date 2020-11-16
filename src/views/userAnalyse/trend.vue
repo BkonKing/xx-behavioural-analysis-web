@@ -9,7 +9,7 @@
       </div>
     </template>
     <div style="background: #fff;">
-      <Summary v-model="summary" :summaryList="summaryList" @change="handleChange"></Summary>
+      <Summary v-model="summary" :data="summaryList" @change="handleChange"></Summary>
       <div style="padding: 0 20px 20px;">
         <a-divider style="margin-top: 0;"></a-divider>
         <a-line :data="data" :scale="scale"></a-line>

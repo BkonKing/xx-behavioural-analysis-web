@@ -9,39 +9,22 @@
     <a-card>
       <a-tabs v-model="active" v-if="isNewFirst" @change="handleTabChange">
         <a-tab-pane key="1" tab="新用户首次使用留存">
-          <div style="padding-bottom: 30px;">
-            <div class="time-span">
-              <span class="tac selected">#</span>
-              <span class="tac">%</span>
-            </div>
-            <div class="time-span">
-              <span class="tac selected">日</span>
-              <span class="tac">周</span>
-              <span class="tac">月</span>
-              <a-popover class="icon-font" placement="leftBottom">
-                <template slot="content">
-                  某日/周/月的活跃用户中，在第2日/周/月之后，每日/周/月启动过程序的用户
-                </template>
-                <a-icon type="question-circle" />
-              </a-popover>
-            </div>
-          </div>
-          <color-piece :data="data" :scale="scale"></color-piece>
+          <chart-box :data="data" :scale="scale" @change="handleChartChange"></chart-box>
         </a-tab-pane>
         <a-tab-pane key="2" tab="新用户自定义留存">
-          <a-row>
-            <a-col :span="3">汇总数据</a-col>
+          <a-row style="margin-top: 20px;">
+            <a-col :span="4">汇总数据</a-col>
             <a-col :span="7">
               <div>留存用户</div>
-              <div>25</div>
+              <div class="vital-data">25</div>
             </a-col>
             <a-col :span="7">
               <div>新用户数</div>
-              <div>25</div>
+              <div class="vital-data">25</div>
             </a-col>
-            <a-col :span="7">
+            <a-col :span="6">
               <div>留存率</div>
-              <div>25</div>
+              <div class="vital-data">25</div>
             </a-col>
           </a-row>
           <a-divider></a-divider>
@@ -49,7 +32,6 @@
           <s-table
             ref="table"
             size="default"
-            :bordered="true"
             rowKey="key"
             :columns="columns"
             :data="loadTableData"
@@ -59,24 +41,7 @@
         </a-tab-pane>
       </a-tabs>
       <template v-else>
-        <div style="padding-bottom: 30px;">
-          <div class="time-span">
-            <span class="tac selected">#</span>
-            <span class="tac">%</span>
-          </div>
-          <div class="time-span">
-            <span class="tac selected">日</span>
-            <span class="tac">周</span>
-            <span class="tac">月</span>
-            <a-popover class="icon-font" placement="leftBottom">
-              <template slot="content">
-                某日/周/月的活跃用户中，在第2日/周/月之后，每日/周/月启动过程序的用户
-              </template>
-              <a-icon type="question-circle" />
-            </a-popover>
-          </div>
-        </div>
-        <color-piece :data="data" :scale="scale"></color-piece>
+        <chart-box :data="data" :scale="scale" @change="handleChartChange" style="margin-top: 20px;"></chart-box>
       </template>
     </a-card>
   </analysis-header>
@@ -84,6 +49,7 @@
 
 <script>
 import { AnalysisHeader, STable, ColorPiece, PopoverTip } from '@/components'
+import ChartBox from './chart'
 import { RETAIN_TIP } from './const'
 
 const columns = [
@@ -124,7 +90,8 @@ export default {
     AnalysisHeader,
     STable,
     ColorPiece,
-    PopoverTip
+    PopoverTip,
+    ChartBox
   },
   data () {
     return {
@@ -133,6 +100,7 @@ export default {
       tipList: RETAIN_TIP.tipList,
       isNewFirst: false, // 是否新用户留存
       active: '1',
+      chartParams: { active: 0, dateActive: 0 },
       data: [],
       scale: [],
       columns
@@ -159,16 +127,22 @@ export default {
     },
     // 新用户tab刷新图表或者表格
     handleTabChange () {
-      if (this.active === '1') { // 新用户首次使用留存
+      if (this.active === '1') {
+        // 新用户首次使用留存
         this.loadChartData()
-      } else { // 新用户自定义留存
+      } else {
+        // 新用户自定义留存
         this.$refs.table && this.$refs.table.refresh(true)
       }
+    },
+    handleChartChange (params) {
+      this.chartParams = params
+      this.loadChartData()
     },
     // 刷新图表数据
     loadChartData () {
       console.log('-----图表------')
-      console.log({ ...this.getHeaderData(), indicator: this.indicator })
+      console.log({ ...this.getHeaderData(), ...this.chartParams })
       console.log('-----图表------')
       this.scale = [
         {
@@ -281,32 +255,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.time-span {
-  float: right;
+/deep/ .ant-card-body {
+  padding-top: 10px;
+  .ant-tabs-tab {
+    padding: 10px 0 20px;
+  }
 }
-
-.time-span span {
-  display: inline-block;
-  border-radius: 2px;
-  width: 30px;
-  height: 28px;
-  line-height: 28px;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.time-span span.selected {
-  background-color: #f3f4f9;
-  color: #396fff;
-}
-
-.time-span span:hover {
-  color: #396fff;
-  cursor: pointer;
-}
-
-.icon-font {
-  margin: 0 20px 0 10px;
-  color: #808492;
+.vital-data {
+  font-size: 32px;
+  font-weight: 500;
 }
 </style>

@@ -48,7 +48,9 @@ export default {
   },
   watch: {
     data (value) {
-      this.loadingChange()
+      setTimeout(() => {
+        this.loadingChange()
+      })
     }
   }
 }

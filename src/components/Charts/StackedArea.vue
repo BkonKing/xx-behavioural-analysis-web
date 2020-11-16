@@ -4,8 +4,8 @@
       <v-tooltip :crosshairs="crosshairs" />
       <v-axis dataKey="value" />
       <v-legend />
-      <v-line position="year*value" :size="2" color="type" />
-      <v-area position="year*value" color="type" />
+      <v-line :position="position" :size="2" color="type" />
+      <v-area :position="position" color="type" />
     </v-chart>
   </a-card>
 </template>
@@ -33,6 +33,10 @@ export default {
       type: Object,
       default: () => {},
       required: true
+    },
+    position: {
+      type: String,
+      default: 'year*value'
     }
   },
   data () {

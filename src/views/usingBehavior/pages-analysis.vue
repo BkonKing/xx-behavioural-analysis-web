@@ -1,36 +1,20 @@
 <template>
-  <div>
-    <analysis-header ref="a" reportTip="sss">
-    </analysis-header>
+  <analysis-header ref="AnalysisHeader" :reportTip="reportTip" @change="loadAllData">
     <div class="antd-pro-pages-dashboard-analysis-twoColLayout">
-      <a-card>
-        <Summary></Summary>
-        <!-- <a-tabs default-active-key="1" size="large" :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}">
-          <a-tab-pane loading="true" tab="销售额" key="1">
-            <a-row>
-              <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">dddd
-              </a-col>
-            </a-row>
-          </a-tab-pane>
-          <a-tab-pane tab="访问量" key="2">
-            <a-row>
-              <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">dddd11
-              </a-col>
-            </a-row>
-          </a-tab-pane>
-        </a-tabs> -->
-        <!-- end -->
-        <div id="c1" style="margin: 40px 0"></div>
+      <Summary v-model="summary" :data="summaryList" @change="handleChange"></Summary>
+      <a-card :bordered="false">
+        <a-line :data="chartData" :scale="scale" position="time*value"></a-line>
         <a-row :gutter="24" type="flex" justify="space-between" align="middle" style="margin-bottom: 20px;">
           <a-col :span="12" type="flex">
-            <a-input-search v-model="queryParam.id" @input="$refs.table.refresh(true)" style="margin-right: 16px; width: 272px;" />
-            <popover-tip :tip-title="tipTitle" :tip-list="tipList"></popover-tip>
+            <a-input-search
+              v-model="queryParam.id"
+              @search="$refs.table.refresh(true)"
+              style="margin-right: 16px; width: 272px;"
+            />
+            <popover-tip :tip-list="tipList"></popover-tip>
           </a-col>
           <a-col :span="12">
-            <span style="float: right"><a-icon
-              type="upload"
-              :style="{ marginRight: '8px' }"
-            />导出</span>
+            <span style="float: right"><a-icon type="upload" :style="{ marginRight: '8px' }" />导出</span>
           </a-col>
         </a-row>
         <s-table
@@ -38,40 +22,22 @@
           size="default"
           rowKey="key"
           :columns="columns"
-          :data="loadData"
-          :alert="true"
-          :rowSelection="rowSelection"
+          :data="loadTableData"
           showPagination="auto"
         >
           <span slot="serial" slot-scope="text, record, index">
             {{ index + 1 }}
           </span>
-          <span slot="status" slot-scope="text">
-            <a-badge :status="text | statusTypeFilter" :text="text | statusFilter" />
-          </span>
-          <span slot="description" slot-scope="text">
-            <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
-          </span>
-          <span slot="action" slot-scope="text, record">
-            <template>
-              <a @click="handleEdit(record)">配置</a>
-              <a-divider type="vertical" />
-              <a @click="handleSub(record)">订阅报警</a>
-            </template>
-          </span>
         </s-table>
       </a-card>
     </div>
-    <!-- <div class="ant-card">
-      <div class="ant-card-head"></div>
-    </div> -->
-  </div>
+  </analysis-header>
 </template>
 
 <script>
-import { AnalysisHeader, Summary, PopoverTip, STable, Ellipsis } from '@/components'
-import { Chart } from '@antv/g2'
-import { getEventList } from '@/api/using'
+import { AnalysisHeader, Summary, PopoverTip, STable, aLine } from '@/components'
+import { PAGE_TIP } from './const'
+
 const columns = [
   {
     title: '#',
@@ -110,134 +76,138 @@ const columns = [
     scopedSlots: { customRender: 'action' }
   }
 ]
+
 export default {
-  name: 'UserTrend',
+  name: 'PageAnalysis',
   components: {
     AnalysisHeader,
     Summary,
     PopoverTip,
     STable,
-    Ellipsis
+    aLine
   },
   data () {
-    this.columns = columns
     return {
-      tipTitle: '事件分析',
-      tipList: [
-        {
-          title: '事件数量(日均)：',
-          content: '事件被触发的日均次数，数值向下取整事件被触'
-        },
-        {
-          title: '事件数量(日均)：',
-          content: '事件被触发的日均次数，数值向下取整'
-        }
-      ],
-      // create model
-      visible: false,
-      confirmLoading: false,
-      mdl: null,
-      // 高级搜索 展开/关闭
-      advanced: false,
+      reportTip: PAGE_TIP.reportTip,
+      tipName: PAGE_TIP.tipName,
+      tipList: PAGE_TIP.tipList,
+      summary: '',
+      summaryIndex: 0,
+      summaryList: [],
       // 查询参数
       queryParam: {},
-      // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        const requestParameters = Object.assign({}, parameter, this.queryParam)
-        console.log('loadData request parameters:', requestParameters)
-        return getEventList(requestParameters)
-          .then(res => {
-            console.log(res)
-            return res
-          })
-      },
-      selectedRowKeys: [],
-      selectedRows: [],
+      columns,
       // 图表
-      chart: '',
+      scale: [],
       chartData: []
     }
   },
   mounted () {
-    this.chartData = [
-      { time: '1991', value: 3 },
-      { time: '1992', value: 4 },
-      { time: '1993', value: 3.5 },
-      { time: '1994', value: 5 },
-      { time: '1995', value: 4.9 },
-      { time: '1996', value: 6 },
-      { time: '1997', value: 7 },
-      { time: '1998', value: 9 },
-      { time: '1999', value: 13 }
-    ]
-    // Step 1: 创建 Chart 对象
-    this.chart = new Chart({
-      container: 'c1', // 指定图表容器 ID
-      autoFit: true,
-      // width: 600, // 指定图表宽度
-      height: 300 // 指定图表高度
-    })
-    // Step 2: 载入数据源
-    this.chart.data(this.chartData)
-    this.chart.scale({
-      time: {
-        range: [0, 1]
-      },
-      value: {
-        min: 0,
-        nice: true
-      }
-    })
-    // Step 3: 创建图形语法，绘制折线图
-    this.chart.tooltip({
-      showCrosshairs: true, // 展示 Tooltip 辅助线
-      shared: true
-    })
-    this.chart.line().position('time*value').label('value')
-    this.chart.point().position('time*value')
-    // Step 4: 渲染图表
-    this.chart.render()
-    setTimeout(() => {
-      this.navTab()
-    }, 2000)
-  },
-  created () {
-    // this.chartLine()
+    this.getSummary()
   },
   methods: {
-    navTab () {
+    // 获取汇总数据
+    getSummary () {
+      this.summaryList = [
+        {
+          text: '页面访问次数',
+          value: '1'
+        },
+        {
+          text: '次均停留时间',
+          value: '2'
+        },
+        {
+          text: '退出率',
+          value: '6'
+        }
+      ]
+      this.summary = this.summaryList[0].value
+      this.loadChartData()
+    },
+    // 获取头部筛选条件数据
+    getHeaderData () {
+      return this.$refs.AnalysisHeader && this.$refs.AnalysisHeader.getSearchData()
+    },
+    // 刷新图表和表格数据
+    loadAllData (params) {
+      this.loadChartData()
+      this.$refs.table.refresh(true)
+    },
+    // 汇总数据变更事件，刷新图表
+    handleChange (value, index) {
+      this.summaryIndex = index
+      this.loadChartData(index)
+    },
+    // 刷新图表数据
+    loadChartData (index) {
+      console.log('-----图表------')
+      console.log({ ...this.getHeaderData(), summary: this.summary })
+      console.log('-----图表------')
+      this.scale = [
+        {
+          dataKey: 'time',
+          range: [0, 1]
+        },
+        {
+          dataKey: 'value',
+          min: 0,
+          alias: this.summaryList[this.summaryIndex].text,
+          nice: true
+        }
+      ]
       this.chartData = [
-        { time: '1991', value: 13 },
-        { time: '1992', value: 24 },
+        { time: '1991', value: 3 },
+        { time: '1992', value: 4 },
         { time: '1993', value: 3.5 },
         { time: '1994', value: 5 },
         { time: '1995', value: 4.9 },
-        { time: '1996', value: 6 }
+        { time: '1996', value: 6 },
+        { time: '1997', value: 7 },
+        { time: '1998', value: 9 },
+        { time: '1999', value: 13 }
       ]
-      this.chart.changeData(this.chartData)
-      // this.chart.clear()
-      // this.chart.source(this.chartData)
-      // this.chart.scale({
-      //   year: {
-      //     range: [0.05, 0.95]
-      //   }
-      // })
-      // this.chart.interaction('active-region')
-      // this.chart.interval().position('year*value')
-      // this.chart.render()
-    }
-  },
-  computed: {
-    rowSelection () {
-      return {
-        selectedRowKeys: this.selectedRowKeys,
-        onChange: this.onSelectChange
-      }
+    },
+    // 刷新表格数据
+    loadTableData () {
+      return new Promise((resolve, reject) => {
+        this.$nextTick(() => {
+          const requestParameters = { ...this.getHeaderData(), ...this.queryParam }
+          console.log('-----表格------')
+          console.log(requestParameters)
+          console.log('-----表格------')
+          const data = [
+            {
+              key: '1',
+              name: 'John Brown',
+              age: 32,
+              address: 'New York No. 1 Lake Park'
+            }
+          ]
+          resolve({
+            pageSize: 1,
+            pageNo: 1,
+            totalCount: 1,
+            totalPage: 1,
+            data: data
+          })
+        })
+      })
     }
   }
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+/deep/ .summary {
+  .ant-tabs-nav {
+    width: 100%;
+    > div {
+    width: 100%;
+    .ant-tabs-tab {
+      width: calc((100% - 64px) / 3);
+    }
+  }
+  }
+}
 </style>

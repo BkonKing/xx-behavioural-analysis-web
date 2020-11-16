@@ -1,6 +1,6 @@
 <template>
   <a-card :loading="loading" :bordered="false">
-    <v-chart :forceFit="true" :height="height" :data="data" :scale="scale">
+    <v-chart :forceFit="true" :height="height" :data="data" :scale="scale" :padding="[0, 0, 120, 80]">
       <v-legend />
       <v-tooltip />
       <v-axis :tickLine="axis1Opts.tickLine" :grid="axis1Opts.grid" position="top" />
@@ -77,7 +77,7 @@ export default {
   },
   data () {
     return {
-      height: 400,
+      height: 450,
       axis1Opts,
       axis2Opts,
       seriesOpts,
