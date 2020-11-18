@@ -11391,10 +11391,10 @@ xtend@^4.0.0, xtend@~4.0.1:
   resolved "https://registry.npm.taobao.org/xtend/download/xtend-4.0.2.tgz#bb72779f5fa465186b1f438f674fa347fdb5db54"
   integrity sha1-u3J3n1+kZRhrH0OPZ0+jR/2121Q=
 
-xx-ant-design-vue-pro-layout@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/xx-ant-design-vue-pro-layout/-/xx-ant-design-vue-pro-layout-1.0.2.tgz#02fe1ec23ffa06b981472cc74dcfbe67195b5a9f"
-  integrity sha512-iTpaOT6Br1bTCSvX/1dOuQvWPnL75zkGRjdtzNsnRrhocu6Gse2ynBBXCu0zH/O+63kB3Zr+YL3jwlCVMrD9Yg==
+xx-ant-design-vue-pro-layout@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/xx-ant-design-vue-pro-layout/-/xx-ant-design-vue-pro-layout-1.0.3.tgz#dcdde1e863f46a2f63a31e6f0df255de6471c72d"
+  integrity sha512-j2AkYOkeh1xjZsAmXpGcS0kACRDDQXRkaxzI8369MVzdSZzS039lq9Ogxv8udkouYWdNbwCgWZLZw6lpgWqj0w==
   dependencies:
     ant-design-vue "^1.6.2"
     classnames "^2.2.6"

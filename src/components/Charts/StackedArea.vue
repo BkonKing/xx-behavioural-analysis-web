@@ -46,12 +46,6 @@ export default {
       crosshairs: { type: 'line' }
     }
   },
-  created () {
-    setTimeout(() => {
-      this.loadingChange()
-      this.transformData()
-    })
-  },
   methods: {
     loadingChange () {
       if (this.data.length > 0) {
@@ -65,11 +59,14 @@ export default {
     }
   },
   watch: {
-    data (value) {
-      setTimeout(() => {
-        this.loadingChange()
-        this.transformData()
-      })
+    data: {
+      handler (value) {
+        setTimeout(() => {
+          this.loadingChange()
+          this.transformData()
+        })
+      },
+      immediate: true
     }
   }
 }

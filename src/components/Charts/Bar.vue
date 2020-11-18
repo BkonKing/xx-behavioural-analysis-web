@@ -34,11 +34,6 @@ export default {
       loading: true
     }
   },
-  created () {
-    setTimeout(() => {
-      this.loadingChange()
-    })
-  },
   methods: {
     loadingChange () {
       if (this.data.length > 0) {
@@ -47,10 +42,13 @@ export default {
     }
   },
   watch: {
-    data (value) {
-      setTimeout(() => {
-        this.loadingChange()
-      })
+    data: {
+      handler (value) {
+        setTimeout(() => {
+          this.loadingChange()
+        })
+      },
+      immediate: true
     }
   }
 }
