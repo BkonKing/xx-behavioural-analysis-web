@@ -1,16 +1,25 @@
 import request from '@/utils/request'
 
 const usingApi = {
-  event: '/life/spi/v1/life/seller/getSellerList',
+  event: '/event/geteventlist',
+  eventDetail: '/event/getsinglelist',
   pagesNumber: '/life/spi/v1/life/seller/getSellerList',
   pagesQuit: '/life/spi/v1/life/seller/getSellerList',
   usingHabit: '/life/spi/v1/life/seller/getSellerList'
 }
 
 // 事件分析
-export function getEventList (parameter) {
+export function getEventList (data) {
   return request({
     url: usingApi.event,
+    method: 'post',
+    data: data
+  })
+}
+// 事件分析
+export function getEventDetail (parameter) {
+  return request({
+    url: usingApi.eventDetail,
     method: 'post',
     data: parameter
   })

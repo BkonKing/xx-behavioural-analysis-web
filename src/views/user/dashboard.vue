@@ -233,7 +233,7 @@ export default {
         { date: '2020/11/05', value: 13 }
       ]
     },
-    // 图标高度修改
+    // 图表高度修改
     toggleChart () {
       this.isDown = !this.isDown
       this.height = this.isDown ? 200 : 400

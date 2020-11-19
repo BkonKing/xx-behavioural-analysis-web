@@ -78,7 +78,12 @@ export const asyncRouterMap = [
           path: '/usingBehavior/eventDetail',
           name: 'eventDetail',
           component: () => import('@/views/usingBehavior/event-detail'),
-          meta: { title: '事件分析2', keepAlive: true }
+          meta: {
+            title: '事件分析详情',
+            selectedKey: '/usingBehavior/event',
+            hidden: true,
+            keepAlive: true
+          }
         },
         {
           path: '/usingBehavior/pagesAnalysis',
@@ -90,7 +95,12 @@ export const asyncRouterMap = [
           path: '/usingBehavior/pagesDetail',
           name: 'pagesDetail',
           component: () => import('@/views/usingBehavior/pages-detail'),
-          meta: { title: '页面分析2', keepAlive: true }
+          meta: {
+            title: '页面分析详情',
+            selectedKey: '/usingBehavior/pagesAnalysis',
+            hidden: true,
+            keepAlive: true
+          }
         },
         {
           path: '/usingBehavior/usingHabit',

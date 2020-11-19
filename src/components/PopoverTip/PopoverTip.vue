@@ -16,7 +16,7 @@
       </a-popover>
     </a-col>
     <a-col :span="12">
-      <span class="upload-btn" style="float: right"><a-icon type="upload" :style="{ marginRight: '8px' }" />导出CSV文件</span>
+      <span class="upload-btn" style="float: right" @click="handleClick"><a-icon type="upload" :style="{ marginRight: '8px' }" />导出CSV文件</span>
     </a-col>
   </a-row>
 </template>
@@ -50,6 +50,11 @@ export default {
   methods: {
     handleTipClick () {
       this.activeKey = this.activeKey.length === 0 ? ['1'] : []
+    },
+    handleClick () {
+      this.$nextTick(() => {
+        this.$emit('exportFile')
+      })
     }
   }
 }

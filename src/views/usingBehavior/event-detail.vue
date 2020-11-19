@@ -5,7 +5,7 @@
         <a-select
           show-search
           placeholder="请选择"
-          v-model="selectVal"
+          v-model="eventId"
           size="small"
           option-filter-prop="children"
           style="width: 200px"
@@ -31,24 +31,15 @@
           </a-select>
         </div>
         <a-line :data="chartData" :scale="scale" :height="300"></a-line>
-        <a-row :gutter="24" type="flex" justify="space-between" align="middle" style="margin-bottom: 20px;">
-          <a-col :span="12" type="flex">
-            <popover-tip :tip-name="tipName" :tip-list="tipList"></popover-tip>
-          </a-col>
-          <a-col :span="12">
-            <span style="float: right"><a-icon type="upload" :style="{ marginRight: '8px' }" />导出</span>
-          </a-col>
-        </a-row>
+        <popover-tip :tip-name="tipName" :tip-list="tipList"></popover-tip>
         <s-table
           ref="table"
           size="default"
-          rowKey="key"
+          rowKey="date"
           :columns="columns"
           :data="loadTableData"
-          showPagination="auto">
-          <span slot="serial" slot-scope="text, record, index">
-            {{ index + 1 }}
-          </span>
+          showPagination="auto"
+        >
         </s-table>
       </a-card>
     </div>
@@ -58,19 +49,19 @@
 <script>
 import { AnalysisHeader, PopoverTip, STable, aLine } from '@/components'
 import { EVENTDETAIL_TIP } from './const'
+import { getEventDetail } from '@/api/using'
 const columns = [
   {
-    title: '',
-    scopedSlots: { customRender: 'serial' }
+    title: '日期',
+    dataIndex: 'date'
   },
   {
-    title: '供应商（名称）',
-    dataIndex: 'seller_name'
+    title: '事件数量  ',
+    dataIndex: 'numberevents'
   },
   {
-    title: '平台',
-    dataIndex: 'platform_name'
-    // scopedSlots: { customRender: 'description' }
+    title: '触发用户数 ',
+    dataIndex: 'userevents'
   }
 ]
 export default {
@@ -94,20 +85,16 @@ export default {
         {
           text: '触发用户数',
           value: 1
-        },
-        {
-          text: '事件平均使用时长',
-          value: 2
         }
       ],
-      selectVal: 2,
+      // selectVal: 3,
       selectList: [
         {
           id: 1,
           value: '登录'
         },
         {
-          id: 2,
+          id: 3,
           value: '加入购物车'
         }
       ],
@@ -116,10 +103,12 @@ export default {
       queryParam: {},
       // 图表
       scale: [],
-      chartData: []
+      chartData: [],
+      eventId: 0
     }
   },
   mounted () {
+    this.eventId = parseInt(this.$route.query.id)
     this.loadChartData()
   },
   methods: {
@@ -134,52 +123,38 @@ export default {
     },
     // 刷新图表数据
     loadChartData () {
+      const requestParameters = { ...this.getHeaderData(), ...this.queryParam }
+      const param = Object.assign(
+      {
+        'eventid': this.eventId
+      }, requestParameters)
       console.log('-----图表------')
       console.log({ ...this.getHeaderData() })
       console.log('-----图表------')
-      this.scale = [
-        {
-          dataKey: 'value',
-          alias: '事件数量',
-          min: 0
-        }
-      ]
-      this.chartData = [
-        { date: '2020/10/28', value: 3 },
-        { date: '2020/10/29', value: 4 },
-        { date: '2020/10/30', value: 3.5 },
-        { date: '2020/10/31', value: 5 },
-        { date: '2020/11/01', value: 4.9 },
-        { date: '2020/11/02', value: 6 },
-        { date: '2020/11/03', value: 7 },
-        { date: '2020/11/04', value: 9 },
-        { date: '2020/11/05', value: 13 }
-      ]
+      getEventDetail(param).then(res => {
+        this.scale = [
+          {
+            dataKey: 'value',
+            alias: this.indicatorList[this.indicator].text,
+            min: 0
+          }
+        ]
+        this.chartData = res.data.list.map(obj => {
+          return {
+            name: obj.name,
+            value: this.indicator === 0 ? obj.numberevents : obj.userevents
+          }
+        })
+      })
     },
     // 刷新表格数据
     loadTableData () {
-      return new Promise((resolve, reject) => {
-        this.$nextTick(() => {
-          console.log('-----表格------')
-          console.log({ ...this.getHeaderData() })
-          console.log('-----表格------')
-          const data = [
-            {
-              key: '1',
-              name: 'John Brown',
-              age: 32,
-              address: 'New York No. 1 Lake Park'
-            }
-          ]
-          resolve({
-            pageSize: 1,
-            pageNo: 1,
-            totalCount: 1,
-            totalPage: 1,
-            data: data
-          })
-        })
-      })
+      const requestParameters = { ...this.getHeaderData(), ...this.queryParam }
+      const param = Object.assign(
+      {
+        'eventid': this.eventId
+      }, requestParameters)
+      return getEventDetail(param)
     },
     handleChange (value) {
       console.log(`selected ${value}`)

@@ -52,6 +52,14 @@ request.interceptors.request.use(config => {
   if (token) {
     config.headers['Access-Token'] = token
   }
+  const dataJson = {
+    'os_type': storage.get('os_type') || 0
+  }
+  if (typeof config.data === 'object') {
+    config.data = Object.assign({}, dataJson, config.data)
+  } else {
+    config.data = Object.assign({}, dataJson)
+  }
   return config
 }, errorHandler)
 
