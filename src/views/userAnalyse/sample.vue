@@ -4,50 +4,59 @@
       <div v-html="reportTip"></div>
     </template>
     <a-card>
-      <!-- <a-tabs default-active-key="1" @change="handleChange">
-        <a-tab-pane key="1" tab="在线访客"> </a-tab-pane>
-        <a-tab-pane key="2" tab="近期访客"> </a-tab-pane>
-      </a-tabs> -->
-      <s-table ref="table" size="default" rowKey="key" :columns="columns" :data="loadTableData"> </s-table>
+      <s-table ref="table" rowKey="name" :columns="columns" :data="loadTableData">
+        <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
+        <span slot="time" slot-scope="text">
+          {{ moment(parseInt(text)).format('YYYY/MM/DD hh:mm:ss') }}
+        </span>
+      </s-table>
     </a-card>
   </analysis-header>
 </template>
 
 <script>
+import moment from 'moment'
 import { AnalysisHeader, STable } from '@/components'
+import { getvisitor } from '@/api/userAnalyse'
 import { SAMPLE_TIP } from './const'
 
 const columns = [
   {
-    dataIndex: 'index'
+    scopedSlots: { customRender: 'serial' }
   },
   {
-    dataIndex: 'name',
-    key: 'name',
-    title: '日期'
+    title: '访问时间',
+    dataIndex: 'startup_time',
+    scopedSlots: { customRender: 'time' }
   },
   {
-    title: '启动用户数',
-    dataIndex: 'age',
-    key: 'age'
+    title: '版本',
+    dataIndex: 'version'
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address'
+    title: '地域',
+    dataIndex: 'startup_province'
   },
   {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    scopedSlots: { customRender: 'tags' }
+    title: '设备操作系统',
+    dataIndex: 'os'
   },
   {
-    title: 'Action',
-    key: 'action',
-    scopedSlots: { customRender: 'action' }
+    title: '设备型号',
+    dataIndex: 'equipment_number'
+  },
+  {
+    title: '终端分辨率',
+    dataIndex: 'resolving_power'
+  },
+  {
+    title: '联网方式',
+    dataIndex: 'networking_mode'
   }
 ]
+
 export default {
   name: 'UserSample',
   components: {
@@ -57,29 +66,17 @@ export default {
   data () {
     return {
       reportTip: SAMPLE_TIP.reportTip,
-      columns
+      columns,
+      moment
     }
   },
   methods: {
     // 刷新表格数据
-    loadTableData () {
-      return new Promise((resolve, reject) => {
-        const data = [
-          {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park'
-          }
-        ]
-        resolve({
-          pageSize: 1,
-          pageNo: 1,
-          totalCount: 1,
-          totalPage: 1,
-          data: data
-        })
-      })
+    loadTableData (page) {
+      const params = Object.assign({}, page)
+      console.log('-----表格------')
+      console.log(params)
+      return getvisitor(params)
     }
   }
 }

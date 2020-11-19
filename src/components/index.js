@@ -3,7 +3,6 @@ import ColorPiece from '@/components/Charts/ColorPiece'
 import aMap from '@/components/Charts/Map.vue'
 import aLine from '@/components/Charts/Line'
 import Bar from '@/components/Charts/Bar'
-import StackedLine from '@/components/Charts/StackedLine'
 import StackedArea from '@/components/Charts/StackedArea'
 
 // pro components
@@ -28,7 +27,6 @@ export {
   aLine,
   StackedArea,
   Bar,
-  StackedLine,
   ColorPiece,
   Trend,
   Ellipsis,

@@ -1,7 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
 import storage from 'store'
-import qs from 'qs'
 import notification from 'ant-design-vue/es/notification'
 import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
@@ -52,10 +51,6 @@ request.interceptors.request.use(config => {
   // 让每个请求携带自定义 token 请根据实际情况自行修改
   if (token) {
     config.headers['Access-Token'] = token
-  }
-  // 转换参数格式
-  if (config.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
-    config.data = qs.stringify(config.data)
   }
   return config
 }, errorHandler)
