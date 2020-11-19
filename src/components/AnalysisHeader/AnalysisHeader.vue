@@ -33,10 +33,10 @@
                   <div :class="`${prefixedClassName}-content`">
                     <slot name="content">
                       <!-- 日期 -->
-                      <template v-if="showSearchList.includes('rangeDate')">
+                      <template v-if="showSearchList.includes('date')">
                         <span>日期：</span>
                         <a-range-picker
-                          v-model="rangeDate"
+                          v-model="date"
                           size="small"
                           :inputReadOnly="true"
                           :disabled-date="disabledDate"
@@ -54,14 +54,14 @@
                       </template>
                       <slot name="condition"></slot>
                       <!-- 版本 -->
-                      <template v-if="showSearchList.includes('versions')">
+                      <template v-if="showSearchList.includes('version')">
                         <span class="margin-left-large">版本：</span>
                         <div style="display: inline-block;min-width: 200px;">
                           <a-select
-                            ref="versions"
+                            ref="version"
                             mode="multiple"
                             size="small"
-                            v-model="versions"
+                            v-model="version"
                             style="width: 100%;"
                             @blur="handleChange"
                           >
@@ -112,15 +112,15 @@ export default {
     // 要显示的搜索条件
     showSearchList: {
       type: Array,
-      default: () => ['rangeDate', 'versions']
+      default: () => ['date', 'version']
     }
   },
   data () {
     return {
       prefixedClassName: 'ant-pro-page-header-wrap',
       activeKey: [], // 控制显示模块说明tip
-      rangeDate: [moment().subtract(2, 'days'), moment()], // 时间范围，默认为近三天
-      versions: [0], // 选中的版本
+      date: [moment().subtract(2, 'days'), moment()], // 时间范围，默认为近三天
+      version: [0], // 选中的版本
       versionList: [
         {
           text: '不限',
@@ -128,11 +128,11 @@ export default {
         },
         {
           text: '1.0.1',
-          key: 2
+          key: '1.0.1'
         },
         {
           text: '1.0.0',
-          key: 1
+          key: '1.0.0'
         }
       ]
     }
@@ -155,24 +155,24 @@ export default {
     getSearchData () {
       const data = {}
       this.showSearchList.forEach(obj => {
-        if (obj === 'rangeDate') {
-          data[obj] = this.rangeDate.map(obj => {
-            return obj.format('YYYY-MM-DD')
-          })
+        if (obj === 'date') {
+          data[obj] = this.date.map(obj => {
+            return obj.format('YYYY/MM/DD')
+          }).join('~')
           return
         }
-        data[obj] = this[obj]
+        data[obj] = this[obj].join('、')
       })
       return data
     }
   },
   watch: {
-    versions (val, old) {
+    version (val, old) {
       if (old.length === 1 && old[0] === 0) {
-        this.versions = this.versions.unshift()
+        this.version = this.version.unshift()
       } else if (val[val.length - 1] === 0 && val.length > 1) {
-        this.$refs.versions.blur()
-        this.versions = [0]
+        this.$refs.version.blur()
+        this.version = [0]
       }
     }
   }

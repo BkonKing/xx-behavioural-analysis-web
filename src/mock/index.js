@@ -11,6 +11,7 @@ if (process.env.NODE_ENV !== 'production' || process.env.VUE_APP_PREVIEW === 'tr
   const Mock = require('mockjs2')
   require('./services/auth')
   require('./services/user')
+  require('./services/userAnalyse')
 
   Mock.setup({
     timeout: 800 // setter delay time

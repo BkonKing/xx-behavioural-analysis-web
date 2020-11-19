@@ -1,6 +1,6 @@
 <template>
   <a-card :loading="loading" :bordered="false">
-    <v-chart :forceFit="true" :height="height" :data="data" :scale="scale" :padding="[50, 50]">
+    <v-chart :forceFit="true" :height="height" :data="data" :scale="scale" :padding="padding">
       <v-tooltip />
       <v-axis />
       <v-bar :position="position" />
@@ -19,14 +19,17 @@ export default {
     data: AProp,
     scale: AProp,
     tooltip: AProp,
-    padding: AProp,
+    padding: {
+      type: Array,
+      default: () => [50, 50]
+    },
     height: {
       type: [Number, String],
       default: 500
     },
     position: {
       type: String,
-      default: 'year*sales'
+      default: 'name*value'
     }
   },
   data () {
