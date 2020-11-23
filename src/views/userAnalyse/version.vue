@@ -16,12 +16,14 @@
         </a-select>
       </div>
       <a-line
+        ref="aline"
         :data="data"
         :transform="transObj"
         :scale="scale"
         :htmlContent="htmlContent"
-        color="version"
         :alias="alias"
+        :padding="[50, 50, 80, 50]"
+        color="version"
       ></a-line>
       <a-divider></a-divider>
       <popover-tip :tip-name="tipName" :tip-list="tipList"></popover-tip>
@@ -164,6 +166,7 @@ export default {
     },
     // 刷新图表数据
     loadChartData () {
+      this.$refs.aline.switchLoading(true)
       const params = { ...this.getHeaderData(), version: this.version.join('、'), ordertype: this.ordertype + 1 }
       console.log('-----图表------')
       console.log(params)
@@ -187,6 +190,7 @@ export default {
             ...version
           }
         })
+        this.$refs.aline.switchLoading()
       })
     },
     // 刷新表格数据

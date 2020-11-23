@@ -25,7 +25,7 @@
         </a-popover>
       </div>
     </div>
-    <color-piece :data="data" :scale="scale"></color-piece>
+    <color-piece :data="data" :scale="scale" :padding="[0, 0, 120, 80]"></color-piece>
   </div>
 </template>
 

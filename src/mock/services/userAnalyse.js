@@ -88,7 +88,9 @@ const getversionpic = () => {
 }
 
 const getvisitor = (option) => {
-  const { pageindex } = getBody(option)
+  const {
+    pageindex
+  } = getBody(option)
   return builder({
     'pageindex': pageindex,
     'pagesize': 10,
@@ -119,8 +121,92 @@ const getvisitor = (option) => {
   }, '', 200)
 }
 
+const getdistribution = () => {
+  return builder({
+    'list': [{
+        'name': '江苏省',
+        'starttimes': '8',
+        'starttimesdis': '34.8%',
+        'newusersdis': '34.8%',
+        'startusersdis': 0
+      },
+      {
+        'name': '福建省',
+        'starttimes': '15',
+        'starttimesdis': '65.2%',
+        'newusersdis': '65.2%',
+        'startusersdis': '100%'
+      }
+    ],
+    'piclist': [{
+        'name': '江苏省',
+        'starttimes': '8',
+        'starttimesdis': '34.8'
+      },
+      {
+        'name': '福建省',
+        'starttimes': '15',
+        'starttimesdis': '65.2'
+      }
+    ]
+  }, '', 200)
+}
+
+const getusertrend = () => {
+  return builder({
+    'startusersum': '42',
+    'newusersum': 32,
+    'starttimes': '32',
+    'oldusersum': 10,
+    'oldusersumdis': 23.8,
+    'newusersumdis': 76.2,
+    'list': [{
+        'estarttimes': '16',
+        'everynewusers': '16',
+        'everystartusers': '16',
+        'oldusers': 1,
+        'oldusersdis': 5.9,
+        'newusersdis': 94.1,
+        'timesdurationuse': '00:01:18',
+        'avgdurationuse': '00:01:13',
+        'name': '2020/11/12'
+      },
+      {
+        'estarttimes': '16',
+        'everynewusers': '16',
+        'everystartusers': '16',
+        'oldusers': 0,
+        'oldusersdis': 0,
+        'newusersdis': 100,
+        'timesdurationuse': '00:01:18',
+        'avgdurationuse': '00:01:18',
+        'name': '2020/11/16'
+      }
+    ]
+  }, '', 200)
+}
+
+const getRetentionList = () => {
+  return builder({
+    'newuserssum': '10',
+    'reminduserssum': '1',
+    'reminddis': 10,
+    'pageindex': 1,
+    'pagesize': 10,
+    'list': [{
+      'eremindusers': '1',
+      'enewusers': '10',
+      'ereminddis': 10,
+      'name': '2020/11/11'
+    }]
+  }, '', 200)
+}
+
 Mock.mock(/\/terminal\/getterminaldata/, 'post', getterminaldata)
 Mock.mock(/\/terminal\/getterminalpic/, 'post', getterminalpic)
 Mock.mock(/\/version\/getversionpic/, 'post', getversionpic)
 Mock.mock(/\/version\/getversion/, 'post', getversion)
 Mock.mock(/\/visitor\/getvisitor/, 'post', getvisitor)
+Mock.mock(/\/geographical\/getdistribution/, 'post', getdistribution)
+Mock.mock(/\/usertrend\/getusertrend/, 'post', getusertrend)
+Mock.mock(/\/retention\/getlist/, 'post', getRetentionList)

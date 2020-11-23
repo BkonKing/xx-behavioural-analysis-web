@@ -1,5 +1,7 @@
 import Mock from 'mockjs2'
-import { builder } from '../util'
+import {
+  builder
+} from '../util'
 
 const info = options => {
   const userInfo = {
@@ -28,15 +30,12 @@ const info = options => {
     creatorId: 'system',
     createTime: 1497160610259,
     deleted: 0,
-    permissions: [
-      {
+    permissions: [{
         roleId: 'admin',
         permissionId: 'dashboard',
         permissionName: '仪表盘',
-        actions:
-          '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
-        actionEntitySet: [
-          {
+        actions: '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
+        actionEntitySet: [{
             action: 'add',
             describe: '新增',
             defaultCheck: false
@@ -69,10 +68,8 @@ const info = options => {
         roleId: 'admin',
         permissionId: 'exception',
         permissionName: '异常页面权限',
-        actions:
-          '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
-        actionEntitySet: [
-          {
+        actions: '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
+        actionEntitySet: [{
             action: 'add',
             describe: '新增',
             defaultCheck: false
@@ -105,10 +102,8 @@ const info = options => {
         roleId: 'admin',
         permissionId: 'result',
         permissionName: '结果权限',
-        actions:
-          '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
-        actionEntitySet: [
-          {
+        actions: '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
+        actionEntitySet: [{
             action: 'add',
             describe: '新增',
             defaultCheck: false
@@ -141,10 +136,8 @@ const info = options => {
         roleId: 'admin',
         permissionId: 'profile',
         permissionName: '详细页权限',
-        actions:
-          '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
-        actionEntitySet: [
-          {
+        actions: '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
+        actionEntitySet: [{
             action: 'add',
             describe: '新增',
             defaultCheck: false
@@ -177,10 +170,8 @@ const info = options => {
         roleId: 'admin',
         permissionId: 'table',
         permissionName: '表格权限',
-        actions:
-          '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"import","defaultCheck":false,"describe":"导入"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"}]',
-        actionEntitySet: [
-          {
+        actions: '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"import","defaultCheck":false,"describe":"导入"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"}]',
+        actionEntitySet: [{
             action: 'add',
             describe: '新增',
             defaultCheck: false
@@ -208,10 +199,8 @@ const info = options => {
         roleId: 'admin',
         permissionId: 'form',
         permissionName: '表单权限',
-        actions:
-          '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
-        actionEntitySet: [
-          {
+        actions: '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
+        actionEntitySet: [{
             action: 'add',
             describe: '新增',
             defaultCheck: false
@@ -244,10 +233,8 @@ const info = options => {
         roleId: 'admin',
         permissionId: 'order',
         permissionName: '订单管理',
-        actions:
-          '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
-        actionEntitySet: [
-          {
+        actions: '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
+        actionEntitySet: [{
             action: 'add',
             describe: '新增',
             defaultCheck: false
@@ -280,10 +267,8 @@ const info = options => {
         roleId: 'admin',
         permissionId: 'permission',
         permissionName: '权限管理',
-        actions:
-          '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
-        actionEntitySet: [
-          {
+        actions: '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
+        actionEntitySet: [{
             action: 'add',
             describe: '新增',
             defaultCheck: false
@@ -311,10 +296,8 @@ const info = options => {
         roleId: 'admin',
         permissionId: 'role',
         permissionName: '角色管理',
-        actions:
-          '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
-        actionEntitySet: [
-          {
+        actions: '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
+        actionEntitySet: [{
             action: 'add',
             describe: '新增',
             defaultCheck: false
@@ -342,10 +325,8 @@ const info = options => {
         roleId: 'admin',
         permissionId: 'table',
         permissionName: '桌子管理',
-        actions:
-          '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
-        actionEntitySet: [
-          {
+        actions: '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
+        actionEntitySet: [{
             action: 'add',
             describe: '新增',
             defaultCheck: false
@@ -378,10 +359,8 @@ const info = options => {
         roleId: 'admin',
         permissionId: 'user',
         permissionName: '用户管理',
-        actions:
-          '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"import","defaultCheck":false,"describe":"导入"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"},{"action":"export","defaultCheck":false,"describe":"导出"}]',
-        actionEntitySet: [
-          {
+        actions: '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"import","defaultCheck":false,"describe":"导入"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"},{"action":"export","defaultCheck":false,"describe":"导出"}]',
+        actionEntitySet: [{
             action: 'add',
             describe: '新增',
             defaultCheck: false
@@ -422,10 +401,8 @@ const info = options => {
     roleId: 'admin',
     permissionId: 'support',
     permissionName: '超级模块',
-    actions:
-      '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"import","defaultCheck":false,"describe":"导入"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"},{"action":"export","defaultCheck":false,"describe":"导出"}]',
-    actionEntitySet: [
-      {
+    actions: '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"import","defaultCheck":false,"describe":"导入"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"},{"action":"export","defaultCheck":false,"describe":"导出"}]',
+    actionEntitySet: [{
         action: 'add',
         describe: '新增',
         defaultCheck: false
@@ -465,8 +442,7 @@ const info = options => {
 }
 
 const menu = options => {
-  const menuArray = [
-    {
+  const menuArray = [{
       path: '/overview/index',
       name: 'overviewIndex',
       meta: {
@@ -480,8 +456,7 @@ const menu = options => {
         title: '用户分析',
         icon: 'https://test.tosolomo.com//library/bootstrap/img/logo/logo-bs4.png'
       },
-      children: [
-        {
+      children: [{
           path: '/userAnalyse/trend',
           name: 'UserTrend',
           meta: {
@@ -531,8 +506,7 @@ const menu = options => {
         title: '使用行为',
         icon: 'https://test.tosolomo.com//library/bootstrap/img/logo/logo-bs4.png'
       },
-      children: [
-        {
+      children: [{
           path: '/usingBehavior/event',
           name: 'event',
           meta: {
@@ -561,8 +535,7 @@ const menu = options => {
         title: '留存分析',
         icon: 'https://test.tosolomo.com//library/bootstrap/img/logo/logo-bs4.png'
       },
-      children: [
-        {
+      children: [{
           path: '/retain/user/newfirst',
           name: 'RetainUserNew',
           meta: {
@@ -583,5 +556,23 @@ const menu = options => {
   return json
 }
 
+const overviewSum = () => {
+  return builder({
+    'todaynewuser': 0,
+    'yestodaynewuser': 0,
+    'todaystarttimes': '0',
+    'yestodaystarttimes': '0',
+    'todaystartusers': '0',
+    'yesdaystartusers': '0',
+    'todayperstarttimes': '0',
+    'yestodayperstarttimes': '0',
+    'todaydurationuse': '0',
+    'yestodaydurationuse': '0',
+    'todayperusagetime': '0',
+    'yestodayperusagetime': '0'
+  }, '', 200)
+}
+
 Mock.mock(/\/api\/user\/info/, 'get', info)
 Mock.mock(/\/api\/spi\/v1\/system\/index\/left/, 'get', menu)
+Mock.mock(/\/applicationoverview\/getsum/, 'post', overviewSum)

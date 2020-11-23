@@ -12,7 +12,7 @@
         <a-input
           size="large"
           type="text"
-          placeholder="账户: admin"
+          placeholder="请输入账户名"
           v-decorator="[
             'account',
             {rules: [{ required: true, message: '请输入帐户名' }], validateTrigger: 'change'}
@@ -25,7 +25,7 @@
       <a-form-item>
         <a-input-password
           size="large"
-          placeholder="密码: admin or ant.design"
+          placeholder="请输入密码"
           v-decorator="[
             'password',
             {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
@@ -88,7 +88,6 @@ export default {
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
-          console.log('login form', values)
           const loginParams = { ...values }
           delete loginParams.account
           loginParams.account = values.account
@@ -107,18 +106,6 @@ export default {
       })
     },
     loginSuccess (res) {
-      console.log(res)
-      // check res.homePage define, set $router.push name res.homePage
-      // Why not enter onComplete
-      /*
-      this.$router.push({ name: 'analysis' }, () => {
-        console.log('onComplete')
-        this.$notification.success({
-          message: '欢迎',
-          description: `${timeFix()}，欢迎回来`
-        })
-      })
-      */
       this.$router.push({ path: '/' })
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {

@@ -1,18 +1,7 @@
 import Mock from 'mockjs2'
 import { builder } from '../util'
 
-// const username = ['admin', 'super']
-// 强硬要求 ant.design 相同密码
-// '21232f297a57a5a743894a0e4a801fc3',
-// const password = ['admin', 'ant.design'] // admin, ant.design
-
-const login = (options) => {
-  // const body = getBody(options)
-  // if (!username.includes(body.username) || !password.includes(body.password)) {
-  //   return builder({ isLogin: true }, '账户或密码错误', 401)
-  // }
-  console.log(options)
-
+const login = () => {
   return builder({
     'id': Mock.mock('@guid'),
     'name': Mock.mock('@name'),
@@ -36,5 +25,5 @@ const logout = () => {
   return builder({}, '[测试接口] 注销成功')
 }
 
-Mock.mock(/\/system\/slognin\/login/, 'post', login)
-Mock.mock(/\/auth\/logout/, 'post', logout)
+Mock.mock(/\/login\/login/, 'post', login)
+Mock.mock(/\/login\/logout/, 'post', logout)

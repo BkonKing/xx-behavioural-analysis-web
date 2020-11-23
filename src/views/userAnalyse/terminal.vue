@@ -127,7 +127,7 @@ export default {
     }
   },
   mounted () {
-    this.loadChartData(0)
+    this.loadChartData()
   },
   methods: {
     // 获取头部筛选条件数据
@@ -136,11 +136,11 @@ export default {
     },
     // 刷新图表和表格数据
     loadAllData (params) {
-      this.loadChartData(0)
+      this.loadChartData()
       this.$refs.table.refresh(true)
     },
     // 刷新图表数据
-    loadChartData (index) {
+    loadChartData () {
       const params = { ...this.getHeaderData(), terminal: this.active + 1, ordertype: this.ordertype + 1 }
       console.log('-----图表------')
       console.log(params)

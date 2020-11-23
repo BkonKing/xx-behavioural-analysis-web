@@ -38,8 +38,8 @@ const view1Opts = {
   quickType: 'polygon',
   position: 'longitude*latitude',
   style: {
-    fill: '#fff',
-    stroke: '#ccc',
+    fill: '#fdfdfd',
+    stroke: '#ddd',
     lineWidth: 1
   },
   tooltip: false
@@ -48,9 +48,9 @@ const view1Opts = {
 const view2Opts = {
   quickType: 'polygon',
   position: 'longitude*latitude',
-  opacity: 'value',
-  color: ['value', '#BAE7FF-#1890FF-#0050B3'],
-  tooltip: 'name*value',
+  opacity: 'starttimes',
+  color: ['starttimes', '#BAE7FF-#1890FF-#0050B3'],
+  tooltip: 'name*starttimes*starttimesdis',
   animate: {
     leave: {
       animation: 'fadeOut'
@@ -80,11 +80,17 @@ export default {
         var html = '<div class="g2-tooltip">'
         var listDom = '<ul class="g2-tooltip-list">'
         var itemDom =
+          '<li style="border-bottom: 1px solid #eee;">' +
+          items[0].value +
+          '</li>' +
           '<li>' +
           '<span style="background-color:' +
           items[0].color +
           ';width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>' +
-          items[0].value +
+          '启动次数' +
+          '<span class="g2-tooltip-value">' +
+          items[2].value +
+          '%</span>' +
           '<span class="g2-tooltip-value">' +
           items[1].value +
           '</span>' +
@@ -100,7 +106,7 @@ export default {
       type: 'FeatureCollection',
       features: geoDatas
     }
-     this.geoData = new DataSet.View().source(mapData, {
+    this.geoData = new DataSet.View().source(mapData, {
       type: 'GeoJSON'
     })
   },

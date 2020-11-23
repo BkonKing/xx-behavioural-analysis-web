@@ -1,21 +1,29 @@
 <template>
-  <a-card :loading="loading" :bordered="false">
-    <v-chart :forceFit="true" :height="height" :data="data" :scale="scale" :padding="[0, 0, 120, 80]">
-      <v-legend />
-      <v-tooltip />
-      <v-axis :tickLine="axis1Opts.tickLine" :grid="axis1Opts.grid" position="top" />
-      <v-axis :tickLine="axis2Opts.tickLine" :grid="axis2Opts.grid" />
-      <v-polygon
-        :position="seriesOpts.position"
-        :color="seriesOpts.color"
-        :label="seriesOpts.label"
-        :vStyle="seriesOpts.style"
-      />
+  <a-spin
+    :spinning="loading"
+    tip="数据正在加载中..."
+    :style="{ height: `${typeof height === 'number' ? height + 'px' : height}` }"
+  >
+    <v-chart :forceFit="true" :height="height" :data="data" :scale="scale" :padding="padding">
+      <slot>
+        <v-legend />
+        <v-tooltip />
+        <v-axis :tickLine="axis1Opts.tickLine" :grid="axis1Opts.grid" position="top" />
+        <v-axis :tickLine="axis2Opts.tickLine" :grid="axis2Opts.grid" />
+        <v-polygon
+          :position="seriesOpts.position"
+          :color="seriesOpts.color"
+          :label="seriesOpts.label"
+          :vStyle="seriesOpts.style"
+        />
+      </slot>
     </v-chart>
-  </a-card>
+  </a-spin>
 </template>
 
 <script>
+import loadingMixin from './mixin'
+
 const axis1Opts = {
   dataKey: 'name',
   tickLine: null,
@@ -65,40 +73,12 @@ const seriesOpts = {
   }
 }
 export default {
-  props: {
-    data: {
-      type: Array,
-      default: () => []
-    },
-    scale: {
-      type: Array,
-      default: () => []
-    }
-  },
+  mixins: [loadingMixin],
   data () {
     return {
-      height: 450,
       axis1Opts,
       axis2Opts,
-      seriesOpts,
-      loading: true
-    }
-  },
-  methods: {
-    loadingChange () {
-      if (this.data.length > 0) {
-        this.loading = false
-      }
-    }
-  },
-  watch: {
-    data: {
-      handler (value) {
-        setTimeout(() => {
-          this.loadingChange()
-        })
-      },
-      immediate: true
+      seriesOpts
     }
   }
 }

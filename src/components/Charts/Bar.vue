@@ -1,64 +1,24 @@
 <template>
-  <a-card :loading="loading" :bordered="false">
+  <a-spin
+    :spinning="loading"
+    tip="数据正在加载中..."
+    :style="{ height: `${typeof height === 'number' ? height + 'px' : height}` }"
+  >
     <v-chart :forceFit="true" :height="height" :data="data" :scale="scale" :padding="padding">
-      <v-tooltip />
-      <v-axis />
-      <v-bar :position="position" />
+      <slot>
+        <v-tooltip />
+        <v-axis />
+        <v-bar :position="position" />
+      </slot>
     </v-chart>
-  </a-card>
+  </a-spin>
 </template>
 
 <script>
-const AProp = {
-  type: Array,
-  default: () => []
-}
+import loadingMixin from './mixin'
+
 export default {
   name: 'Bar',
-  props: {
-    data: AProp,
-    scale: AProp,
-    tooltip: AProp,
-    padding: {
-      type: Array,
-      default: () => [50, 50]
-    },
-    height: {
-      type: [Number, String],
-      default: 500
-    },
-    position: {
-      type: String,
-      default: 'name*value'
-    }
-  },
-  data () {
-    return {
-      loading: true
-    }
-  },
-  methods: {
-    loadingChange () {
-      if (this.data.length > 0) {
-        this.loading = false
-      }
-    }
-  },
-  watch: {
-    data: {
-      handler (value) {
-        setTimeout(() => {
-          this.loadingChange()
-        })
-      },
-      immediate: true
-    }
-  }
+  mixins: [loadingMixin]
 }
 </script>
-
-<style lang="less" scoped>
-/deep/ .ant-card-body {
-  padding: 0;
-}
-</style>

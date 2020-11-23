@@ -16,28 +16,33 @@
             <a-col :span="4">汇总数据</a-col>
             <a-col :span="7">
               <div>留存用户</div>
-              <div class="vital-data">25</div>
+              <div class="vital-data">{{ reminduserssum }}</div>
             </a-col>
             <a-col :span="7">
               <div>新用户数</div>
-              <div class="vital-data">25</div>
+              <div class="vital-data">{{ newuserssum }}</div>
             </a-col>
             <a-col :span="6">
               <div>留存率</div>
-              <div class="vital-data">25</div>
+              <div class="vital-data">{{ reminddis }}%</div>
             </a-col>
           </a-row>
           <a-divider></a-divider>
           <popover-tip :tip-name="tipName" :tip-list="tipList"></popover-tip>
-          <s-table
-            ref="table"
-            size="default"
-            rowKey="key"
+          <a-table
+            rowKey="name"
             :columns="columns"
-            :data="loadTableData"
+            :data-source="tableData"
+            :pagination="pagination"
+            :loading="loading"
+            @change="handleTableChange"
             style="margin-top: 20px;"
           >
-          </s-table>
+            <span slot="serial" slot-scope="text, record, index">
+              {{ index + 1 }}
+            </span>
+            <span slot="ereminddis" slot-scope="text">{{ text }}%</span>
+          </a-table>
         </a-tab-pane>
       </a-tabs>
       <template v-else>
@@ -48,39 +53,32 @@
 </template>
 
 <script>
-import { AnalysisHeader, STable, ColorPiece, PopoverTip } from '@/components'
+import { AnalysisHeader, STable, PopoverTip } from '@/components'
 import ChartBox from './chart'
+import { getRetentionList } from '@/api/userAnalyse'
 import { RETAIN_TIP } from './const'
 
 const columns = [
   {
-    dataIndex: 'index'
+    scopedSlots: { customRender: 'serial' },
+    width: 70
   },
   {
-    dataIndex: 'name',
-    key: 'name',
-    title: '日期'
+    title: '日期',
+    dataIndex: 'name'
   },
   {
-    title: '启动用户数',
-    dataIndex: 'age',
-    key: 'age'
+    title: '留存用户',
+    dataIndex: 'eremindusers'
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address'
+    title: '新用户数',
+    dataIndex: 'enewusers'
   },
   {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    scopedSlots: { customRender: 'tags' }
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    scopedSlots: { customRender: 'action' }
+    title: '留存率',
+    dataIndex: 'ereminddis',
+    scopedSlots: { customRender: 'ereminddis' }
   }
 ]
 
@@ -89,7 +87,6 @@ export default {
   components: {
     AnalysisHeader,
     STable,
-    ColorPiece,
     PopoverTip,
     ChartBox
   },
@@ -103,16 +100,23 @@ export default {
       chartParams: { active: 0, dateActive: 0 },
       data: [],
       scale: [],
-      columns
+      columns,
+      pagination: {},
+      loading: false,
+      tableData: [],
+      newuserssum: '', // 新用户数
+      reminduserssum: '', // 留存用户数
+      reminddis: 0 // 留存率 无百分号
     }
   },
-  created () {
-    this.isNewFirst = this.$route.name === 'RetainUserNew'
-  },
   mounted () {
-    this.loadAssignData()
+    this.pageLoad()
   },
   methods: {
+    pageLoad () {
+      this.isNewFirst = this.$route.name === 'RetainUserNew'
+      this.loadAssignData()
+    },
     // 获取头部筛选条件数据
     getHeaderData () {
       return this.$refs.AnalysisHeader && this.$refs.AnalysisHeader.getSearchData()
@@ -132,7 +136,7 @@ export default {
         this.loadChartData()
       } else {
         // 新用户自定义留存
-        this.$refs.table && this.$refs.table.refresh(true)
+        this.getRetentionList()
       }
     },
     handleChartChange (params) {
@@ -218,37 +222,37 @@ export default {
         source.push(obj)
       }
 
-      this.data = source
+      setTimeout(() => {
+        this.data = source
+        console.log(this.data)
+      })
+    },
+    handleTableChange (pagination) {
+      const pager = { ...this.pagination }
+      pager.current = pagination.current
+      this.pagination = pager
+      this.getRetentionList()
     },
     // 刷新表格数据
-    loadTableData () {
-      return new Promise((resolve, reject) => {
-        this.$nextTick(() => {
-          console.log('-----表格------')
-          console.log(this.getHeaderData())
-          console.log('-----表格------')
-          const data = [
-            {
-              key: '1',
-              name: 'John Brown',
-              age: 32,
-              address: 'New York No. 1 Lake Park'
-            }
-          ]
-          resolve({
-            pageSize: 1,
-            pageNo: 1,
-            totalCount: 1,
-            totalPage: 1,
-            data: data
-          })
-        })
+    getRetentionList () {
+      const { current } = this.pagination
+      const params = { ...this.getHeaderData(), pageindex: current, pagesize: 10 }
+      this.loading = true
+      getRetentionList(params).then(({ data }) => {
+        const pagination = { ...this.pagination }
+        pagination.total = 200
+        this.loading = false
+        this.newuserssum = data.newuserssum
+        this.reminduserssum = data.reminduserssum
+        this.reminddis = data.reminddis
+        this.tableData = data.list
+        this.pagination = pagination
       })
     }
   },
   watch: {
     $route (to, from) {
-      this.isNewFirst = this.$route.name === 'RetainUserNew'
+      this.pageLoad()
     }
   }
 }

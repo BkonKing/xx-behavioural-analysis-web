@@ -1,48 +1,37 @@
 <template>
-  <a-card :loading="loading" :bordered="false">
+  <a-spin
+    :spinning="loading"
+    tip="数据正在加载中..."
+    :style="{ height: `${typeof height === 'number' ? height + 'px' : height}` }"
+  >
     <v-chart :forceFit="true" :height="height" :data="dvData" :scale="scale" :padding="padding">
-      <template v-if="htmlContent">
-        <v-tooltip :htmlContent="(title, items) => htmlContent(title, items, alias)" />
-      </template>
-      <v-tooltip v-else />
-      <v-axis />
-      <v-legend />
-      <v-line :position="position" :color="color" />
-      <v-point :position="position" :color="color" :size="4" shape="circle" />
+      <slot>
+        <template v-if="htmlContent">
+          <v-tooltip :htmlContent="(title, items) => htmlContent(title, items, alias)" />
+        </template>
+        <v-tooltip v-else />
+        <v-axis />
+        <v-legend />
+        <v-line :position="position" :color="color" />
+        <v-point :position="position" :color="color" :size="4" shape="circle" />
+      </slot>
     </v-chart>
-  </a-card>
+  </a-spin>
 </template>
 
 <script>
 import DataSet from '@antv/data-set'
+import loadingMixin from './mixin'
 
-const AProp = {
-  type: Array,
-  default: () => []
-}
 export default {
   name: 'ALine',
+  mixins: [loadingMixin],
   props: {
-    data: AProp,
-    scale: AProp,
-    tooltip: AProp,
-    padding: {
-      type: Array,
-      default: () => [50, 20, 100, 50]
-    },
-    height: {
-      type: [Number, String],
-      default: 500
-    },
     transform: {
       type: Object,
       default: () => {
         return {}
       }
-    },
-    position: {
-      type: String,
-      default: 'name*value'
     },
     // eslint-disable-next-line vue/require-default-prop
     htmlContent: Function,
@@ -57,18 +46,11 @@ export default {
   },
   data () {
     return {
-      loading: true,
       dvData: []
     }
   },
   methods: {
-    loadingChange () {
-      if (this.data.length > 0) {
-        this.loading = false
-      }
-    },
     transformData () {
-      console.log(this.transform)
       if (Object.keys(this.transform).length > 0) {
         const dv = new DataSet.View().source(this.data)
         dv.transform(this.transform)
@@ -81,19 +63,9 @@ export default {
   watch: {
     data: {
       handler (value) {
-        setTimeout(() => {
-          this.loadingChange()
-          this.transformData()
-        })
-      },
-      immediate: true
+        this.transformData()
+      }
     }
   }
 }
 </script>
-
-<style lang="less" scoped>
-/deep/ .ant-card-body {
-  padding: 0;
-}
-</style>

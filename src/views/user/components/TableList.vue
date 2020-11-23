@@ -7,7 +7,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(c, i) in data.col" :key="i" :class="{ today: i === 0 }">
+        <tr v-for="(c, i) in col" :key="i" :class="{ today: i === 0 }">
           <td>{{ c.label }}</td>
         </tr>
       </tbody>
@@ -16,13 +16,13 @@
       <table cellspacing="0" cellpadding="0" class="list width100">
         <tbody>
           <tr class="title">
-            <th v-for="(t, i) in data.title" :key="i" :class="{ 'td-selected': active === i }" @click="active = i">
+            <th v-for="(t, i) in title" :key="i" :class="{ 'td-selected': active === i }" @click="active = i">
               {{ t }}
             </th>
           </tr>
-          <tr v-for="(c, i) in data.col" :key="i" :class="{ highlight: i === 0 }">
+          <tr v-for="(c, i) in col" :key="i" :class="{ highlight: i === 0 }">
             <td
-              v-for="(item, index) in data.data"
+              v-for="(item, index) in data"
               :key="index"
               :class="{ 'arrow-down': c.value === 'c', 'td-selected': active === index }"
               @click="active = index"
@@ -39,10 +39,10 @@
         </tbody>
       </table>
     </div>
-    <div class="fold  btw">
+    <!-- <div class="fold  btw">
       <a-icon v-if="visible" type="up-circle" theme="filled" :style="{ fontSize: '16px' }" @click="visible = false" />
       <a-icon v-else type="down-circle" theme="filled" :style="{ fontSize: '16px' }" @click="visible = true" />
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -50,89 +50,26 @@
 export default {
   name: 'TableList',
   props: {
-    data: {
-      type: Object,
-      default: () => {
-        return {
-          title: ['启动用户数', '启动次数', '新用户数', '次均使用时长', '人均使用时长', '人均日启动次数'],
-          col: [
-            {
-              label: '今日',
-              value: 'a'
-            },
-            {
-              label: '昨日',
-              value: 'b'
-            },
-            {
-              label: '预计今日',
-              value: 'c'
-            },
-            {
-              label: '昨日此时',
-              value: 'd'
-            },
-            {
-              label: '每日平均',
-              value: 'e'
-            },
-            {
-              label: '历史峰值',
-              value: 'f'
-            }
-          ],
-          data: [
-            {
-              a: '1',
-              b: '2',
-              c: '3',
-              d: '4',
-              e: '5',
-              f: '6'
-            },
-            {
-              a: '1',
-              b: '2',
-              c: '3',
-              d: '4',
-              e: '5',
-              f: '6'
-            },
-            {
-              a: '1',
-              b: '2',
-              c: '3',
-              d: '4',
-              e: '5',
-              f: '6'
-            },
-            {
-              a: '1',
-              b: '2',
-              c: '3',
-              d: '4',
-              e: '5',
-              f: '6'
-            },
-            {
-              a: '1',
-              b: '2',
-              c: '3',
-              d: '4',
-              e: '5',
-              f: '6'
-            },
-            {
-              a: '1',
-              b: '2',
-              c: '3',
-              d: '4',
-              e: '5',
-              f: '6'
-            }
-          ]
+    title: {
+      type: Array,
+      default: () => ['启动用户数', '启动次数', '新用户数', '次均使用时长', '人均使用时长', '人均日启动次数']
+    },
+    col: {
+      type: Array,
+      default: () => [
+        {
+          label: '今日',
+          value: 'today'
+        },
+        {
+          label: '昨日',
+          value: 'yesterday'
         }
-      }
+      ]
+    },
+    data: {
+      type: Array,
+      default: () => []
     }
   },
   data () {

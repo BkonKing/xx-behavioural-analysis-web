@@ -1,7 +1,7 @@
 <template>
   <analysis-header ref="AnalysisHeader" :reportTip="reportTip" :showSearchList="[]">
     <div style="background: #fff;">
-      <table-list></table-list>
+      <table-list :data="sumData"></table-list>
       <stacked-area :data="data1" :scale="scale1" :transform="transform"></stacked-area>
       <a-row class="data-card-container">
         <a-col :span="12">
@@ -28,6 +28,7 @@
 <script>
 import { AnalysisHeader, aLine, StackedArea } from '@/components'
 import TableList from './components/TableList'
+import { getsum } from '@/api/overview'
 
 const data = [
   { date: '2020/10/28', value: 3 },
@@ -46,29 +47,6 @@ const scale = [
     alias: '新用户数',
     min: 0
   }
-]
-
-const data1 = [
-  { year: '1996', north: 322, south: 162 },
-  { year: '1997', north: 324, south: 90 },
-  { year: '1998', north: 329, south: 50 },
-  { year: '1999', north: 342, south: 77 },
-  { year: '2000', north: 348, south: 35 },
-  { year: '2001', north: 334, south: -45 },
-  { year: '2002', north: 325, south: -88 },
-  { year: '2003', north: 316, south: -120 },
-  { year: '2004', north: 318, south: -156 },
-  { year: '2005', north: 330, south: -123 },
-  { year: '2006', north: 355, south: -88 },
-  { year: '2007', north: 366, south: -66 },
-  { year: '2008', north: 337, south: -45 },
-  { year: '2009', north: 352, south: -29 },
-  { year: '2010', north: 377, south: -45 },
-  { year: '2011', north: 383, south: -88 },
-  { year: '2012', north: 344, south: -132 },
-  { year: '2013', north: 366, south: -146 },
-  { year: '2014', north: 389, south: -169 },
-  { year: '2015', north: 334, south: -184 }
 ]
 
 const transform = {
@@ -133,14 +111,72 @@ export default {
       ],
       data,
       scale,
-      data1,
+      data1: [],
       scale1,
-      transform
+      transform,
+      sumData: []
     }
+  },
+  mounted () {
+    this.getsum()
+    setTimeout(() => {
+      this.data1 = [
+        { name: '1996', north: 322, south: 162 },
+        { name: '1997', north: 324, south: 90 },
+        { name: '1998', north: 329, south: 50 },
+        { name: '1999', north: 342, south: 77 },
+        { name: '2000', north: 348, south: 35 },
+        { name: '2001', north: 334, south: -45 },
+        { name: '2002', north: 325, south: -88 },
+        { name: '2003', north: 316, south: -120 },
+        { name: '2004', north: 318, south: -156 },
+        { name: '2005', north: 330, south: -123 },
+        { name: '2006', north: 355, south: -88 },
+        { name: '2007', north: 366, south: -66 },
+        { name: '2008', north: 337, south: -45 },
+        { name: '2009', north: 352, south: -29 },
+        { name: '2010', north: 377, south: -45 },
+        { name: '2011', north: 383, south: -88 },
+        { name: '2012', north: 344, south: -132 },
+        { name: '2013', north: 366, south: -146 },
+        { name: '2014', north: 389, south: -169 },
+        { name: '2015', north: 334, south: -184 }
+      ]
+    })
   },
   methods: {
     handleChange (a, b) {
       console.log(a, b)
+    },
+    getsum () {
+      getsum().then(({ data }) => {
+        this.sumData = [
+          {
+            today: data.todaystartusers,
+            yesterday: data.yesdaystartusers
+          },
+          {
+            today: data.todaystarttimes,
+            yesterday: data.yestodaystarttimes
+          },
+          {
+            today: data.todaynewuser,
+            yesterday: data.yestodaynewuser
+          },
+          {
+            today: data.todaydurationuse,
+            yesterday: data.yestodaydurationuse
+          },
+          {
+            today: data.todayperusagetime,
+            yesterday: data.yestodayperusagetime
+          },
+          {
+            today: data.todayperstarttimes,
+            yesterday: data.yestodayperstarttimes
+          }
+        ]
+      })
     }
   }
 }
