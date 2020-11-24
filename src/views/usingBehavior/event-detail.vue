@@ -15,7 +15,7 @@
           @change="handleChange"
         >
           <a-select-option v-for="(item, i) in selectList" :key="i" :value="item.id">
-            {{ item.value }}
+            {{ item.event_name }}
           </a-select-option>
         </a-select>
       </div>
@@ -49,7 +49,7 @@
 <script>
 import { AnalysisHeader, PopoverTip, STable, aLine } from '@/components'
 import { EVENTDETAIL_TIP } from './const'
-import { getEventDetail } from '@/api/using'
+import { getEventContans, getEventDetail } from '@/api/using'
 const columns = [
   {
     title: '日期',
@@ -87,17 +87,7 @@ export default {
           value: 1
         }
       ],
-      // selectVal: 3,
-      selectList: [
-        {
-          id: 1,
-          value: '登录'
-        },
-        {
-          id: 3,
-          value: '加入购物车'
-        }
-      ],
+      selectList: [],
       columns,
       // 查询参数
       queryParam: {},
@@ -108,10 +98,17 @@ export default {
     }
   },
   mounted () {
-    this.eventId = parseInt(this.$route.query.id)
+    this.eventId = this.$route.query.id
     this.loadChartData()
+    this.getEventContans()
   },
   methods: {
+    // 获取app页面列表
+    getEventContans () {
+      getEventContans().then(res => {
+        this.selectList = res.data.list
+      })
+    },
     // 获取头部筛选条件数据
     getHeaderData () {
       return this.$refs.AnalysisHeader && this.$refs.AnalysisHeader.getSearchData()

@@ -1,21 +1,21 @@
 <template>
-  <analysis-header ref="AnalysisHeader" :reportTip="reportTip" @change="loadAllData">
+  <analysis-header ref="AnalysisHeader" @change="loadAllData">
     <template v-slot:eventlist>
       <div style="display: inline-block;">
         <a-select
           show-search
           placeholder="请选择"
-          v-model="selectVal"
+          v-model="pagesId"
           size="small"
           option-filter-prop="children"
           style="width: 200px"
           :filter-option="filterOption"
           @focus="handleFocus"
           @blur="handleBlur"
-          @change="pagesChange"
+          @change="handleChange"
         >
           <a-select-option v-for="(item, i) in selectList" :key="i" :value="item.id">
-            {{ item.value }}
+            {{ item.remark }}
           </a-select-option>
         </a-select>
       </div>
@@ -24,22 +24,17 @@
       <Summary v-model="summary" :data="summaryList" @change="handleChange"></Summary>
       <div style="padding: 0 20px 20px;">
         <a-divider style="margin-top: 0;"></a-divider>
-        <a-line :data="data" :scale="scale"></a-line>
+        <a-line :data="chartData" :scale="scale" :height="300"></a-line>
         <a-divider></a-divider>
         <popover-tip :tip-list="tipList"></popover-tip>
-        <s-table
-          ref="table"
-          size="default"
-          rowKey="key"
-          :columns="columns"
-          :data="loadTableData"
-          :scroll="{ x: 1000 }"
-          style="margin-top: 20px;"
-        >
-          <template v-slot:index="text">
-            {{ text.key }}
+        <a-table :columns="columns" :data-source="tableData" rowKey="name">
+          <span slot="serial" slot-scope="text, record, index">
+            {{ index + 1 }}
+          </span>
+          <template slot="eleavecountdis" slot-scope="text">
+            {{ text + '%' }}
           </template>
-        </s-table>
+        </a-table>
       </div>
     </div>
   </analysis-header>
@@ -48,57 +43,39 @@
 <script>
 import { AnalysisHeader, Summary, STable, PopoverTip, aLine } from '@/components'
 import { PAGEDETAIL_TIP } from './const'
+import { getPagesContans, getPagesDetail } from '@/api/using'
 
 const columns = [
   {
-    scopedSlots: { customRender: 'index' }
+    scopedSlots: { customRender: 'serial' }
   },
   {
     dataIndex: 'name',
-    key: 'name',
     title: '日期'
   },
   {
-    title: '启动用户数',
-    dataIndex: 'age',
-    key: 'age'
+    title: '页面访问次数',
+    dataIndex: 'epagecount'
   },
   {
-    title: '新用户数',
-    dataIndex: 'address',
-    key: 'address'
+    title: '次均停留时间',
+    dataIndex: 'eusetime'
+  },
+  {
+    title: '退出率',
+    dataIndex: 'eleavecountdis',
+    scopedSlots: { customRender: 'eleavecountdis' }
+  },
+  {
+    title: '入口页次数',
+    dataIndex: 'eentrycount'
+  },
+  {
+    title: '退出页次数',
+    dataIndex: 'eleavecount'
   }
-  /* {
-    title: '新用户占比',
-    key: 'tags',
-    dataIndex: 'tags'
-  },
-  {
-    title: '老用户数',
-    key: 'tags',
-    dataIndex: 'tags'
-  },
-  {
-    title: '老用户占比',
-    key: 'tags',
-    dataIndex: 'tags'
-  },
-  {
-    title: '启动次数',
-    key: 'tags',
-    dataIndex: 'tags'
-  },
-  {
-    title: '次均使用时长',
-    key: 'tags',
-    dataIndex: 'tags'
-  },
-  {
-    title: '人均使用时长',
-    key: 'tags',
-    dataIndex: 'tags'
-  } */
 ]
+
 export default {
   name: 'PagesDetail',
   components: {
@@ -114,28 +91,29 @@ export default {
       tipList: PAGEDETAIL_TIP.tipList,
       time: '1',
       summary: '',
+      summaryIndex: 0,
       summaryList: [],
       params: {},
       columns,
-      data: [],
+      tableData: [],
       scale: [],
-      selectVal: 2,
-      selectList: [
-        {
-          id: 1,
-          value: '登录'
-        },
-        {
-          id: 2,
-          value: '加入购物车'
-        }
-      ]
+      chartData: [],
+      selectList: [],
+      pagesId: 0
     }
   },
   mounted () {
+    this.pagesId = this.$route.query.id
     this.getSummary()
+    this.getPagesContans()
   },
   methods: {
+    // 获取app页面列表
+    getPagesContans () {
+      getPagesContans().then(res => {
+        this.selectList = res.data.list
+      })
+    },
     // 获取头部筛选条件数据
     getHeaderData () {
       return this.$refs.AnalysisHeader && this.$refs.AnalysisHeader.getSearchData()
@@ -173,6 +151,7 @@ export default {
     },
     // 汇总数据变更事件，刷新图表
     handleChange (value, index) {
+      this.summaryIndex = index
       this.loadChartData(index)
     },
     // 刷新图表和表格数据
@@ -182,52 +161,58 @@ export default {
     },
     // 刷新图表数据
     loadChartData (index) {
+      const requestParameters = { ...this.getHeaderData(), ...this.queryParam }
+      const param = Object.assign(
+      {
+        'pageid': this.pagesId
+      }, requestParameters)
       console.log('-----图表------')
-      console.log({ ...this.getHeaderData(), summary: this.summary, time: this.time })
+      console.log({ ...this.getHeaderData() })
       console.log('-----图表------')
-      this.scale = [
-        {
-          dataKey: 'value',
-          alias: this.summaryList[index].text,
-          min: 0
-        }
-      ]
-      this.data = [
-        { date: '2020/10/28', value: 3 },
-        { date: '2020/10/29', value: 4 },
-        { date: '2020/10/30', value: 3.5 },
-        { date: '2020/10/31', value: 5 },
-        { date: '2020/11/01', value: 4.9 },
-        { date: '2020/11/02', value: 6 },
-        { date: '2020/11/03', value: 7 },
-        { date: '2020/11/04', value: 9 },
-        { date: '2020/11/05', value: 13 }
-      ]
+      getPagesDetail(param).then(res => {
+        this.tableData = res.data.list
+        this.summaryList[0].value = res.data.pagecount
+        this.summaryList[1].value = res.data.stoptime
+        this.summaryList[2].value = res.data.leavedis + '%'
+        this.summaryList[3].value = res.data.entrycount
+        this.summaryList[4].value = res.data.leavecount
+        this.scale = [
+          {
+            dataKey: 'value',
+            alias: this.summaryList[this.summaryIndex].text,
+            min: 0
+          }
+        ]
+        this.chartData = res.data.list.map(obj => {
+          let value = ''
+          switch (this.summaryIndex) {
+              case 0:
+              value = obj.epagecount
+            break
+            case 1:
+              value = obj.eusetime
+              break
+            case 2:
+              value = obj.eleavecountdis
+              break
+            case 3:
+              value = obj.eentrycount
+              break
+            case 4:
+              value = obj.eleavecount
+              break
+          }
+          return {
+            name: obj.name,
+            value: value
+          }
+        })
+        console.log('aaddd', this.chartData)
+      })
     },
     // 刷新表格数据
-    loadTableData () {
-      return new Promise((resolve, reject) => {
-        this.$nextTick(() => {
-          console.log('-----表格------')
-          console.log({ ...this.getHeaderData(), time: this.time })
-          console.log('-----表格------')
-          const data = [
-            {
-              key: '1',
-              name: 'John Brown',
-              age: 32,
-              address: 'New York No. 1 Lake Park'
-            }
-          ]
-          resolve({
-            pageSize: 1,
-            pageNo: 1,
-            totalCount: 1,
-            totalPage: 1,
-            data: data
-          })
-        })
-      })
+    loadTableData (page) {
+
     },
     pagesChange (value) {
       console.log(`selected ${value}`)

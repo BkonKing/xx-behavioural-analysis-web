@@ -3,14 +3,14 @@
     <div class="antd-pro-pages-dashboard-analysis-twoColLayout">
       <Summary v-model="summary" :data="summaryList" @change="handleChange"></Summary>
       <a-card :bordered="false">
-        <a-line :data="chartData" :scale="scale" position="time*value"></a-line>
+        <a-line :data="chartData" :scale="scale" :height="300"></a-line>
         <a-divider></a-divider>
         <popover-tip :tip-list="tipList">
           <template v-slot:search>
             <a-input-search
               size="small"
               placeholder="请输入页面名称"
-              v-model="queryParam.id"
+              v-model="search"
               @search="$refs.table.refresh(true)"
               style="margin-right: 16px; width: 272px;"
             />
@@ -19,14 +19,18 @@
         <s-table
           ref="table"
           size="default"
-          rowKey="key"
+          rowKey="name"
           :columns="columns"
           :data="loadTableData"
           showPagination="auto"
         >
+          <template v-slot:index="text">
+            {{ text.key }}
+          </template>
           <span slot="serial" slot-scope="text, record, index">
             {{ index + 1 }}
           </span>
+          <a slot="pagename" slot-scope="text, record" @click="goDetail(record.name)">{{ text }}</a>
         </s-table>
       </a-card>
     </div>
@@ -36,43 +40,48 @@
 <script>
 import { AnalysisHeader, Summary, PopoverTip, STable, aLine } from '@/components'
 import { PAGE_TIP } from './const'
+import { getPagesList, getPagesChart } from '@/api/using'
 
 const columns = [
   {
-    title: '#',
     scopedSlots: { customRender: 'serial' }
   },
   {
-    title: '供应商（名称）',
-    dataIndex: 'seller_name'
+    title: '访问页面',
+    dataIndex: 'path',
+    scopedSlots: { customRender: 'pagename' }
   },
   {
-    title: '平台',
-    dataIndex: 'platform_name'
-    // scopedSlots: { customRender: 'description' }
+    title: '访问页面备注名称',
+    dataIndex: 'remark'
   },
-  // {
-  //   title: '服务调用次数',
-  //   dataIndex: 'callNo',
-  //   sorter: true,
-  //   needTotal: true,
-  //   customRender: (text) => text + ' 次'
-  // },
-  // {
-  //   title: '状态',
-  //   dataIndex: 'status',
-  //   scopedSlots: { customRender: 'status' }
-  // },
-  // {
-  //   title: '更新时间',
-  //   dataIndex: 'updatedAt',
-  //   sorter: true
-  // },
   {
-    title: '操作',
-    dataIndex: 'action',
-    width: '150px',
-    scopedSlots: { customRender: 'action' }
+    title: '页面访问次数',
+    dataIndex: 'epagecount'
+  },
+  {
+    title: '访问次数占比',
+    dataIndex: 'epagecountdis'
+  },
+  {
+    title: '次均停留时间',
+    dataIndex: 'eusetime'
+  },
+  {
+    title: '停留时间占比',
+    dataIndex: 'eusetimedis'
+  },
+  {
+    title: '退出率',
+    dataIndex: 'eleavecountdis'
+  },
+  {
+    title: '入口页次数',
+    dataIndex: 'eentrycount'
+  },
+  {
+    title: '退出页次数',
+    dataIndex: 'eleavecount'
   }
 ]
 
@@ -96,6 +105,7 @@ export default {
       // 查询参数
       queryParam: {},
       columns,
+      search: '',
       // 图表
       scale: [],
       chartData: []
@@ -139,58 +149,53 @@ export default {
       this.loadChartData(index)
     },
     // 刷新图表数据
-    loadChartData (index) {
+    loadChartData (page) {
+      const requestParameters = { ...this.getHeaderData(), ...this.queryParam }
+      const param = Object.assign(
+      {
+        'eventid': this.eventId
+      }, requestParameters)
       console.log('-----图表------')
-      console.log({ ...this.getHeaderData(), summary: this.summary })
+      console.log({ ...this.getHeaderData() })
       console.log('-----图表------')
-      this.scale = [
-        {
-          dataKey: 'time',
-          range: [0, 1]
-        },
-        {
-          dataKey: 'value',
-          min: 0,
-          alias: this.summaryList[this.summaryIndex].text,
-          nice: true
-        }
-      ]
-      this.chartData = [
-        { time: '1991', value: 3 },
-        { time: '1992', value: 4 },
-        { time: '1993', value: 3.5 },
-        { time: '1994', value: 5 },
-        { time: '1995', value: 4.9 },
-        { time: '1996', value: 6 },
-        { time: '1997', value: 7 },
-        { time: '1998', value: 9 },
-        { time: '1999', value: 13 }
-      ]
+      getPagesChart(param).then(res => {
+        this.summaryList[0].value = res.data.pagecount
+        this.summaryList[1].value = res.data.usetimesum
+        this.summaryList[2].value = res.data.leavedis + '%'
+        console.log('aa', this.summaryList, this.summaryIndex)
+        this.scale = [
+          {
+            dataKey: 'value',
+            alias: this.summaryList[this.summaryIndex].text,
+            min: 0
+          }
+        ]
+        this.chartData = res.data.list.map(obj => {
+          return {
+            name: obj.name,
+            value: this.summaryIndex === 0 ? obj.epagecount : (this.summaryIndex === 1 ? obj.eusetime : obj.eleavecountdis)
+          }
+        })
+      })
     },
     // 刷新表格数据
-    loadTableData () {
-      return new Promise((resolve, reject) => {
-        this.$nextTick(() => {
-          const requestParameters = { ...this.getHeaderData(), ...this.queryParam }
-          console.log('-----表格------')
-          console.log(requestParameters)
-          console.log('-----表格------')
-          const data = [
-            {
-              key: '1',
-              name: 'John Brown',
-              age: 32,
-              address: 'New York No. 1 Lake Park'
-            }
-          ]
-          resolve({
-            pageSize: 1,
-            pageNo: 1,
-            totalCount: 1,
-            totalPage: 1,
-            data: data
-          })
-        })
+    loadTableData (page) {
+      const requestParameters = { ...this.getHeaderData(), ...this.queryParam }
+      console.log('-----表格------')
+      // console.log(requestParameters)
+      console.log('-----表格------')
+      const param = Object.assign(
+        {
+        'search': this.search
+      }, page, requestParameters)
+      return getPagesList(param)
+    },
+    goDetail (id) {
+      this.$router.push({
+        path: '/usingBehavior/pagesDetail',
+        query: {
+          id: id
+        }
       })
     }
   }

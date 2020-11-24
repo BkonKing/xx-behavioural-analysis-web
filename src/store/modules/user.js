@@ -10,7 +10,8 @@ const user = {
     welcome: '',
     avatar: '',
     roles: [],
-    info: {}
+    info: {},
+    os_type: storage.get('os_type')
   },
 
   mutations: {
@@ -29,6 +30,10 @@ const user = {
     },
     SET_INFO: (state, info) => {
       state.info = info
+    },
+    setOs_type (state, value) {
+      state.os_type = value
+      storage.set('os_type', value)
     }
   },
 

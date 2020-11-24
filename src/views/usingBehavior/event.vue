@@ -87,17 +87,14 @@ export default {
     },
     // 刷新表格数据
     loadTableData (page) {
-      console.log('page', page)
       const requestParameters = { ...this.getHeaderData(), ...this.queryParam }
       console.log('-----表格------')
       // console.log(requestParameters)
       console.log('-----表格------')
       const param = Object.assign(
         {
-        'search': this.search,
-        'pageindex': 1,
-        'pagesize': 10
-      }, requestParameters)
+        'search': this.search
+      }, page, requestParameters)
       console.log(param)
       return getEventList(param)
     },

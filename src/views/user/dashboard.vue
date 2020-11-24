@@ -5,7 +5,7 @@
         <div class="table-lsit dashboard-container">
           <div v-for="(item, i) in tableList" :key="i" v-if="i == 0" class="table-item">
             <div class="item-line1">
-              <popover-tip :tip-name="tipName" :tip-list="tipList"></popover-tip>
+              <popover-tip :tip-name="tipName" :tip-list="tipList"><div slot="upload"></div></popover-tip>
             </div>
             <div class="item-line2">{{ item.today }}</div>
             <div class="item-line3">{{ item.yesterday }}</div>
@@ -41,7 +41,7 @@
               @change="loadChartData"
             />
           </div>
-          <a-line :data="data" :scale="scale" :height="height"></a-line>
+          <a-line :data="chartData" :scale="scale" :height="height" :padding="[50, 20, 10, 50]"></a-line>
           <div class="toggle-btn" @click="toggleChart"><a-icon :type="isDown ? 'down' : 'up'" /></div>
         </div>
       </a-card>
@@ -76,20 +76,20 @@
                 </div>
               </div>
               <div>
-                <span>10</span>
-                <span>20</span>
+                <span>{{ dashboardJson.newuserand }}</span>
+                <span>{{ dashboardJson.yestodaynewuserand }}</span>
               </div>
               <div>
-                <span>10</span>
-                <span>20</span>
+                <span>{{ dashboardJson.todaystartusersand }}</span>
+                <span>{{ dashboardJson.yesdaystartusersand }}</span>
               </div>
               <div>
-                <span>10</span>
-                <span>20</span>
+                <span>{{ dashboardJson.todaystarttimesand }}</span>
+                <span>{{ dashboardJson.yestodaystarttimesand }}</span>
               </div>
               <div>
-                <span>10</span>
-                <span>20</span>
+                <span>{{ dashboardJson.todaycumulativestartand }}</span>
+                <span>{{ dashboardJson.yesdaycumulativestartand }}</span>
               </div>
               <div class="text-center">
                 <a-button type="primary" ghost @click="goLink(1,2)">查看报告</a-button>
@@ -106,23 +106,23 @@
                 </div>
               </div>
               <div>
-                <span>10</span>
-                <span>20</span>
+                <span>{{ dashboardJson.newuserios }}</span>
+                <span>{{ dashboardJson.yestodaynewuserios }}</span>
               </div>
               <div>
-                <span>10</span>
-                <span>20</span>
+                <span>{{ dashboardJson.todaystartusersios }}</span>
+                <span>{{ dashboardJson.yesdaystartusersios }}</span>
               </div>
               <div>
-                <span>10</span>
-                <span>20</span>
+                <span>{{ dashboardJson.todaystarttimesios }}</span>
+                <span>{{ dashboardJson.yestodaystarttimesios }}</span>
               </div>
               <div>
-                <span>10</span>
-                <span>20</span>
+                <span>{{ dashboardJson.todaycumulativestartios }}</span>
+                <span>{{ dashboardJson.yesdaycumulativestartios }}</span>
               </div>
               <div class="text-center">
-                <a-button type="primary" ghost @click="goLink(1,2)">查看报告</a-button>
+                <a-button type="primary" ghost @click="goLink(2,2)">查看报告</a-button>
               </div>
             </div>
           </div>
@@ -134,15 +134,15 @@
 </template>
 
 <script>
-import { PopoverTip, AnalysisHeader, aLine } from '@/components'
+import { PopoverTip, aLine } from '@/components'
 import moment from 'moment'
+import store from '@/store'
 import { DASHBOARD_TIP } from '../userAnalyse/const'
-// import { getEventList } from '@/api/using'
+import { getDashboardJson, getDashboardChart } from '@/api/using'
 export default {
   name: 'Dashboard',
   components: {
     PopoverTip,
-    AnalysisHeader,
     aLine
   },
   data () {
@@ -176,19 +176,34 @@ export default {
           yesterday: 2
         }
       ],
-      indicator: 0,
+      indicator: 1,
       indicatorList: [],
       rangeDate: [moment().subtract(2, 'days'), moment()], // 时间范围，默认为近三天
       isDown: true,
-      data: [],
+      chartData: [],
       scale: [],
-      height: 200
+      height: 200,
+      dashboardJson: {}
     }
   },
   mounted () {
     this.getSummary()
+    this.getDashboardJson()
   },
   methods: {
+    getDashboardJson () {
+      getDashboardJson().then(res => {
+        this.dashboardJson = res.data
+        this.tableList[1].today = res.data.newuser
+        this.tableList[1].yesterday = res.data.yestodaynewuser
+        this.tableList[2].today = res.data.todaystartusers
+        this.tableList[2].yesterday = res.data.yesdaystartusers
+        this.tableList[3].today = res.data.todaystarttimes
+        this.tableList[3].yesterday = res.data.yestodaystarttimes
+        this.tableList[4].today = res.data.todaycumulativestart
+        this.tableList[4].yesterday = res.data.yesdaycumulativestart
+      })
+    },
     moment,
     // 不能选择今天之后的日期
     disabledDate (current) {
@@ -199,39 +214,45 @@ export default {
       this.indicatorList = [
         {
           text: '新用户数',
-          value: 0
-        },
-        {
-          text: '启动用户数',
           value: 1
         },
         {
-          text: '启动次数',
+          text: '启动用户数',
           value: 2
+        },
+        {
+          text: '启动次数',
+          value: 3
         }
       ]
       this.loadChartData(0)
     },
     // 刷新图表数据
     loadChartData (index) {
-      this.scale = [
-        {
-          dataKey: 'value',
-          alias: this.indicatorList[index].text,
-          min: 0
-        }
-      ]
-      this.data = [
-        { date: '2020/10/28', value: 3 },
-        { date: '2020/10/29', value: 4 },
-        { date: '2020/10/30', value: 3.5 },
-        { date: '2020/10/31', value: 5 },
-        { date: '2020/11/01', value: 4.9 },
-        { date: '2020/11/02', value: 6 },
-        { date: '2020/11/03', value: 7 },
-        { date: '2020/11/04', value: 9 },
-        { date: '2020/11/05', value: 13 }
-      ]
+      const param = Object.assign(
+      {
+        'date': this.rangeDate.map(obj => {
+            return obj.format('YYYY/MM/DD')
+          }).join('~'),
+        'ordertype': this.indicator
+      })
+      getDashboardChart(param).then(res => {
+        this.scale = [
+          {
+            dataKey: 'value',
+            alias: this.indicatorList[this.indicator - 1].text,
+            min: 0
+          }
+        ]
+        console.log(22, res.data.list)
+        this.chartData = res.data.list.map(obj => {
+          return {
+            name: obj.name,
+            value: obj.startusers
+            // value: this.indicator === 0 ? obj.numberevents : obj.userevents
+          }
+        })
+      })
     },
     // 图表高度修改
     toggleChart () {
@@ -240,9 +261,7 @@ export default {
     },
     // 跳转 os_type
     goLink (osType, projectId) {
-      if (osType === 1) {
-        console.log(osType)
-      }
+      store.commit('setOs_type', osType)
       this.$router.push({
         path: '/overview/index'
       })

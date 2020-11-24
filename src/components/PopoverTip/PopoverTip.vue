@@ -15,9 +15,11 @@
         /></span>
       </a-popover>
     </a-col>
-    <a-col :span="12">
-      <span class="upload-btn" style="float: right" @click="handleClick"><a-icon type="upload" :style="{ marginRight: '8px' }" />导出CSV文件</span>
-    </a-col>
+    <slot name="upload">
+      <a-col :span="12">
+        <span class="upload-btn" style="float: right" @click="handleClick"><a-icon type="upload" :style="{ marginRight: '8px' }" />导出CSV文件</span>
+      </a-col>
+    </slot>
   </a-row>
 </template>
 
