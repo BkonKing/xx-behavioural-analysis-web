@@ -46,7 +46,7 @@
         </a-tab-pane>
       </a-tabs>
       <template v-else>
-        <chart-box :data="data" :scale="scale" @change="handleChartChange" style="margin-top: 20px;"></chart-box>
+        <chart-box :data="tableData" :scale="scale" @change="handleChartChange" style="margin-top: 20px;"></chart-box>
       </template>
     </a-card>
   </analysis-header>
@@ -111,6 +111,7 @@ export default {
   },
   mounted () {
     this.pageLoad()
+    this.getRetentionList()
   },
   methods: {
     pageLoad () {
@@ -224,7 +225,6 @@ export default {
 
       setTimeout(() => {
         this.data = source
-        console.log(this.data)
       })
     },
     handleTableChange (pagination) {

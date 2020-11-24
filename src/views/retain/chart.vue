@@ -25,15 +25,15 @@
         </a-popover>
       </div>
     </div>
-    <color-piece :data="data" :scale="scale" :padding="[0, 0, 120, 80]"></color-piece>
+    <color-table :data="data"></color-table>
   </div>
 </template>
 
 <script>
-import { ColorPiece } from '@/components'
+import { ColorTable } from '@/components'
 export default {
   components: {
-    ColorPiece
+    ColorTable
   },
   props: {
     data: {

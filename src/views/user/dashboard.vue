@@ -139,7 +139,7 @@ import moment from 'moment'
 import { DASHBOARD_TIP } from '../userAnalyse/const'
 // import { getEventList } from '@/api/using'
 export default {
-  name: 'dashboard',
+  name: 'Dashboard',
   components: {
     PopoverTip,
     AnalysisHeader,

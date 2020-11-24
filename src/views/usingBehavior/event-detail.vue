@@ -65,7 +65,7 @@ const columns = [
   }
 ]
 export default {
-  name: 'eventDetail',
+  name: 'EventDetail',
   components: {
     AnalysisHeader,
     PopoverTip,

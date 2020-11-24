@@ -1,5 +1,6 @@
 // chart
 import ColorPiece from '@/components/Charts/ColorPiece'
+import ColorTable from '@/components/Charts/ColorTable'
 import aMap from '@/components/Charts/Map.vue'
 import aLine from '@/components/Charts/Line'
 import Bar from '@/components/Charts/Bar'
@@ -28,6 +29,7 @@ export {
   StackedArea,
   Bar,
   ColorPiece,
+  ColorTable,
   Trend,
   Ellipsis,
   FooterToolbar,

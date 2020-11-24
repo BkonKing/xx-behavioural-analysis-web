@@ -100,7 +100,7 @@ const columns = [
   } */
 ]
 export default {
-  name: 'pagesDetail',
+  name: 'PagesDetail',
   components: {
     AnalysisHeader,
     Summary,

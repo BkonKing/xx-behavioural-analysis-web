@@ -1,6 +1,6 @@
 <template>
   <a-card :loading="loading" class="v-container" :bordered="false">
-    <v-chart :width="650" :height="500" :padding="padding" :scale="scale">
+    <v-chart :width="width" :height="height" :padding="padding" :scale="scale">
       <v-tooltip :htmlContent="htmlContent" />
       <v-legend data-key="value" position="left" />
       <v-view :data="geoData" :scale="scale">
@@ -64,13 +64,24 @@ export default {
     data: {
       type: Array,
       default: () => []
+    },
+    width: {
+      type: [Number, String],
+      default: 650
+    },
+    height: {
+      type: [Number, String],
+      default: 500
+    },
+    padding: {
+      type: Array,
+      default: () => [20, 20]
     }
   },
   data () {
     return {
       loading: true,
       dvData: [],
-      padding: [20, 20],
       geoData: [],
       scale,
       view1Opts,
