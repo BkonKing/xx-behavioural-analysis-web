@@ -919,3 +919,79 @@ const getDashboardChart = (options) => {
 }
 Mock.mock(/\/mobilestatistics\/getsum/, 'post', getDashboardJson)
 Mock.mock(/\/mobilestatistics\/statisticschart/, 'post', getDashboardChart)
+
+const getUsingHabit = (options) => {
+  return builder({
+    'list': [
+      {
+        'name': 1,
+        'tname': '1-2次',
+        'estarttimesdis': '100',
+        'estarttimes': 42
+      },
+      {
+        'name': 2,
+        'tname': '3-5次',
+        'estarttimesdis': '0',
+        'estarttimes': 0
+      },
+      {
+        'name': 3,
+        'tname': '6-9次',
+        'estarttimesdis': '0',
+        'estarttimes': 0
+      },
+      {
+        'name': 4,
+        'tname': '10-19次',
+        'estarttimesdis': '0',
+        'estarttimes': 0
+      },
+      {
+        'name': 5,
+        'tname': '20-49次',
+        'estarttimesdis': '0',
+        'estarttimes': 0
+      },
+      {
+        'name': 6,
+        'tname': '50次以上',
+        'estarttimesdis': '0',
+        'estarttimes': 0
+      }
+    ],
+    'piclist': [
+      {
+        'name': 1,
+        'tname': '1-2次',
+        'estarttimes': 42
+      },
+      {
+        'name': 2,
+        'tname': '3-5次',
+        'estarttimes': 23
+      },
+      {
+        'name': 3,
+        'tname': '6-9次',
+        'estarttimes': 0
+      },
+      {
+        'name': 4,
+        'tname': '10-19次',
+        'estarttimes': 0
+      },
+      {
+        'name': 5,
+        'tname': '20-49次',
+        'estarttimes': 0
+      },
+      {
+        'name': 6,
+        'tname': '50次以上',
+        'estarttimes': 0
+      }
+    ]
+  }, '', 200, { 'Custom-Header': Mock.mock('@guid') })
+}
+Mock.mock(/\/usagehabits\/getlist/, 'post', getUsingHabit)

@@ -3,26 +3,25 @@
     <div class="antd-pro-pages-dashboard-analysis-twoColLayout">
       <a-card>
         <a-tabs v-model="active" @change="loadAllData">
-          <a-tab-pane key="1" tab="使用频率"></a-tab-pane>
+          <a-tab-pane v-for="item in tapList" :key="item.key" :tab="item.txt"></a-tab-pane>
+          <!-- <a-tab-pane key="1" tab="使用频率"></a-tab-pane>
           <a-tab-pane key="2" tab="访问深度"></a-tab-pane>
           <a-tab-pane key="3" tab="使用时长"></a-tab-pane>
-          <a-tab-pane key="4" tab="使用间隔"></a-tab-pane>
+          <a-tab-pane key="4" tab="使用间隔"></a-tab-pane> -->
         </a-tabs>
         <!-- end -->
-        <bar :data="chartData" :scale="scale" position="time*value" :height="300"></bar>
+        <bar :data="chartData" :scale="scale" :height="350"></bar>
+        <!-- <bar :data="chartData" :scale="scale" position="time*value" :height="300"></bar> -->
         <a-divider></a-divider>
         <popover-tip :tip-list="tipList"></popover-tip>
-        <s-table
-          ref="table"
-          size="default"
-          rowKey="key"
-          :columns="columns"
-          :data="loadTableData"
-          showPagination="auto">
+        <a-table :columns="columns" :data-source="tableData" rowKey="name">
           <span slot="serial" slot-scope="text, record, index">
             {{ index + 1 }}
           </span>
-        </s-table>
+          <template slot="estarttimesdis" slot-scope="text">
+            {{ text + '%' }}
+          </template>
+        </a-table>
       </a-card>
     </div>
   </analysis-header>
@@ -31,38 +30,25 @@
 <script>
 import { AnalysisHeader, PopoverTip, STable, Bar } from '@/components'
 import { CHARACTER_TIP } from './const'
+import { getUsingHabit } from '@/api/using'
 
-const columns = [
+var columns = [
   {
-    title: '',
     scopedSlots: { customRender: 'serial' }
   },
   {
-    title: '供应商（名称）',
-    dataIndex: 'seller_name'
+    title: '日启动次数',
+    dataIndex: 'tname'
   },
   {
-    title: '平台',
-    dataIndex: 'platform_name'
-    // scopedSlots: { customRender: 'description' }
+    title: '启动用户数',
+    dataIndex: 'estarttimes'
+  },
+  {
+    title: '所占比例',
+    dataIndex: 'estarttimesdis',
+    scopedSlots: { customRender: 'estarttimesdis' }
   }
-  // {
-  //   title: '服务调用次数',
-  //   dataIndex: 'callNo',
-  //   sorter: true,
-  //   needTotal: true,
-  //   customRender: (text) => text + ' 次'
-  // },
-  // {
-  //   title: '状态',
-  //   dataIndex: 'status',
-  //   scopedSlots: { customRender: 'status' }
-  // },
-  // {
-  //   title: '更新时间',
-  //   dataIndex: 'updatedAt',
-  //   sorter: true
-  // }
 ]
 export default {
   name: 'UsingHabit',
@@ -78,7 +64,30 @@ export default {
       tipName: CHARACTER_TIP.tipName,
       tipList: CHARACTER_TIP.tipList,
       columns,
-      active: '1',
+      tableData: [],
+      active: 0,
+      tapList: [
+        {
+          key: 0,
+          txt: '使用频率'
+        },
+        {
+          key: 1,
+          txt: '访问深度'
+        },
+        {
+          key: 2,
+          txt: '使用时长'
+        },
+        {
+          key: 3,
+          txt: '使用间隔'
+        }
+      ],
+      columns1: ['日启动次数', '启动用户数'],
+      columns2: ['访问深度', '启动次数'],
+      columns3: ['使用时长', '启动次数'],
+      columns4: ['使用间隔', '启动次数'],
       // 查询参数
       queryParam: {},
       // 图表
@@ -88,6 +97,7 @@ export default {
   },
   mounted () {
     this.loadChartData()
+    console.log(getUsingHabit())
   },
   methods: {
     // 获取头部筛选条件数据
@@ -97,56 +107,65 @@ export default {
     // 刷新图表和表格数据
     loadAllData (params) {
       this.loadChartData()
-      this.$refs.table.refresh(true)
+      // this.$refs.table.refresh(true)
     },
     // 刷新图表数据
     loadChartData () {
+      switch (parseInt(this.active)) {
+        case 0:
+          columns[1].title = this.columns1[0]
+          columns[2].title = this.columns1[1]
+          break
+        case 1:
+          columns[1].title = this.columns2[0]
+          columns[2].title = this.columns2[1]
+          break
+        case 2:
+          columns[1].title = this.columns3[0]
+          columns[2].title = this.columns3[1]
+          break
+        case 3:
+          columns[1].title = this.columns4[0]
+          columns[2].title = this.columns4[1]
+          break
+      }
+      this.columns = columns
+      const requestParameters = { ...this.getHeaderData(), ...this.queryParam }
+      const param = Object.assign(
+      {
+        'type': this.active + 1
+      }, requestParameters)
       console.log('-----图表------')
-      console.log({ ...this.getHeaderData(), active: this.active })
+      console.log({ ...this.getHeaderData() })
       console.log('-----图表------')
-      this.scale = [
-        {
-          dataKey: 'value',
-          alias: '启动次数',
-          min: 0
-        }
-      ]
-      this.chartData = [
-        { time: '1991', value: 3 },
-        { time: '1992', value: 4 },
-        { time: '1993', value: 3.5 },
-        { time: '1994', value: 5 },
-        { time: '1995', value: 4.9 },
-        { time: '1996', value: 6 },
-        { time: '1997', value: 7 },
-        { time: '1998', value: 9 },
-        { time: '1999', value: 13 }
-      ]
-    },
-    // 刷新表格数据
-    loadTableData () {
-      return new Promise((resolve, reject) => {
-        this.$nextTick(() => {
-          console.log('-----表格------')
-          console.log({ ...this.getHeaderData(), active: this.active })
-          console.log('-----表格------')
-          const data = [
-            {
-              key: '1',
-              name: 'John Brown',
-              age: 32,
-              address: 'New York No. 1 Lake Park'
-            }
-          ]
-          resolve({
-            pageSize: 1,
-            pageNo: 1,
-            totalCount: 1,
-            totalPage: 1,
-            data: data
-          })
+      getUsingHabit(param).then(res => {
+        this.tableData = res.data.list
+        this.scale = [
+          {
+            dataKey: 'value',
+            alias: this.tapList[this.active].txt,
+            min: 0
+          }
+        ]
+        this.chartData = res.data.piclist.map(obj => {
+          return {
+            name: obj.tname,
+            value: obj.estarttimes
+          }
         })
       })
+    },
+    // 刷新表格数据
+    loadTableData (page) {
+      const requestParameters = { ...this.getHeaderData(), ...this.queryParam }
+      console.log('-----表格------')
+      // console.log(requestParameters)
+      console.log('-----表格------')
+      const param = Object.assign(
+        {
+        'search': this.search
+      }, page, requestParameters)
+      return getUsingHabit(param)
     }
   }
 }

@@ -10,7 +10,7 @@ const usingApi = {
   pagesChart: '/page/getpagelistpic',
   pagesContans: '/page/getpagecontanslist',
   pagesDetail: '/page/getsinglepage',
-  usingHabit: '/page/getsinglepage'
+  usingHabit: '/usagehabits/getlist'
 }
 
 // 移动统计-首页数据
@@ -94,7 +94,7 @@ export function getPagesDetail (data) {
 }
 
 // 使用习惯
-export function usingHabit (data) {
+export function getUsingHabit (data) {
   return request({
     url: usingApi.usingHabit,
     method: 'post',
