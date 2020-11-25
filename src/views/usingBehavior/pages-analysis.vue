@@ -159,9 +159,9 @@ export default {
       console.log({ ...this.getHeaderData() })
       console.log('-----图表------')
       getPagesChart(param).then(res => {
-        this.summaryList[0].value = res.data.pagecount
-        this.summaryList[1].value = res.data.usetimesum
-        this.summaryList[2].value = res.data.leavedis + '%'
+        this.summaryList[0].value = res.data.pagecount || 0
+        this.summaryList[1].value = res.data.usetimesum || 0
+        this.summaryList[2].value = (res.data.leavedis || 0) + '%'
         console.log('aa', this.summaryList, this.summaryIndex)
         this.scale = [
           {
@@ -186,7 +186,7 @@ export default {
       console.log('-----表格------')
       const param = Object.assign(
         {
-        'search': this.search
+        'search': this.search || '[]'
       }, page, requestParameters)
       return getPagesList(param)
     },

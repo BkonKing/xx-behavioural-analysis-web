@@ -41,7 +41,7 @@
               @change="loadChartData"
             />
           </div>
-          <a-line :data="chartData" :scale="scale" :height="height" :padding="[50, 20, 10, 50]"></a-line>
+          <a-line :data="chartData" :scale="scale" :height="height" :padding="paddingVal"></a-line>
           <div class="toggle-btn" @click="toggleChart"><a-icon :type="isDown ? 'down' : 'up'" /></div>
         </div>
       </a-card>
@@ -128,7 +128,6 @@
           </div>
         </div>
       </div>
-      <div class="text-center">福建线下信息科技有限公司</div>
     </div>
   </div>
 </template>
@@ -183,6 +182,7 @@ export default {
       chartData: [],
       scale: [],
       height: 200,
+      paddingVal: [50, 20, 30, 50],
       dashboardJson: {}
     }
   },
@@ -244,14 +244,22 @@ export default {
             min: 0
           }
         ]
-        console.log(22, res.data.list)
         this.chartData = res.data.list.map(obj => {
+          let chartVal = ''
+          if (this.indicator === 1) {
+            chartVal = obj.newusers
+          } else if (this.indicator === 2) {
+            chartVal = obj.startusers
+          } else {
+            chartVal = obj.starttimes
+          }
           return {
             name: obj.name,
-            value: obj.startusers
+            value: chartVal
             // value: this.indicator === 0 ? obj.numberevents : obj.userevents
           }
         })
+        console.log(22, this.chartData)
       })
     },
     // 图表高度修改

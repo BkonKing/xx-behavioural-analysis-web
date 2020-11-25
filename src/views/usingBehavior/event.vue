@@ -93,7 +93,7 @@ export default {
       console.log('-----表格------')
       const param = Object.assign(
         {
-        'search': this.search
+        'search': this.search || '[]'
       }, page, requestParameters)
       console.log(param)
       return getEventList(param)

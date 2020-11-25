@@ -97,8 +97,10 @@ export default {
       eventId: 0
     }
   },
-  mounted () {
+  created () {
     this.eventId = this.$route.query.id
+  },
+  mounted () {
     this.loadChartData()
     this.getEventContans()
   },

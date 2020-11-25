@@ -67,6 +67,10 @@ export default {
         {
           'name': '美好生活家园(IOS)',
           'value': 2
+        },
+        {
+          'name': '我的应用',
+          'value': 3
         }
       ]
     }
@@ -88,9 +92,13 @@ export default {
   },
   methods: {
     menuSelect (i) {
-      this.os_type = i
-      store.commit('setOs_type', i)
-      this.$router.go(0)
+      if (i === 3) {
+        this.$router.push('/dashboard/index')
+      } else {
+        this.os_type = i
+        store.commit('setOs_type', i)
+        this.$router.go(0)
+      }
     }
   }
 }

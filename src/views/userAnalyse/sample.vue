@@ -9,7 +9,7 @@
           {{ index + 1 }}
         </span>
         <span slot="time" slot-scope="text">
-          {{ moment(parseInt(text)).format('YYYY/MM/DD hh:mm:ss') }}
+          {{ moment(parseInt(text) * 1000).format('YYYY/MM/DD hh:mm:ss') }}
         </span>
       </s-table>
     </a-card>

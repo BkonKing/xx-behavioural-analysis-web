@@ -97,7 +97,6 @@ export default {
   },
   mounted () {
     this.loadChartData()
-    console.log(getUsingHabit())
   },
   methods: {
     // 获取头部筛选条件数据
@@ -150,7 +149,7 @@ export default {
         this.chartData = res.data.piclist.map(obj => {
           return {
             name: obj.tname,
-            value: obj.estarttimes
+            value: +obj.estarttimes
           }
         })
       })

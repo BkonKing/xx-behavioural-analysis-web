@@ -4,11 +4,11 @@ const usingApi = {
   dashboardJson: '/mobilestatistics/getsum',
   dashboardChart: '/mobilestatistics/statisticschart',
   event: '/event/geteventlist',
-  eventContans: '/event/geteventcontanslist',
+  eventContans: '/pageandevent/geteventcontanslist',
   eventDetail: '/event/getsinglelist',
   pagesList: '/page/getpagelist',
   pagesChart: '/page/getpagelistpic',
-  pagesContans: '/page/getpagecontanslist',
+  pagesContans: '/pageandevent/getpagecontanslist',
   pagesDetail: '/page/getsinglepage',
   usingHabit: '/usagehabits/getlist'
 }

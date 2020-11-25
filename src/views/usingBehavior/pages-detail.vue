@@ -171,11 +171,11 @@ export default {
       console.log('-----图表------')
       getPagesDetail(param).then(res => {
         this.tableData = res.data.list
-        this.summaryList[0].value = res.data.pagecount
-        this.summaryList[1].value = res.data.stoptime
-        this.summaryList[2].value = res.data.leavedis + '%'
-        this.summaryList[3].value = res.data.entrycount
-        this.summaryList[4].value = res.data.leavecount
+        this.summaryList[0].value = res.data.pagecount || 0
+        this.summaryList[1].value = res.data.stoptime || 0
+        this.summaryList[2].value = (res.data.leavedis || 0) + '%'
+        this.summaryList[3].value = res.data.entrycount || 0
+        this.summaryList[4].value = res.data.leavecount || 0
         this.scale = [
           {
             dataKey: 'value',
