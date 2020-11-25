@@ -8,7 +8,9 @@ const userAnalyseApi = {
   visitor: '/visitor/getvisitor',
   region: '/geographical/getdistribution',
   usertrend: '/usertrend/getusertrend',
-  retentionList: '/retention/getlist'
+  retentionList: '/retention/getlist',
+  activeuserList: '/activeuser/getlist',
+  activeuserPic: '/activeuser/getactivepic'
 }
 
 // 终端分析表格
@@ -78,6 +80,24 @@ export function getusertrend (data) {
 export function getRetentionList (data) {
   return request({
     url: userAnalyseApi.retentionList,
+    method: 'POST',
+    data
+  })
+}
+
+// 活跃用户表格
+export function getActiveuserList (data) {
+  return request({
+    url: userAnalyseApi.activeuserList,
+    method: 'POST',
+    data
+  })
+}
+
+// 活跃用户图表
+export function getActiveuserPic (data) {
+  return request({
+    url: userAnalyseApi.activeuserPic,
     method: 'POST',
     data
   })

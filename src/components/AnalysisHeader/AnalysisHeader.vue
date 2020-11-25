@@ -94,6 +94,7 @@
 <script>
 import moment from 'moment'
 import { PageHeaderWrapper } from 'xx-ant-design-vue-pro-layout'
+import { mapGetters } from 'vuex'
 export default {
   name: 'AnalysisHeader',
   components: {
@@ -115,6 +116,9 @@ export default {
       default: () => ['date', 'version']
     }
   },
+  computed: {
+    ...mapGetters(['versions'])
+  },
   data () {
     return {
       prefixedClassName: 'ant-pro-page-header-wrap',
@@ -125,20 +129,34 @@ export default {
         {
           text: '不限',
           key: 0
-        },
-        {
-          text: '1.0.1',
-          key: '1.0.1'
-        },
-        {
-          text: '1.0.0',
-          key: '1.0.0'
         }
       ]
     }
   },
+  created () {
+    if (this.versions.length > 0) {
+      this.setVersionList(this.versions)
+    } else {
+      this.getVersionList()
+    }
+  },
   methods: {
     moment,
+    getVersionList () {
+      this.$store.dispatch('GetVersionall').then((data) => {
+        this.setVersionList(this.versions)
+      })
+    },
+    // 设置版本列表
+    setVersionList (versions) {
+      this.versionList = [
+        {
+          text: '不限',
+          key: 0
+        },
+        ...versions
+      ]
+    },
     // 显示隐藏说明tip
     handleTipClick () {
       this.activeKey = this.activeKey.length === 0 ? ['1'] : []
@@ -156,12 +174,14 @@ export default {
       const data = {}
       this.showSearchList.forEach(obj => {
         if (obj === 'date') {
-          data[obj] = this.date.map(obj => {
-            return obj.format('YYYY/MM/DD')
-          }).join('~')
-          return
+          data[obj] = this.date
+            .map(obj => {
+              return obj.format('YYYY/MM/DD')
+            })
+            .join('~')
+        } else if (this[obj].length !== 1 || this[obj][0] !== 0) {
+          data[obj] = this[obj].join('、')
         }
-        data[obj] = this[obj].join('、')
       })
       return data
     }
@@ -169,7 +189,7 @@ export default {
   watch: {
     version (val, old) {
       if (old.length === 1 && old[0] === 0) {
-        this.version = this.version.unshift()
+        this.version.shift()
       } else if (val[val.length - 1] === 0 && val.length > 1) {
         this.$refs.version.blur()
         this.version = [0]

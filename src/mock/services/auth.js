@@ -1,7 +1,11 @@
 import Mock from 'mockjs2'
+import Cookies from 'js-cookie'
 import { builder } from '../util'
 
 const login = () => {
+  Cookies.set('tokenid', 'MQ%3D%3D')
+  Cookies.set('logintime', '1606266713')
+  Cookies.set('keystr', 'd5745e54ad1417dd31d1bc63a7d47353')
   return builder({
     'id': Mock.mock('@guid'),
     'name': Mock.mock('@name'),

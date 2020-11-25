@@ -19,17 +19,8 @@ export function login (data) {
   return request({
     url: userApi.Login,
     method: 'post',
-    data
-  })
-}
-
-export function getInfo () {
-  return request({
-    url: userApi.UserInfo,
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
+    data,
+    no_os_type: true
   })
 }
 

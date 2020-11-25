@@ -16,16 +16,16 @@
       <table cellspacing="0" cellpadding="0" class="list width100">
         <tbody>
           <tr class="title">
-            <th v-for="(t, i) in title" :key="i" :class="{ 'td-selected': active === i }" @click="active = i">
-              {{ t }}
+            <th v-for="(t, i) in title" :key="i" :class="{ 'td-selected': active === t.value }" @click="active = t.value">
+              {{ t.text }}
             </th>
           </tr>
           <tr v-for="(c, i) in col" :key="i" :class="{ highlight: i === 0 }">
             <td
               v-for="(item, index) in data"
               :key="index"
-              :class="{ 'arrow-down': c.value === 'c', 'td-selected': active === index }"
-              @click="active = index"
+              :class="{ 'arrow-down': c.value === 'c', 'td-selected': active === title[index].value }"
+              @click="active = title[index].value"
             >
               <div :title="item[c.value]" class="outline-td-value ellipsis">
                 {{ item[c.value] }}
@@ -52,7 +52,7 @@ export default {
   props: {
     title: {
       type: Array,
-      default: () => ['启动用户数', '启动次数', '新用户数', '次均使用时长', '人均使用时长', '人均日启动次数']
+      default: () => []
     },
     col: {
       type: Array,
@@ -70,16 +70,21 @@ export default {
     data: {
       type: Array,
       default: () => []
+    },
+    value: {
+      type: Number,
+      default: 1
     }
   },
   data () {
     return {
       visible: false,
-      active: 0
+      active: this.value
     }
   },
   watch: {
     active (value) {
+      this.$emit('input', value)
       this.$emit('change', value)
     }
   }

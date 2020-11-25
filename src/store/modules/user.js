@@ -1,7 +1,8 @@
 import storage from 'store'
-import { login, getInfo, logout } from '@/api/login'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { login, logout } from '@/api/login'
+import { getVersionall } from '@/api/overview'
 import { welcome } from '@/utils/util'
+import Cookies from 'js-cookie'
 
 const user = {
   state: {
@@ -9,9 +10,9 @@ const user = {
     name: '',
     welcome: '',
     avatar: '',
-    roles: [],
     info: {},
-    os_type: storage.get('os_type')
+    os_type: storage.get('os_type'),
+    versions: []
   },
 
   mutations: {
@@ -25,15 +26,15 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
-    },
     SET_INFO: (state, info) => {
       state.info = info
     },
     setOs_type (state, value) {
       state.os_type = value
       storage.set('os_type', value)
+    },
+    SET_VERSIONS: (state, versions) => {
+      state.versions = versions
     }
   },
 
@@ -42,9 +43,9 @@ const user = {
     Login ({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
-          const result = response.data
-          storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
-          commit('SET_TOKEN', result.token)
+          commit('SET_INFO', response)
+          commit('SET_NAME', { name: response.name, welcome: welcome() })
+          commit('SET_AVATAR', response.avatar)
           resolve()
         }).catch(error => {
           reject(error)
@@ -52,45 +53,33 @@ const user = {
       })
     },
 
-    // 获取用户信息
-    GetInfo ({ commit }) {
+    // 登出
+    Logout ({ commit }) {
       return new Promise((resolve, reject) => {
-        getInfo().then(response => {
-          const result = response.data
-
-          if (result.role && result.role.permissions.length > 0) {
-            const role = result.role
-            role.permissions = result.role.permissions
-            role.permissions.map(per => {
-              if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
-                const action = per.actionEntitySet.map(action => { return action.action })
-                per.actionList = action
-              }
-            })
-            role.permissionList = role.permissions.map(permission => { return permission.permissionId })
-            commit('SET_ROLES', result.role)
-            commit('SET_INFO', result)
-          } else {
-            reject(new Error('getInfo: roles must be a non-null array !'))
-          }
-
-          commit('SET_NAME', { name: result.name, welcome: welcome() })
-          commit('SET_AVATAR', result.avatar)
-
-          resolve(response)
+        logout().then((res) => {
+          commit('SET_TOKEN', '')
+          Cookies.remove('tokenid')
+          Cookies.remove('logintime')
+          Cookies.remove('keystr')
+          resolve(res)
         }).catch(error => {
           reject(error)
+        }).finally(() => {
         })
       })
     },
 
-    // 登出
-    Logout ({ commit, state }) {
+    // 获取所有版本号
+    GetVersionall ({ commit }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then((res) => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          storage.remove(ACCESS_TOKEN)
+        getVersionall().then((res) => {
+          const versions = res.data.list.map(version => {
+            return {
+              text: `v${version}`,
+              key: version
+            }
+          })
+          commit('SET_VERSIONS', versions)
           resolve(res)
         }).catch(error => {
           reject(error)
@@ -98,7 +87,6 @@ const user = {
         })
       })
     }
-
   }
 }
 

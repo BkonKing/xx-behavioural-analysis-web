@@ -48,7 +48,7 @@ export default {
   methods: {
     // 获取active所在的index
     findIndex () {
-      if (this.value) {
+      if (this.value !== undefined || this.value !== null) {
         this.activeIndex = this.data.findIndex(obj => {
           return obj.value === this.value
         })

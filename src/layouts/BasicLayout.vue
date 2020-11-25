@@ -8,12 +8,11 @@
     :handleCollapse="handleCollapse"
     v-bind="settings"
   >
-
     <!-- LOGO 和 title 自定义  -->
     <template v-slot:menuHeaderRender>
       <div>
         <!-- <logo-svg /> -->
-        <img src="~@/assets/logo.png" class="logo" alt="logo">
+        <img src="~@/assets/logo.png" class="logo" alt="logo" />
         <h1>{{ title }}</h1>
       </div>
     </template>
@@ -31,6 +30,7 @@
 
 <script>
 import { SettingDrawer, updateTheme } from 'xx-ant-design-vue-pro-layout'
+import { asyncRouterMap } from '@/config/router.config'
 // import { mapState } from 'vuex'
 import { CONTENT_WIDTH_TYPE, SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/store/mutation-types'
 
@@ -38,7 +38,7 @@ import defaultSettings from '@/config/defaultSettings'
 import RightContent from '@/components/GlobalHeader/RightContent'
 import GlobalFooter from '@/components/GlobalFooter'
 // import LogoSvg from '../assets/logo.svg?inline'
-import { getMenu } from '@/api/user'
+// import { getMenu } from '@/api/user'
 
 export default {
   name: 'BasicLayout',
@@ -89,11 +89,11 @@ export default {
   //   })
   // },
   created () {
-    getMenu().then(({ data }) => {
-      this.menus = data
-    })
-    // const routes = this.mainMenu.find(item => item.path === '/')
-    // this.menus = (routes && routes.children) || []
+    // getMenu().then(({ data }) => {
+    //   this.menus = data
+    // })
+    const routes = this.filterAsyncRouter(asyncRouterMap).find(item => item.path === '/')
+    this.menus = (routes && routes.children) || []
     // 处理侧栏收起状态
     this.$watch('collapsed', () => {
       this.$store.commit(SIDEBAR_TYPE, this.collapsed)
@@ -120,6 +120,18 @@ export default {
     }
   },
   methods: {
+    filterAsyncRouter (routerMap) {
+      const accessedRouters = routerMap.filter(route => {
+        if (!route.hidden && !(route.meta && route.meta.hidden)) {
+          if (route.children && route.children.length && !route.hideChildrenInMenu) {
+            route.children = this.filterAsyncRouter(route.children)
+          }
+          return true
+        }
+      })
+      console.log(accessedRouters)
+      return accessedRouters
+    },
     handleMediaQuery (val) {
       this.query = val
       if (this.isMobile && !val['screen-xs']) {
@@ -158,5 +170,5 @@ export default {
 </script>
 
 <style lang="less">
-@import "./BasicLayout.less";
+@import './BasicLayout.less';
 </style>

@@ -157,30 +157,34 @@ export default {
       // eslint-disable-next-line
       if ((typeof result === 'object' || typeof result === 'function') && typeof result.then === 'function') {
         result.then(({ data: r }) => {
-          this.localPagination = (this.showPagination === true || (this.showPagination && r.pageindex)) && Object.assign({}, this.localPagination, {
-            current: r.pageindex, // 返回结果中的当前分页数
-            total: r.total, // 返回结果中的总记录数
-            showSizeChanger: this.showSizeChanger,
-            pagesize: (pagination && pagination.pagesize) ||
-              this.localPagination.pagesize
-          }) || false
-          // 为防止删除数据后导致页面当前页面数据长度为 0 ,自动翻页到上一页
-          if (r.list.length === 0 && this.showPagination && this.localPagination.current > 1) {
-            this.localPagination.current--
-            this.loadData()
-            return
-          }
-
-          // 这里用于判断接口是否有返回 r.total 且 this.showPagination = true 且 pageindex 和 pagesize 存在 且 total 小于等于 pageindex * pagesize 的大小
-          // 当情况满足时，表示数据不满足分页大小，关闭 table 分页功能
-          try {
-            if ((['auto', true].includes(this.showPagination) && r.total <= (r.pageindex * this.localPagination.pagesize))) {
-              this.localPagination.hideOnSinglePage = true
+          if (r.list && r.list.length > 0) {
+              this.localPagination = (this.showPagination === true || (this.showPagination && r.pageindex)) && Object.assign({}, this.localPagination, {
+              current: r.pageindex, // 返回结果中的当前分页数
+              total: r.total, // 返回结果中的总记录数
+              showSizeChanger: this.showSizeChanger,
+              pagesize: (pagination && pagination.pagesize) ||
+                this.localPagination.pagesize
+            }) || false
+            // 为防止删除数据后导致页面当前页面数据长度为 0 ,自动翻页到上一页
+            if (r.list.length === 0 && this.showPagination && this.localPagination.current > 1) {
+              this.localPagination.current--
+              this.loadData()
+              return
             }
-          } catch (e) {
-            this.localPagination = false
+
+            // 这里用于判断接口是否有返回 r.total 且 this.showPagination = true 且 pageindex 和 pagesize 存在 且 total 小于等于 pageindex * pagesize 的大小
+            // 当情况满足时，表示数据不满足分页大小，关闭 table 分页功能
+            try {
+              if ((['auto', true].includes(this.showPagination) && r.total <= (r.pageindex * this.localPagination.pagesize))) {
+                this.localPagination.hideOnSinglePage = true
+              }
+            } catch (e) {
+              this.localPagination = false
+            }
+            this.localDataSource = r.list // 返回结果中的数组数据
+          } else {
+            this.localDataSource = [] // 返回结果中的数组数据
           }
-          this.localDataSource = r.list // 返回结果中的数组数据
           this.localLoading = false
         })
       }

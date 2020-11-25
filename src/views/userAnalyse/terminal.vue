@@ -153,12 +153,12 @@ export default {
           }
         ]
         const valueList = ['estarttimes', 'estarttimedis', 'enewusersdis', 'estartusersdis', 'avgusetime']
-        this.data = data.list.map(obj => {
+        this.data = data.list ? data.list.map(obj => {
           return {
             name: obj.name,
             value: parseInt(obj[valueList[this.ordertype]])
           }
-        })
+        }) : []
       })
     },
     // 刷新表格数据

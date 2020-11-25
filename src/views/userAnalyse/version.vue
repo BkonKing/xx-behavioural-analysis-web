@@ -39,6 +39,7 @@
 <script>
 import { AnalysisHeader, PopoverTip, STable, aLine } from '@/components'
 import { getversion, getversionpic } from '@/api/userAnalyse'
+import { mapGetters } from 'vuex'
 import { VERSION_TIP } from './const'
 
 const columns = [
@@ -78,6 +79,9 @@ export default {
     PopoverTip,
     STable,
     aLine
+  },
+  computed: {
+    ...mapGetters(['versions'])
   },
   data () {
     return {
@@ -147,17 +151,18 @@ export default {
     },
     // 获取版本列表
     getVersionList () {
-      this.versionList = [
-        {
-          text: '1.0.1',
-          key: '1.0.1'
-        },
-        {
-          text: '1.0.0',
-          key: '1.0.0'
-        }
-      ]
-      this.version = [this.versionList[0].key]
+      if (this.versions.length > 0) {
+        this.setVersionList(this.versions)
+      } else {
+        this.$store.dispatch('GetVersionall').then(data => {
+          this.setVersionList(this.versions)
+        })
+      }
+    },
+    // 设置版本列表
+    setVersionList (versions) {
+        this.versionList = versions
+        this.version = [this.versionList[0].key]
     },
     // 刷新图表和表格数据
     loadAllData (params) {

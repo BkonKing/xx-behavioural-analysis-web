@@ -3,8 +3,8 @@
     <template v-slot:condition>
       <div style="display: inline-block;margin-left: 20px;">
         <a-select size="small" v-model="type" style="width: 100px" @change="getusertrend">
-          <a-select-option key="1">按日</a-select-option>
-          <a-select-option key="2">按时</a-select-option>
+          <a-select-option :key="1">按日</a-select-option>
+          <a-select-option :key="2">按时</a-select-option>
         </a-select>
       </div>
     </template>
@@ -96,7 +96,7 @@ export default {
       reportTip: TREND_TIP.reportTip,
       tipName: TREND_TIP.tipName,
       tipList: TREND_TIP.tipList,
-      type: '1',
+      type: 1,
       summary: '',
       summaryList: [],
       summaryType: ['everystartusers', 'everynewusers', 'newusersdis', 'oldusers', 'oldusersdis', 'estarttimes'],
@@ -123,27 +123,27 @@ export default {
         this.summaryList = [
           {
             text: '启动用户数',
-            value: summary.startusersum
+            value: summary.startusersum || 0
           },
           {
             text: '新用户数',
-            value: summary.newusersum
+            value: summary.newusersum || 0
           },
           {
             text: '新用户占比',
-            value: `${summary.newusersumdis}%`
+            value: `${summary.newusersumdis || 0}%`
           },
           {
             text: '老用户数',
-            value: summary.oldusersum
+            value: summary.oldusersum || 0
           },
           {
             text: '老用户占比',
-            value: `${summary.oldusersumdis}%`
+            value: `${summary.oldusersumdis || 0}%`
           },
           {
             text: '启动次数',
-            value: summary.starttimes
+            value: summary.starttimes || 0
           }
         ]
         this.summary = this.summaryList[0].value
@@ -164,12 +164,12 @@ export default {
           min: 0
         }
       ]
-      this.data = this.tableData.map(obj => {
+      this.data = this.tableData && this.tableData.length > 1 ? this.tableData.map(obj => {
         return {
           name: obj.name,
           value: obj[this.summaryType[index]]
         }
-      })
+      }) : []
     }
   }
 }

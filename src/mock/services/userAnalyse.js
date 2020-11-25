@@ -202,6 +202,55 @@ const getRetentionList = () => {
   }, '', 200)
 }
 
+const getActiveuserList = () => {
+  return builder({
+    'total': 2,
+    'pageindex': 1,
+    'pagesize': 10,
+    'list': [{
+        'name': '2020/11/16',
+        'daystartusers': '16',
+        'weekstatusers': '41',
+        'monthstatusers': '49',
+        'sumstatusers': '49',
+        'dayactive': '32.7',
+        'dayormonthactive': '32.7',
+        'weekactive': '83.7',
+        'monthactive': '100'
+      },
+      {
+        'name': '2020/11/11',
+        'daystartusers': '8',
+        'weekstatusers': '17',
+        'monthstatusers': '17',
+        'sumstatusers': '17',
+        'dayactive': '47.1',
+        'dayormonthactive': '47.1',
+        'weekactive': '100',
+        'monthactive': '100'
+      }
+    ]
+  }, '', 200)
+}
+
+const getActiveuserPic = () => {
+  return builder({
+    'list': [{
+        'name': '2020/11/11',
+        'dayormonthactive': 47.1,
+        'sumstatusers': 143,
+        'startusers': 13
+      },
+      {
+        'name': '2020/11/16',
+        'dayormonthactive': 32.7,
+        'sumstatusers': 12,
+        'startusers': 14
+      }
+    ]
+  }, '', 200)
+}
+
 Mock.mock(/\/terminal\/getterminaldata/, 'post', getterminaldata)
 Mock.mock(/\/terminal\/getterminalpic/, 'post', getterminalpic)
 Mock.mock(/\/version\/getversionpic/, 'post', getversionpic)
@@ -210,3 +259,5 @@ Mock.mock(/\/visitor\/getvisitor/, 'post', getvisitor)
 Mock.mock(/\/geographical\/getdistribution/, 'post', getdistribution)
 Mock.mock(/\/usertrend\/getusertrend/, 'post', getusertrend)
 Mock.mock(/\/retention\/getlist/, 'post', getRetentionList)
+Mock.mock(/\/activeuser\/getlist/, 'post', getActiveuserList)
+Mock.mock(/\/activeuser\/getactivepic/, 'post', getActiveuserPic)

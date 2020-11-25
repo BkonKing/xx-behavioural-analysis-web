@@ -89,7 +89,7 @@ export default {
       chartData: []
     }
   },
-  created () {
+  mounted () {
     this.getdistribution()
   },
   methods: {
