@@ -285,7 +285,6 @@ export default {
         ordertype: this.ordertype
       }
       this.alias = this.sumTitle[this.ordertype - 1].text
-      console.log('对比数据参数：' + JSON.stringify(params))
       gettimesharing(params).then(({ data }) => {
         if (this.type < 3) {
           this.transformTimeSharing(data.list)
@@ -297,9 +296,7 @@ export default {
     // 汇总对比图表数据转换(时段)
     transformTimeSharing (list) {
       const keys = Object.keys(list)
-      const fields = list[keys[0]].map(obj => {
-        return Object.keys(obj)[0]
-      })
+      const fields = list[keys[0]].map(obj => (Object.keys(obj)[0]))
       this.sharingTransform = {
         type: 'fold',
         fields,

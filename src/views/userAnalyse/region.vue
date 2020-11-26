@@ -99,8 +99,8 @@ export default {
     },
     getdistribution () {
       getdistribution(this.getHeaderData()).then(({ data }) => {
-        this.chartData = data.piclist
-        this.tableData = data.list
+        this.chartData = data.piclist || []
+        this.tableData = data.list || []
       })
     }
   }

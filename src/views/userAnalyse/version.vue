@@ -138,11 +138,8 @@ export default {
       }
     }
   },
-  created () {
-    this.getVersionList()
-  },
   mounted () {
-    this.loadChartData()
+    this.getVersionList()
   },
   methods: {
     // 获取头部筛选条件数据
@@ -152,17 +149,10 @@ export default {
     // 获取版本列表
     getVersionList () {
       if (this.versions.length > 0) {
-        this.setVersionList(this.versions)
-      } else {
-        this.$store.dispatch('GetVersionall').then(data => {
-          this.setVersionList(this.versions)
-        })
-      }
-    },
-    // 设置版本列表
-    setVersionList (versions) {
-        this.versionList = versions
+        this.versionList = this.versions
         this.version = [this.versionList[0].key]
+        this.loadChartData()
+      }
     },
     // 刷新图表和表格数据
     loadAllData (params) {
@@ -185,7 +175,7 @@ export default {
         }
         this.alias = this.ordertypeList[this.ordertype].text
         const valueList = ['enewusers', 'eupgradeusers', 'estartusers', 'estarttimes']
-        this.data = data.list.map(obj => {
+        this.data = data.list ? data.list.map(obj => {
           const version = {}
           this.version.forEach((key, index) => {
             version[key] = parseInt(obj[valueList[this.ordertype]]) + index
@@ -194,7 +184,7 @@ export default {
             name: obj.name,
             ...version
           }
-        })
+        }) : []
         this.$refs.aline.switchLoading()
       })
     },
@@ -204,6 +194,11 @@ export default {
       console.log('-----表格------')
       console.log(params)
       return getversion(params)
+    }
+  },
+  watch: {
+    versions () {
+      this.getVersionList()
     }
   }
 }

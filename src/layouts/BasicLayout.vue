@@ -129,7 +129,6 @@ export default {
           return true
         }
       })
-      console.log(accessedRouters)
       return accessedRouters
     },
     handleMediaQuery (val) {

@@ -2,15 +2,22 @@
   <a-spin
     :spinning="loading"
     tip="数据正在加载中..."
-    :style="{ height: `${typeof height === 'number' ? height + 'px' : height}` }"
+    :style="spinStyle"
   >
-    <v-chart :forceFit="true" :height="height" :data="dvData" :scale="scale" :padding="padding">
+    <v-chart
+      v-if="data.length > 0"
+      :forceFit="true"
+      :height="height"
+      :data="dvData"
+      :scale="scale"
+      :padding="padding">
       <v-tooltip :htmlContent="htmlContent" />
       <v-axis data-key="name" :useHtml="true" :label="{ htmlTemplate: htmlTemplate, rotate: 45 }" />
       <v-legend v-if="legend" />
       <v-line :position="position" :size="2" :color="color" />
       <v-area :position="position" :color="color" />
     </v-chart>
+    <a-empty v-else-if="!loading" :image="simpleImage" />
   </a-spin>
 </template>
 

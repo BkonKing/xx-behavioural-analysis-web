@@ -19,7 +19,6 @@
           rowKey="name"
           :columns="columns"
           :data-source="tableData"
-          :scroll="{ x: 1000 }"
           :pagination="false"
           style="margin-top: 20px;"
         >
@@ -164,7 +163,7 @@ export default {
           min: 0
         }
       ]
-      this.data = this.tableData && this.tableData.length > 1 ? this.tableData.map(obj => {
+      this.data = this.tableData && this.tableData.length > 0 ? this.tableData.map(obj => {
         return {
           name: obj.name,
           value: obj[this.summaryType[index]]

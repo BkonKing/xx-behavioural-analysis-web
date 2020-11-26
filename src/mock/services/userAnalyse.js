@@ -193,12 +193,71 @@ const getRetentionList = () => {
     'reminddis': 10,
     'pageindex': 1,
     'pagesize': 10,
+    'total': 10,
     'list': [{
       'eremindusers': '1',
       'enewusers': '10',
       'ereminddis': 10,
       'name': '2020/11/11'
     }]
+  }, '', 200)
+}
+
+const getactiverate = () => {
+  return builder({
+    '2020/11/09-2020/11/15': {
+      'sum': '35',
+      'list': [
+        1,
+        12,
+        3
+      ]
+    },
+    '2020/11/16-2020/11/22': {
+      'sum': '34',
+      'list': [
+        0,
+        0,
+        3
+      ]
+    },
+    '2020/11/23-2020/11/29': {
+      'sum': '18',
+      'list': [
+        0,
+        0,
+        0
+      ]
+    }
+  }, '', 200)
+}
+
+const getnewuserretention = () => {
+  return builder({
+    '2020/11/09-2020/11/15': {
+      'sum': '35',
+      'list': [
+        0,
+        0,
+        3
+      ]
+    },
+    '2020/11/16-2020/11/22': {
+      'sum': '34',
+      'list': [
+        0,
+        0,
+        2
+      ]
+    },
+    '2020/11/23-2020/11/29': {
+      'sum': '18',
+      'list': [
+        10,
+        0,
+        2
+      ]
+    }
   }, '', 200)
 }
 
@@ -259,5 +318,7 @@ Mock.mock(/\/visitor\/getvisitor/, 'post', getvisitor)
 Mock.mock(/\/geographical\/getdistribution/, 'post', getdistribution)
 Mock.mock(/\/usertrend\/getusertrend/, 'post', getusertrend)
 Mock.mock(/\/retention\/getlist/, 'post', getRetentionList)
+Mock.mock(/\/retention\/getactiverate/, 'post', getactiverate)
+Mock.mock(/\/retention\/getnewuserretention/, 'post', getnewuserretention)
 Mock.mock(/\/activeuser\/getlist/, 'post', getActiveuserList)
 Mock.mock(/\/activeuser\/getactivepic/, 'post', getActiveuserPic)

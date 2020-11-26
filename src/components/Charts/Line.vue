@@ -1,9 +1,15 @@
 <template>
-  <a-card :loading="loading" :bordered="false">
-    <v-chart :forceFit="true" :height="height" :data="dvData" :scale="scale" :padding="padding">
+  <a-spin :spinning="loading" tip="数据正在加载中..." :style="spinStyle">
+    <v-chart
+      v-if="data.length > 0"
+      :forceFit="true"
+      :height="height"
+      :data="dvData"
+      :scale="scale"
+      :padding="padding">
       <slot>
         <template v-if="htmlContent">
-          <v-tooltip :htmlContent="(title, items) => htmlContent(title, items, alias)" />
+          <v-tooltip :htmlContent="tooltipContent" />
         </template>
         <v-tooltip v-else />
         <v-axis />
@@ -14,7 +20,8 @@
         <v-point :position="position" :color="color" :size="4" shape="circle" />
       </slot>
     </v-chart>
-  </a-card>
+    <a-empty v-else-if="!loading" :image="simpleImage" />
+  </a-spin>
 </template>
 
 <script>
@@ -60,6 +67,9 @@ export default {
       } else {
         this.dvData = this.data
       }
+    },
+    tooltipContent (title, items) {
+      return this.htmlContent(title, items, this.alias)
     }
   },
   watch: {
@@ -71,9 +81,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-/deep/ .ant-card-body {
-  padding: 0;
-}
-</style>

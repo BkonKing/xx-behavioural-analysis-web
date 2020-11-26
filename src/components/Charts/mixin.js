@@ -1,9 +1,14 @@
+import { Empty } from 'ant-design-vue'
+
 const AProp = {
   type: Array,
   default: () => []
 }
 
 const loadingMixin = {
+  beforeCreate () {
+    this.simpleImage = Empty.PRESENTED_IMAGE_SIMPLE
+  },
   props: {
     data: AProp,
     scale: AProp,
@@ -26,21 +31,27 @@ const loadingMixin = {
       loading: true
     }
   },
+  computed: {
+    spinStyle () {
+      if (this.data.length > 0) {
+        return { height: typeof this.height === 'number' ? this.height + 'px' : this.height }
+      } else {
+        return { height: 'auto', margin: '32px 0', width: '100%' }
+      }
+    }
+  },
   methods: {
     switchLoading (val) {
       this.loading = val || !this.loading
-    },
-    loadingChange () {
-      if (this.data.length > 0) {
-        this.loading = false
-      }
     }
   },
   watch: {
     data: {
-      handler (value) {
+      handler (value, oldvalue) {
         setTimeout(() => {
-          this.loadingChange()
+          if (value.length >= oldvalue.length) {
+            this.loading = false
+          }
         })
       }
     }

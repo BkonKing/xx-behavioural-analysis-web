@@ -9,6 +9,8 @@ const userAnalyseApi = {
   region: '/geographical/getdistribution',
   usertrend: '/usertrend/getusertrend',
   retentionList: '/retention/getlist',
+  activerate: '/retention/getactiverate',
+  newuserretention: '/retention/getnewuserretention',
   activeuserList: '/activeuser/getlist',
   activeuserPic: '/activeuser/getactivepic'
 }
@@ -80,6 +82,24 @@ export function getusertrend (data) {
 export function getRetentionList (data) {
   return request({
     url: userAnalyseApi.retentionList,
+    method: 'POST',
+    data
+  })
+}
+
+// 活跃用户数留存
+export function getactiverate (data) {
+  return request({
+    url: userAnalyseApi.activerate,
+    method: 'POST',
+    data
+  })
+}
+
+// 新用户留存
+export function getnewuserretention (data) {
+  return request({
+    url: userAnalyseApi.newuserretention,
     method: 'POST',
     data
   })

@@ -7,7 +7,7 @@ import Cookies from 'js-cookie'
 const user = {
   state: {
     token: '',
-    name: '',
+    name: storage.get('nickName') || '未命名',
     welcome: '',
     avatar: '',
     info: {},
@@ -21,6 +21,7 @@ const user = {
     },
     SET_NAME: (state, { name, welcome }) => {
       state.name = name
+      storage.set('nickName', name)
       state.welcome = welcome
     },
     SET_AVATAR: (state, avatar) => {
@@ -43,9 +44,9 @@ const user = {
     Login ({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
-          commit('SET_INFO', response)
-          commit('SET_NAME', { name: response.name, welcome: welcome() })
-          commit('SET_AVATAR', response.avatar)
+          // commit('SET_INFO', response)
+          commit('SET_NAME', { name: response.data, welcome: welcome() })
+          // commit('SET_AVATAR', response.avatar)
           resolve()
         }).catch(error => {
           reject(error)

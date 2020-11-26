@@ -159,11 +159,11 @@ export default {
         result.then(({ data: r }) => {
           if (r.list && r.list.length > 0) {
               this.localPagination = (this.showPagination === true || (this.showPagination && r.pageindex)) && Object.assign({}, this.localPagination, {
-              current: r.pageindex, // 返回结果中的当前分页数
-              total: r.total, // 返回结果中的总记录数
+              current: parseInt(r.pageindex), // 返回结果中的当前分页数
+              total: parseInt(r.total), // 返回结果中的总记录数
               showSizeChanger: this.showSizeChanger,
-              pagesize: (pagination && pagination.pagesize) ||
-                this.localPagination.pagesize
+              pagesize: parseInt((pagination && pagination.pagesize) ||
+              this.localPagination.pagesize)
             }) || false
             // 为防止删除数据后导致页面当前页面数据长度为 0 ,自动翻页到上一页
             if (r.list.length === 0 && this.showPagination && this.localPagination.current > 1) {

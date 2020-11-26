@@ -6,7 +6,7 @@
           <template slot="title">
             {{ item.title }}
           </template>
-          <span class="tac" :class="{ selected: active === item.value }">{{ item.text }}</span>
+          <span class="tac" :class="{ selected: retentiontype === item.value }">{{ item.text }}</span>
         </a-tooltip>
       </div>
       <div class="time-span">
@@ -14,9 +14,10 @@
           v-for="(item, index) in dateParams"
           :key="index"
           class="tac"
-          :class="{ selected: dateActive === item.value }"
+          :class="{ selected: datetype === item.value }"
           @click="handleDateClick(item.value)"
-        >{{ item.text }}</span>
+        >{{ item.text }}</span
+        >
         <a-popover class="icon-font" placement="leftBottom">
           <template slot="content">
             某日/周/月的活跃用户中，在第2日/周/月之后，每日/周/月启动过程序的用户
@@ -25,24 +26,62 @@
         </a-popover>
       </div>
     </div>
-    <color-table :data="data"></color-table>
+    <color-table :data="data" :columns="retainColumns" :per-cent="retentiontype === 2"></color-table>
   </div>
 </template>
 
 <script>
 import { ColorTable } from '@/components'
+const retainColumns = [
+  {
+    title: '日期',
+    dataIndex: 'name',
+    scopedSlots: { customRender: 'row-header' }
+  },
+  {
+    title: '新用户数',
+    dataIndex: 'value',
+    scopedSlots: { customRender: 'row-header' }
+  },
+  {
+    title: '第2天',
+    dataIndex: '2',
+    scopedSlots: { customRender: 'color-td' }
+  },
+  {
+    title: '第3天',
+    dataIndex: '3',
+    scopedSlots: { customRender: 'color-td' }
+  },
+  {
+    title: '第4天',
+    dataIndex: '4',
+    scopedSlots: { customRender: 'color-td' }
+  },
+  {
+    title: '第5天',
+    dataIndex: '5',
+    scopedSlots: { customRender: 'color-td' }
+  },
+  {
+    title: '第6天',
+    dataIndex: '6',
+    scopedSlots: { customRender: 'color-td' }
+  },
+  {
+    title: '第7天',
+    dataIndex: '7',
+    scopedSlots: { customRender: 'color-td' }
+  }
+]
 export default {
   components: {
     ColorTable
   },
   props: {
     data: {
-      type: Array,
-      default: () => []
-    },
-    scale: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
@@ -50,46 +89,47 @@ export default {
       retainParams: [
         {
           title: '留存用户数',
-          value: 0,
+          value: 1,
           text: '#'
         },
         {
           title: '留存率',
-          value: 1,
+          value: 2,
           text: '%'
         }
       ],
       dateParams: [
         {
           text: '日',
-          value: 0
-        },
-        {
-          text: '周',
           value: 1
         },
         {
-          text: '月',
+          text: '周',
           value: 2
         }
+        // {
+        //   text: '月',
+        //   value: 2
+        // }
       ],
-      active: 0,
-      dateActive: 0
+      retentiontype: 1,
+      datetype: 1,
+      retainColumns
     }
   },
   methods: {
     handleRetainClick (value) {
-      this.active = value
+      this.retentiontype = value
       this.handleChange()
     },
     handleDateClick (value) {
-      this.dateActive = value
+      this.datetype = value
       this.handleChange()
     },
     handleChange () {
       this.$emit('change', {
-        active: this.active,
-        dateActive: this.dateActive
+        retentiontype: this.retentiontype,
+        datetype: this.datetype
       })
     }
   }
