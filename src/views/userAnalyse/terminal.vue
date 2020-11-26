@@ -19,6 +19,9 @@
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
+        <!-- <span slot="percent" slot-scope="text">
+          {{ text }}
+        </span> -->
       </s-table>
     </div>
   </analysis-header>
@@ -43,14 +46,17 @@ const columns = [
   {
     title: '启动次数分布',
     dataIndex: 'estarttimedis'
+    // scopedSlots: { customRender: 'percent' }
   },
   {
     title: '新用户分布',
     dataIndex: 'enewusersdis'
+    // scopedSlots: { customRender: 'percent' }
   },
   {
     title: '启动用户分布',
     dataIndex: 'estartusersdis'
+    // scopedSlots: { customRender: 'percent' }
   },
   {
     title: '次平均使用时长',
@@ -142,9 +148,6 @@ export default {
     // 刷新图表数据
     loadChartData () {
       const params = { ...this.getHeaderData(), terminal: this.active + 1, ordertype: this.ordertype + 1 }
-      console.log('-----图表------')
-      console.log(params)
-
       getterminalpic(params).then(({ data }) => {
         this.scale = [
           {
@@ -164,8 +167,6 @@ export default {
     // 刷新表格数据
     loadTableData () {
       const params = { ...this.getHeaderData(), terminal: this.active + 1 }
-      console.log('-----表格------')
-      console.log(params)
       return getterminaldata(params)
     }
   }

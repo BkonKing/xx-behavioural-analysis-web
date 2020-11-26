@@ -1,6 +1,12 @@
 <template>
-  <a-card :loading="loading" class="v-container" :bordered="false">
-    <v-chart :width="width" :height="height" :padding="padding" :scale="scale">
+  <a-spin :spinning="loading" class="v-container" tip="数据正在加载中..." :style="spinStyle">
+    <v-chart
+      v-if="dvData.rows && dvData.rows.length > 0"
+      :width="width"
+      :height="height"
+      :padding="padding"
+      :scale="scale"
+    >
       <v-tooltip :htmlContent="htmlContent" />
       <v-legend data-key="value" position="left" />
       <v-view :data="geoData" :scale="scale">
@@ -16,11 +22,13 @@
         />
       </v-view>
     </v-chart>
-  </a-card>
+    <a-empty v-else-if="!loading" :image="simpleImage" />
+  </a-spin>
 </template>
 
 <script>
 import geoDatas from './Map'
+import { Empty } from 'ant-design-vue'
 const DataSet = require('@antv/data-set')
 
 const scale = [
@@ -81,7 +89,7 @@ export default {
   data () {
     return {
       loading: true,
-      dvData: [],
+      dvData: {},
       geoData: [],
       scale,
       view1Opts,
@@ -112,6 +120,18 @@ export default {
       }
     }
   },
+  computed: {
+    spinStyle () {
+      if (this.data.length > 0) {
+        return { height: typeof this.height === 'number' ? this.height + 'px' : this.height }
+      } else {
+        return { height: 'auto', margin: '32px 0', width: '100%' }
+      }
+    }
+  },
+  beforeCreate () {
+    this.simpleImage = Empty.PRESENTED_IMAGE_SIMPLE
+  },
   mounted () {
     const mapData = {
       type: 'FeatureCollection',
@@ -123,7 +143,7 @@ export default {
   },
   methods: {
     loadMap () {
-      this.loading = false
+      // this.loading = false
 
       const userDv = new DataSet.View().source(this.data).transform({
         geoDataView: this.geoData,
@@ -136,9 +156,12 @@ export default {
     }
   },
   watch: {
-    data (val) {
+    data (value, oldvalue) {
       setTimeout(() => {
-        val.length && this.loadMap()
+        if (value.length >= oldvalue.length) {
+          this.loading = false
+        }
+        this.loadMap()
       }, 0)
     }
   }

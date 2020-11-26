@@ -10,6 +10,7 @@
         </a-select>
         <span class="margin-left-large">版本：</span>
         <a-select mode="multiple" v-model="version" size="small" @blur="loadChartData" style="min-width: 100px;">
+          <span slot="removeIcon"></span>
           <a-select-option v-for="(item, i) in versionList" :key="i" :value="item.key">
             {{ item.text }}
           </a-select-option>
@@ -17,13 +18,12 @@
       </div>
       <a-line
         ref="aline"
+        color="version"
+        position="name*value*dis"
         :data="data"
-        :transform="transObj"
-        :scale="scale"
         :htmlContent="htmlContent"
         :alias="alias"
         :padding="[50, 50, 80, 50]"
-        color="version"
       ></a-line>
       <a-divider></a-divider>
       <popover-tip :tip-name="tipName" :tip-list="tipList"></popover-tip>
@@ -109,7 +109,6 @@ export default {
       ],
       data: [],
       scale: [],
-      transObj: {},
       version: [],
       versionList: [],
       alias: '', // tooltip自定义别名
@@ -117,7 +116,10 @@ export default {
       htmlContent (title, items, alias) {
         var html = '<div class="g2-tooltip">'
         var listDom = '<table class="g2-tooltip-list"><tbody>'
-        listDom += '<tr><td>' + title + '</td><td style="text-align:right;">' + alias + '</td></tr>'
+        listDom +=
+          '<tr><td>' +
+          title +
+          '</td><td style="text-align:right;padding-left: 10px;">' + alias + '</td><td style="text-align:right;">占比</td></tr>'
         for (var i = 0; i < items.length; i++) {
           var item = items[i]
           var itemDom =
@@ -130,6 +132,9 @@ export default {
             '<td><span class="g2-tooltip-value">' +
             item.value +
             '</span></td>' +
+            '<td><span class="g2-tooltip-value">' +
+            item.point._origin.dis +
+            '%</span></td>' +
             '</tr>'
           listDom += itemDom
         }
@@ -163,45 +168,61 @@ export default {
     loadChartData () {
       this.$refs.aline.switchLoading(true)
       const params = { ...this.getHeaderData(), version: this.version.join('、'), ordertype: this.ordertype + 1 }
-      console.log('-----图表------')
-      console.log(params)
 
       getversionpic(params).then(({ data }) => {
-        this.transObj = {
-          type: 'fold',
-          fields: this.version,
-          key: 'version', // color对应的值
-          value: 'value' // 对应值所转化的key
-        }
-        this.alias = this.ordertypeList[this.ordertype].text
-        const valueList = ['enewusers', 'eupgradeusers', 'estartusers', 'estarttimes']
-        this.data = data.list ? data.list.map(obj => {
-          const version = {}
-          this.version.forEach((key, index) => {
-            version[key] = parseInt(obj[valueList[this.ordertype]]) + index
-          })
-          return {
-            name: obj.name,
-            ...version
-          }
-        }) : []
+        this.data = this.versionsTransform(data.list)
         this.$refs.aline.switchLoading()
       })
+    },
+    // 图表数据转换
+    versionsTransform (data) {
+      this.transObj = {
+        type: 'fold',
+        fields: this.version,
+        key: 'version', // color对应的值
+        value: 'value' // 对应值所转化的key
+      }
+      this.alias = this.ordertypeList[this.ordertype].text
+      if (data) {
+        const arr = []
+        Object.keys(data).forEach((key, index) => {
+          arr.push(
+            ...data[key].map(obj => {
+              const version = Object.keys(obj)[0]
+              return {
+                version,
+                name: key,
+                value: obj[version].starttimes,
+                dis: obj[version].dis
+              }
+            })
+          )
+        })
+        return arr
+      }
+      return []
     },
     // 刷新表格数据
     loadTableData (page) {
       const params = this.getHeaderData()
-      console.log('-----表格------')
-      console.log(params)
       return getversion(params)
     }
   },
   watch: {
-    versions () {
+    version (val, oldVal) {
+      if (val && val.length === 0 && oldVal && oldVal.length > 0) {
+        this.version = oldVal
+      }
+    },
+    versions (data) {
       this.getVersionList()
     }
   }
 }
 </script>
 
-<style></style>
+<style lang="less" scoped>
+/deep/ .ant-select-selection__choice {
+  padding-right: 10px;
+}
+</style>

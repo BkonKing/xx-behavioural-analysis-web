@@ -47,9 +47,9 @@ const loadingMixin = {
   },
   watch: {
     data: {
-      handler (value, oldvalue) {
+      handler (value) {
         setTimeout(() => {
-          if (value.length >= oldvalue.length) {
+          if (value) {
             this.loading = false
           }
         })

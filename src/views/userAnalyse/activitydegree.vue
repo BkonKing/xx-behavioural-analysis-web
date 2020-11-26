@@ -17,11 +17,9 @@
           {{ index + 1 }}
         </span>
         <span slot="time" slot-scope="text">
-          {{ moment(parseInt(text)).format('YYYY/MM/DD hh:mm:ss') }}
+          {{ moment(parseInt(text) * 1000).format('YYYY/MM/DD HH:mm:ss') }}
         </span>
-        <span slot="percent" slot-scope="text">
-          {{ text }}%
-        </span>
+        <span slot="percent" slot-scope="text"> {{ text }}% </span>
       </s-table>
     </div>
   </analysis-header>
@@ -127,14 +125,11 @@ export default {
     // 刷新图表数据
     loadChartData () {
       const params = { ...this.getHeaderData(), ordertype: this.ordertype }
-      console.log('-----图表------')
-      console.log(params)
       const ordertype = this.ordertypeList[this.ordertype - 1]
       this.scale = [
         {
           dataKey: ordertype.key,
-          alias: ordertype.text,
-          min: 0
+          alias: ordertype.text
         }
       ]
       this.position = `name*${ordertype.key}`
@@ -145,8 +140,6 @@ export default {
     // 刷新表格数据
     loadTableData () {
       const params = this.getHeaderData()
-      console.log('-----表格------')
-      console.log(params)
       return getActiveuserList(params)
     }
   }

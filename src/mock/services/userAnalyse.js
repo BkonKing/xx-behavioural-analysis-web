@@ -63,27 +63,47 @@ const getversion = () => {
 
 const getversionpic = () => {
   return builder({
-    'list': [{
-        'eupgradeusers': '0',
-        'enewusers': '16',
-        'estartusers': '16',
-        'estarttimes': '16',
-        'estarttimedis': '100%',
-        'estartusersdis': '100%',
-        'enewuserdis': '100%',
-        'name': '2020-11-16'
-      },
-      {
-        'eupgradeusers': '0',
-        'enewusers': '18',
-        'estartusers': '18',
-        'estarttimes': '18',
-        'estarttimedis': '100%',
-        'estartusersdis': '100%',
-        'enewuserdis': '100%',
-        'name': '2020-11-17'
-      }
-    ]
+    'list': {
+      '2020/11/16': [{
+          '2.0.3': {
+            'starttimes': 16,
+            'dis': 66.7
+          }
+        },
+        {
+          '2.0.2': {
+            'starttimes': 8,
+            'dis': 33.3
+          }
+        }
+      ],
+      '2020/11/17': [{
+          '2.0.3': {
+            'starttimes': 16,
+            'dis': 66.7
+          }
+        },
+        {
+          '2.0.2': {
+            'starttimes': 8,
+            'dis': 33.3
+          }
+        }
+      ],
+      '2020/11/18': [{
+          '2.0.3': {
+            'starttimes': 16,
+            'dis': 66.7
+          }
+        },
+        {
+          '2.0.2': {
+            'starttimes': 8,
+            'dis': 33.3
+          }
+        }
+      ]
+    }
   }, '', 200)
 }
 

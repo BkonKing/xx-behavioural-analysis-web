@@ -22,7 +22,8 @@
         position="name*startusers"
         :showLegend="false"
         :data="sharingData"
-        :scale="sharingLineScale"></a-line>
+        :scale="sharingLineScale"
+      ></a-line>
       <a-row class="data-card-container" style="border-top: 1px solid #e7e9f0;border-bottom: 1px solid #e7e9f0;">
         <a-col :span="12">
           <h3 class="data-card-title">新用户留存<span class="data-card-condition">（近7日）</span></h3>
@@ -35,7 +36,6 @@
             color="page"
             position="name*value*edis"
             :data="pageData"
-            :transform="transObj"
             :htmlContent="pageContent"
             :padding="[50, 50, 80, 50]"
           ></a-line>
@@ -209,7 +209,6 @@ export default {
       retainColumns,
       regiontData: [], // 地域分布
       pageData: [],
-      transObj: {},
       // 页面分析tooltip自定义显示内容
       pageContent (title, items) {
         var html = '<div class="g2-tooltip">'
@@ -250,30 +249,44 @@ export default {
     // 获取汇总数据
     getsum () {
       getsum().then(({ data }) => {
+        const {
+          todaystartusers,
+          yesdaystartusers,
+          todaystarttimes,
+          yestodaystarttimes,
+          todaynewuser,
+          yestodaynewuser,
+          todaydurationuse,
+          yestodaydurationuse,
+          todayperusagetime,
+          yestodayperusagetime,
+          todayperstarttimes,
+          yestodayperstarttimes
+        } = data
         this.sumData = [
           {
-            today: data.todaystartusers || 0,
-            yesterday: data.yesdaystartusers || 0
+            today: todaystartusers || 0,
+            yesterday: yesdaystartusers || 0
           },
           {
-            today: data.todaystarttimes || 0,
-            yesterday: data.yestodaystarttimes || 0
+            today: todaystarttimes || 0,
+            yesterday: yestodaystarttimes || 0
           },
           {
-            today: data.todaynewuser || 0,
-            yesterday: data.yestodaynewuser || 0
+            today: todaynewuser || 0,
+            yesterday: yestodaynewuser || 0
           },
           {
-            today: data.todaydurationuse || 0,
-            yesterday: data.yestodaydurationuse || 0
+            today: !todaydurationuse || todaydurationuse === '0' ? '00:00:00' : todaydurationuse,
+            yesterday: !yestodaydurationuse || yestodaydurationuse === '0' ? '00:00:00' : yestodaydurationuse
           },
           {
-            today: data.todayperusagetime || 0,
-            yesterday: data.yestodayperusagetime || 0
+            today: !todayperusagetime || todayperusagetime === '0' ? '00:00:00' : todayperusagetime,
+            yesterday: !yestodayperusagetime || yestodayperusagetime === '0' ? '00:00:00' : yestodayperusagetime
           },
           {
-            today: data.todayperstarttimes || 0,
-            yesterday: data.yestodayperstarttimes || 0
+            today: todayperstarttimes || 0,
+            yesterday: yestodayperstarttimes || 0
           }
         ]
       })
@@ -296,7 +309,7 @@ export default {
     // 汇总对比图表数据转换(时段)
     transformTimeSharing (list) {
       const keys = Object.keys(list)
-      const fields = list[keys[0]].map(obj => (Object.keys(obj)[0]))
+      const fields = list[keys[0]].map(obj => Object.keys(obj)[0])
       this.sharingTransform = {
         type: 'fold',
         fields,
@@ -343,18 +356,13 @@ export default {
               }
               return {
                 name: key,
-                [obj.pathname]: obj.starttimes,
+                page: obj.pathname,
+                value: obj.starttimes,
                 edis: obj.edis
               }
             })
           )
         })
-        this.transObj = {
-          type: 'fold',
-          fields,
-          key: 'page', // color对应的值
-          value: 'value' // 对应值所转化的key
-        }
         return arr
       }
       return []
@@ -372,7 +380,7 @@ export default {
 }
 .data-card-container {
   .data-card-title {
-    margin-top: 20px;
+    margin-top: 10px;
     .data-card-condition {
       font-size: 12px;
       color: #808492;

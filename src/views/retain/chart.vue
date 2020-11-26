@@ -124,6 +124,10 @@ export default {
     },
     handleDateClick (value) {
       this.datetype = value
+      this.retainColumns = this.retainColumns.map(obj => {
+        obj.title = obj.title.replace(value === 1 ? '周' : '天', value === 1 ? '天' : '周')
+        return obj
+      })
       this.handleChange()
     },
     handleChange () {

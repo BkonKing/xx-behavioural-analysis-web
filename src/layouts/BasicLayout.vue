@@ -1,6 +1,7 @@
 <template>
   <pro-layout
     :menus="menus"
+    :menuHidden="$route.meta.menuHidden"
     :collapsed="collapsed"
     :mediaQuery="query"
     :isMobile="isMobile"

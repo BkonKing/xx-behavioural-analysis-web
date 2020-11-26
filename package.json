@@ -35,7 +35,7 @@
     "vue-svg-component-runtime": "^1.0.1",
     "vuex": "^3.1.1",
     "wangeditor": "^3.1.1",
-    "xx-ant-design-vue-pro-layout": "^1.0.3"
+    "xx-ant-design-vue-pro-layout": "^1.0.5"
   },
   "devDependencies": {
     "@ant-design/colors": "^3.2.1",

@@ -22,6 +22,9 @@ export const asyncRouterMap = [{
         path: '/dashboard/index',
         name: 'dashboard',
         hidden: true,
+        meta: {
+          menuHidden: true
+        },
         component: () => import('@/views/user/dashboard')
       },
       {

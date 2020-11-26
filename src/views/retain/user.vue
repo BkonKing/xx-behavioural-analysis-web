@@ -185,22 +185,24 @@ export default {
     // 刷新表格数据(新用户自定义留存)
     getRetentionList () {
       const { current } = this.pagination
-      const params = { ...this.getHeaderData(), pageindex: current, pagesize: 10 }
+      const params = { ...this.getHeaderData(), pageindex: current || 1, pagesize: 10 }
       this.loading = true
       getRetentionList(params).then(({ data }) => {
         const pagination = { ...this.pagination }
         pagination.total = parseInt(data.total)
         this.loading = false
-        this.newuserssum = data.newuserssum
-        this.reminduserssum = data.reminduserssum
-        this.reminddis = data.reminddis
-        this.tableData = data.list
+        this.newuserssum = data.newuserssum || 0
+        this.reminduserssum = data.reminduserssum || 0
+        this.reminddis = data.reminddis || 0
+        this.tableData = data.list || []
         this.pagination = pagination
       })
     }
   },
   watch: {
     $route (to, from) {
+      this.$refs.AnalysisHeader && this.$refs.AnalysisHeader.resetSearchData()
+      this.active = '1'
       this.pageLoad()
     }
   }

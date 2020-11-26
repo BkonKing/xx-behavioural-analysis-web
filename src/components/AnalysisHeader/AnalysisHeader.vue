@@ -38,6 +38,7 @@
                         <a-range-picker
                           v-model="date"
                           size="small"
+                          :allowClear="false"
                           :inputReadOnly="true"
                           :disabled-date="disabledDate"
                           :ranges="{
@@ -65,6 +66,7 @@
                             style="width: 100%;"
                             @blur="handleChange"
                           >
+                            <span slot="removeIcon"></span>
                             <a-select-option v-for="item in versionList" :key="item.key">
                               {{ item.text }}
                             </a-select-option>
@@ -143,7 +145,7 @@ export default {
   methods: {
     moment,
     getVersionList () {
-      this.$store.dispatch('GetVersionall').then((data) => {
+      this.$store.dispatch('GetVersionall').then(data => {
         this.setVersionList(this.versions)
       })
     },
@@ -184,6 +186,11 @@ export default {
         }
       })
       return data
+    },
+    // 重置搜索条件
+    resetSearchData () {
+      this.date = [moment().subtract(2, 'days'), moment()] // 时间范围，默认为近三天
+      this.version = [0] // 选中的版本
     }
   },
   watch: {
@@ -193,6 +200,8 @@ export default {
       } else if (val[val.length - 1] === 0 && val.length > 1) {
         this.$refs.version.blur()
         this.version = [0]
+      } else if (val.length === 0) {
+        this.version = [0]
       }
     }
   }
@@ -200,6 +209,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/ .ant-select-selection__choice {
+  padding-right: 10px;
+}
 .margin-left-large {
   margin-left: 24px;
 }

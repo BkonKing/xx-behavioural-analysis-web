@@ -68,7 +68,7 @@ export default {
             '<td><span style="background-color:' +
             item.color +
             ';width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>' +
-            moment(parseInt(item.name)).format('YYYY/MM/DD') +
+            moment(parseInt(item.name) * 1000).format('YYYY/MM/DD') +
             '</td>' +
             '<td><span class="g2-tooltip-value">' +
             item.value +
