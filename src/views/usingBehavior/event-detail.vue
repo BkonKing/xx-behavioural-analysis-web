@@ -138,12 +138,16 @@ export default {
             min: 0
           }
         ]
-        this.chartData = res.data.list.map(obj => {
-          return {
-            name: obj.name,
-            value: this.indicator === 0 ? obj.numberevents : obj.userevents
-          }
-        })
+        if (res.data.list) {
+          this.chartData = res.data.list.map(obj => {
+            return {
+              name: obj.name,
+              value: this.indicator === 0 ? obj.numberevents : obj.userevents
+            }
+          })
+        } else {
+          this.chartData = []
+        }
       })
     },
     // 刷新表格数据

@@ -183,31 +183,34 @@ export default {
             min: 0
           }
         ]
-        this.chartData = res.data.list.map(obj => {
-          let value = ''
-          switch (this.summaryIndex) {
-              case 0:
-              value = obj.epagecount
-            break
-            case 1:
-              value = obj.eusetime
+        if (res.data.list) {
+          this.chartData = res.data.list.map(obj => {
+            let value = ''
+            switch (this.summaryIndex) {
+                case 0:
+                value = obj.epagecount
               break
-            case 2:
-              value = obj.eleavecountdis
-              break
-            case 3:
-              value = obj.eentrycount
-              break
-            case 4:
-              value = obj.eleavecount
-              break
-          }
-          return {
-            name: obj.name,
-            value: value
-          }
-        })
-        console.log('aaddd', this.chartData)
+              case 1:
+                value = obj.eusetime
+                break
+              case 2:
+                value = obj.eleavecountdis
+                break
+              case 3:
+                value = obj.eentrycount
+                break
+              case 4:
+                value = obj.eleavecount
+                break
+            }
+            return {
+              name: obj.name,
+              value: value
+            }
+          })
+        } else {
+          this.chartData = []
+        }
       })
     },
     // 刷新表格数据

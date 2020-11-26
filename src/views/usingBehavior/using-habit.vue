@@ -146,12 +146,17 @@ export default {
             min: 0
           }
         ]
-        this.chartData = res.data.piclist.map(obj => {
-          return {
-            name: obj.tname,
-            value: +obj.estarttimes
-          }
-        })
+        console.log(11, res.data.piclist)
+        if (res.data.piclist) {
+          this.chartData = res.data.piclist.map(obj => {
+            return {
+              name: obj.tname,
+              value: +obj.estarttimes
+            }
+          })
+        } else {
+          this.chartData = []
+        }
       })
     },
     // 刷新表格数据

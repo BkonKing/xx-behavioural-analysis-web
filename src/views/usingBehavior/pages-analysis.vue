@@ -170,12 +170,16 @@ export default {
             min: 0
           }
         ]
-        this.chartData = res.data.list.map(obj => {
-          return {
-            name: obj.name,
-            value: this.summaryIndex === 0 ? obj.epagecount : (this.summaryIndex === 1 ? obj.eusetime : obj.eleavecountdis)
-          }
-        })
+        if (res.data.list) {
+          this.chartData = res.data.list.map(obj => {
+            return {
+              name: obj.name,
+              value: this.summaryIndex === 0 ? obj.epagecount : (this.summaryIndex === 1 ? obj.eusetime : obj.eleavecountdis)
+            }
+          })
+        } else {
+          this.chartData = []
+        }
       })
     },
     // 刷新表格数据
