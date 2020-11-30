@@ -7,6 +7,7 @@
     :isMobile="isMobile"
     :handleMediaQuery="handleMediaQuery"
     :handleCollapse="handleCollapse"
+    :sider-width="210"
     v-bind="settings"
   >
     <!-- LOGO 和 title 自定义  -->
@@ -18,7 +19,7 @@
       </div>
     </template>
 
-    <setting-drawer :settings="settings" @change="handleSettingChange" />
+    <!-- <setting-drawer :settings="settings" @change="handleSettingChange" /> -->
     <template v-slot:rightContentRender>
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
     </template>
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import { SettingDrawer, updateTheme } from 'xx-ant-design-vue-pro-layout'
+// import { SettingDrawer } from 'xx-ant-design-vue-pro-layout'
 import { asyncRouterMap } from '@/config/router.config'
 // import { mapState } from 'vuex'
 import { CONTENT_WIDTH_TYPE, SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/store/mutation-types'
@@ -44,7 +45,7 @@ import GlobalFooter from '@/components/GlobalFooter'
 export default {
   name: 'BasicLayout',
   components: {
-    SettingDrawer,
+    // SettingDrawer,
     RightContent,
     GlobalFooter
     // LogoSvg
@@ -113,12 +114,6 @@ export default {
         }, 16)
       })
     }
-
-    // first update color
-    // TIPS: THEME COLOR HANDLER!! PLEASE CHECK THAT!!
-    if (process.env.NODE_ENV !== 'production' || process.env.VUE_APP_PREVIEW === 'true') {
-      updateTheme(this.settings.primaryColor)
-    }
   },
   methods: {
     filterAsyncRouter (routerMap) {
@@ -149,7 +144,6 @@ export default {
       this.collapsed = val
     },
     handleSettingChange ({ type, value }) {
-      console.log('type', type, value)
       type && (this.settings[type] = value)
       switch (type) {
         case 'contentWidth':

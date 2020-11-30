@@ -175,6 +175,7 @@ div.table-list div.index-table-list-tip {
 div.table-list table.list {
   border-collapse: collapse;
   font-size: 12px;
+  table-layout: fixed;
 }
 
 div.table-list table.width100 {

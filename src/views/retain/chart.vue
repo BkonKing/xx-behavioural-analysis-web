@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import lodash from 'lodash'
 import { ColorTable } from '@/components'
 const retainColumns = [
   {
@@ -114,7 +115,7 @@ export default {
       ],
       retentiontype: 1,
       datetype: 1,
-      retainColumns
+      retainColumns: lodash.cloneDeep(retainColumns)
     }
   },
   methods: {
