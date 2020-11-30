@@ -108,14 +108,65 @@ ol {
 }
 
 // 图表自定义Tooltip
-.v-container {
-  .g2-tooltip {
-    position: absolute;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 3px;
-    color: rgb(87, 87, 87);
-    font-size: 12px;
-    line-height: 20px;
-    padding: 10px 10px 6px 10px;
-  }
+.g2-tooltip {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: rgb(174, 174, 174) 0px 0px 10px;
+  border-radius: 3px;
+  color: rgb(87, 87, 87);
+  font-size: 12px;
+  line-height: 20px;
+  padding: 10px 10px 6px;
+  transition: visibility 0.2s cubic-bezier(0.23, 1, 0.32, 1) 0s,
+    left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s,
+    top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s;
+}
+
+.g2-tooltip-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.g2-tooltip-value {
+  margin-left: 30px;
+  display: inline;
+  float: right;
+}
+
+.g2-tooltip-statistic {
+  font-size: 14px;
+  padding-bottom: 10px;
+  margin-top: 10px;
+  list-style-type: none;
+}
+
+.g2-tooltip-statistic-value {
+  font-weight: 'bold';
+  display: 'inline-block';
+  float: right;
+  margin-left: 30px;
+}
+
+// 去除下拉框的border
+.ant-select-selection {
+  border: none;
+}
+
+.ant-select-focused .ant-select-selection,
+.ant-select-selection:focus,
+.ant-select-selection:active {
+  border: none;
+  box-shadow: initial;
+}
+
+.ant-select-sm .ant-select-selection__rendered {
+  margin-left: 0;
+}
+
+// 选择器label
+.select-label {
+  font-size: 12px;
+  color: #808492;
+  margin-right: 7px;
 }

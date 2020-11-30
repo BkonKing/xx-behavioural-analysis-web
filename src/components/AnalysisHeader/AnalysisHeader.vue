@@ -34,24 +34,7 @@
                     <slot name="content">
                       <!-- 日期 -->
                       <template v-if="showSearchList.includes('date')">
-                        <span>日期：</span>
-                        <a-range-picker
-                          v-model="date"
-                          size="small"
-                          :allowClear="false"
-                          :inputReadOnly="true"
-                          :disabled-date="disabledDate"
-                          :ranges="{
-                            今天: [moment(), moment()],
-                            昨天: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                            最近7天: [moment().subtract(6, 'days'), moment()],
-                            最近30天: [moment().subtract(29, 'days'), moment()],
-                            最近60天: [moment().subtract(59, 'days'), moment()]
-                          }"
-                          format="YYYY-MM-DD"
-                          style="width: 220px;"
-                          @change="handleChange"
-                        />
+                        <range-picker v-model="date" @change="handleChange"></range-picker>
                       </template>
                       <slot name="condition"></slot>
                       <!-- 版本 -->
@@ -63,7 +46,7 @@
                             mode="multiple"
                             size="small"
                             v-model="version"
-                            style="width: 100%;"
+                            :showArrow="true"
                             @blur="handleChange"
                           >
                             <span slot="removeIcon"></span>
@@ -96,11 +79,13 @@
 <script>
 import moment from 'moment'
 import { PageHeaderWrapper } from 'xx-ant-design-vue-pro-layout'
+import RangePicker from '../RangePicker'
 import { mapGetters } from 'vuex'
 export default {
   name: 'AnalysisHeader',
   components: {
-    PageHeaderWrapper
+    PageHeaderWrapper,
+    RangePicker
   },
   props: {
     title: {
@@ -163,10 +148,6 @@ export default {
     handleTipClick () {
       this.activeKey = this.activeKey.length === 0 ? ['1'] : []
     },
-    // 不能选择今天之后的日期
-    disabledDate (current) {
-      return current && current > moment().endOf('day')
-    },
     // 搜索参数变更事件
     handleChange () {
       this.$emit('change', this.getSearchData())
@@ -177,10 +158,6 @@ export default {
       this.showSearchList.forEach(obj => {
         if (obj === 'date') {
           data[obj] = this.date
-            .map(obj => {
-              return obj.format('YYYY/MM/DD')
-            })
-            .join('~')
         } else if (this[obj].length !== 1 || this[obj][0] !== 0) {
           data[obj] = this[obj].join('、')
         }
@@ -189,7 +166,7 @@ export default {
     },
     // 重置搜索条件
     resetSearchData () {
-      this.date = [moment().subtract(2, 'days'), moment()] // 时间范围，默认为近三天
+      this.date = [moment().subtract(2, 'days').format('YYYY/MM/DD'), moment().format('YYYY/MM/DD')].join('~') // 时间范围，默认为近三天
       this.version = [0] // 选中的版本
     }
   },
@@ -209,6 +186,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/ .ant-calendar-picker-input {
+  padding-left: 0;
+}
 /deep/ .ant-select-selection__choice {
   padding-right: 10px;
 }
@@ -251,5 +231,9 @@ export default {
   left: 67px;
   top: -4px;
   position: absolute;
+}
+/deep/ .ant-select-selection--multiple .ant-select-selection__choice {
+  background-color: initial;
+  border-color: #fff;
 }
 </style>

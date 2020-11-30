@@ -6,13 +6,26 @@
       </a-tabs>
       <div>
         <span>指标：</span>
-        <a-select v-model="ordertype" size="small" style="width: 120px" @change="loadChartData">
+        <a-select v-model="ordertype" size="small" :dropdownMatchSelectWidth="false" @change="loadChartData">
           <a-select-option v-for="(item, i) in ordertypeList" :key="i" :value="item.value">
             {{ item.text }}
           </a-select-option>
         </a-select>
       </div>
-      <bar :data="data" :scale="scale"></bar>
+      <bar :data="data" :scale="scale" :htmlContent="tooltipContent">
+        <template v-slot:axis>
+          <v-axis
+            dataKey="value"
+            :title="{
+              autoRotate: false,
+              offset: -1,
+              text: [1,2,3].indexOf(ordertype) > -1 ? '%' : ' ',
+              position: 'end',
+              textStyle: { rotate: 0, fill: '#666' }
+            }"
+          />
+        </template>
+      </bar>
       <a-divider></a-divider>
       <popover-tip :tip-name="tipName" :tip-list="tipList"></popover-tip>
       <s-table ref="table" rowKey="name" :columns="columns" :data="loadTableData" style="margin-top: 20px;">
@@ -28,8 +41,10 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { AnalysisHeader, PopoverTip, STable, Bar } from '@/components'
 import { getterminaldata, getterminalpic } from '@/api/userAnalyse'
+import { setToolTipContent } from '@/utils/domUtil'
 import { TERMINAL_TIP } from './const'
 const columns = [
   {
@@ -129,7 +144,18 @@ export default {
       ],
       data: [],
       scale: [],
-      columns
+      columns,
+      tooltipContent (title, items) {
+        return setToolTipContent({
+          title: items[0].title,
+          label: items[0].name,
+          values:
+            ['次均使用时长'].indexOf(items[0].name) > -1
+              ? moment(items[0].value * 1000 - 28800000).format('HH:mm:ss')
+              : items[0].value,
+          suffix: ['启动次数分布', '新用户分布', '启动用户分布'].indexOf(items[0].name) > -1 ? '%' : ''
+        })
+      }
     }
   },
   mounted () {
@@ -156,12 +182,14 @@ export default {
           }
         ]
         const valueList = ['estarttimes', 'estarttimedis', 'enewusersdis', 'estartusersdis', 'avgusetime']
-        this.data = data.list ? data.list.map(obj => {
-          return {
-            name: obj.name,
-            value: parseInt(obj[valueList[this.ordertype]])
-          }
-        }) : []
+        this.data = data.list
+          ? data.list.map(obj => {
+              return {
+                name: obj.name,
+                value: parseInt(obj[valueList[this.ordertype]])
+              }
+            })
+          : []
       })
     },
     // 刷新表格数据

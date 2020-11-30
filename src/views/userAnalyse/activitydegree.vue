@@ -3,13 +3,26 @@
     <div style="padding: 20px;background: #fff;">
       <div>
         <span>指标：</span>
-        <a-select v-model="ordertype" size="small" @change="loadChartData">
+        <a-select v-model="ordertype" size="small" :dropdownMatchSelectWidth="false" @change="loadChartData">
           <a-select-option v-for="(item, i) in ordertypeList" :key="i" :value="item.value">
             {{ item.text }}
           </a-select-option>
         </a-select>
       </div>
-      <a-line :data="data" :scale="scale" :position="position" :showLegend="false"></a-line>
+      <a-line :data="data" :scale="scale" :showLegend="false" :htmlContent="tooltipContent">
+        <template v-slot:axis>
+          <v-axis
+            dataKey="value"
+            :title="{
+              autoRotate: false,
+              offset: -1,
+              text: ordertype === 2 ? '%' : ' ',
+              position: 'end',
+              textStyle: { rotate: 0, fill: '#666' }
+            }"
+          />
+        </template>
+      </a-line>
       <a-divider></a-divider>
       <popover-tip :tip-name="tipName" :tip-list="tipList"></popover-tip>
       <s-table ref="table" rowKey="name" :columns="columns" :data="loadTableData">
@@ -28,6 +41,7 @@
 <script>
 import { AnalysisHeader, PopoverTip, STable, aLine } from '@/components'
 import { ACTIVITY_TIP } from './const'
+import { setToolTipContent } from '@/utils/domUtil'
 import { getActiveuserList, getActiveuserPic } from '@/api/userAnalyse'
 
 const columns = [
@@ -105,8 +119,15 @@ export default {
       ],
       data: [],
       scale: [],
-      position: '',
-      columns
+      columns,
+      tooltipContent (title, items) {
+        return setToolTipContent({
+          title: items[0].title,
+          label: items[0].name,
+          values: items[0].value,
+          suffix: items[0].name === '日活/月活' ? '%' : ''
+        })
+      }
     }
   },
   mounted () {
@@ -128,13 +149,20 @@ export default {
       const ordertype = this.ordertypeList[this.ordertype - 1]
       this.scale = [
         {
-          dataKey: ordertype.key,
+          dataKey: 'value',
           alias: ordertype.text
         }
       ]
-      this.position = `name*${ordertype.key}`
       getActiveuserPic(params).then(({ data }) => {
-        this.data = data.list || []
+        this.data =
+          data.list && data.list.length > 0
+            ? data.list.map(obj => {
+                return {
+                  name: obj.name,
+                  value: obj[ordertype.key]
+                }
+              })
+            : []
       })
     },
     // 刷新表格数据

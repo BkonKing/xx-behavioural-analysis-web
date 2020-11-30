@@ -90,7 +90,7 @@ export default {
       tipName: PAGEDETAIL_TIP.tipName,
       tipList: PAGEDETAIL_TIP.tipList,
       time: '1',
-      summary: '',
+      summary: 0,
       summaryIndex: 0,
       summaryList: [],
       params: {},
@@ -146,7 +146,6 @@ export default {
           value: '23'
         }
       ]
-      this.summary = this.summaryList[0].value
       this.loadChartData(0)
     },
     // 汇总数据变更事件，刷新图表

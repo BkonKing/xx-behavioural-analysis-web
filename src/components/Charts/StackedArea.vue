@@ -52,7 +52,7 @@ export default {
     return {
       dvData: [],
       htmlTemplate (text, item, index) {
-        if (index % 2 === 0) {
+        if (index % 3 === 0) {
           return '<span style="white-space: nowrap;">' + text + '</span>'
         }
         return ''
@@ -71,7 +71,7 @@ export default {
             moment(parseInt(item.name) * 1000).format('YYYY/MM/DD') +
             '</td>' +
             '<td><span class="g2-tooltip-value">' +
-            item.value +
+            (['次均使用时长', '人均使用时长'].indexOf(alias) > -1 ? moment(item.value * 1000 - 28800000).format('HH:mm:ss') : item.value) +
             '</span></td>' +
             '</tr>'
           listDom += itemDom

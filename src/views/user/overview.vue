@@ -11,6 +11,8 @@
         v-if="type < 3"
         color="type"
         position="name*value"
+        :height="270"
+        :padding="[15, 80, 30]"
         :alias="alias"
         :legend="false"
         :data="sharingData"
@@ -19,12 +21,17 @@
       ></stacked-area>
       <a-line
         v-else
-        position="name*startusers"
+        :height="270"
+        :padding="[15, 80, 30]"
         :showLegend="false"
         :data="sharingData"
         :scale="sharingLineScale"
+        :htmlContent="tooltipContent"
       ></a-line>
-      <a-row class="data-card-container" style="border-top: 1px solid #e7e9f0;border-bottom: 1px solid #e7e9f0;">
+      <a-row
+        class="data-card-container"
+        style="border-top: 1px solid #e7e9f0;border-bottom: 1px solid #e7e9f0;margin-top: 30px;"
+      >
         <a-col :span="12">
           <h3 class="data-card-title">新用户留存<span class="data-card-condition">（近7日）</span></h3>
           <color-table :data="retainData" :columns="retainColumns" :per-cent="true"></color-table>
@@ -32,16 +39,19 @@
         <a-col :span="12" style="border-right-color: transparent;">
           <h3 class="data-card-title">页面分析<span class="data-card-condition">（近7日）</span></h3>
           <a-line
+            class="page-line"
             ref="aline"
             color="page"
             position="name*value*edis"
+            :showLegend="false"
+            :height="300"
             :data="pageData"
             :htmlContent="pageContent"
-            :padding="[50, 50, 80, 50]"
+            :padding="[25, 30, 34]"
           ></a-line>
         </a-col>
       </a-row>
-      <a-row class="data-card-container" style="padding: 0 20px 40px;">
+      <a-row class="data-card-container" style="padding: 30px 40px;">
         <a-col :span="24">
           <h3 class="data-card-title">地域分布<span class="data-card-condition">（近7日）</span></h3>
           <a-map :data="regiontData" :width="500"></a-map>
@@ -52,14 +62,17 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { AnalysisHeader, aLine, StackedArea, ColorTable, aMap } from '@/components'
 import TableList from './components/TableList'
 import { getsum, gettimesharing, getsumpic } from '@/api/overview'
+import { setToolTipTable, setToolTipContent } from '@/utils/domUtil'
 
 const retainColumns = [
   {
     title: '首次使用',
     dataIndex: 'name',
+    width: 90,
     scopedSlots: { customRender: 'row-header' }
   },
   {
@@ -102,27 +115,33 @@ const sharingScale = [
 const sumTitle = [
   {
     text: '启动用户数',
-    value: 1
+    value: 1,
+    key: 'startusers'
   },
   {
     text: '启动次数',
-    value: 2
+    value: 2,
+    key: 'starttimes'
   },
   {
     text: '新用户数',
-    value: 3
+    value: 3,
+    key: 'newusers'
   },
   {
     text: '次均使用时长',
-    value: 4
+    value: 4,
+    key: 'durationtime'
   },
   {
     text: '人均使用时长',
-    value: 5
+    value: 5,
+    key: 'percapitatime'
   },
   {
     text: '人均日启动次数',
-    value: 6
+    value: 6,
+    key: 'percapitastartup'
   }
 ]
 
@@ -140,40 +159,7 @@ export default {
     return {
       reportTip:
         '应用概况是产品健康仪表盘，通过集中展现当前应用的核心数据指标（如：新用户数、启动用户数等）及主要报表的近7日趋势变化缩略图，帮助您快速了解应用的当前数据表现。',
-      summaryList: [
-        {
-          text: '启动用户数',
-          value: '29'
-        },
-        {
-          text: '新用户数',
-          value: '29'
-        },
-        {
-          text: '新用户占比',
-          value: '29'
-        },
-        {
-          text: '老用户数',
-          value: '29'
-        },
-        {
-          text: '老用户占比',
-          value: '29'
-        },
-        {
-          text: '启动次数',
-          value: '29'
-        },
-        {
-          text: '次均使用时长',
-          value: '29'
-        },
-        {
-          text: '人均使用时长',
-          value: '2'
-        }
-      ],
+      summaryList: [],
       sharingLineScale: [],
       sharingData: [],
       sharingScale,
@@ -211,32 +197,22 @@ export default {
       pageData: [],
       // 页面分析tooltip自定义显示内容
       pageContent (title, items) {
-        var html = '<div class="g2-tooltip">'
-        var listDom = '<table class="g2-tooltip-list"><tbody>'
-        listDom +=
-          '<tr><td>' +
-          title +
-          '</td><td style="text-align:right;">访问次数</td><td style="text-align:right;">占比</td></tr>'
-        for (var i = 0; i < items.length; i++) {
-          var item = items[i]
-          var itemDom =
-            '<tr>' +
-            '<td><span style="background-color:' +
-            item.color +
-            ';width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>' +
-            item.name +
-            '</td>' +
-            '<td><span class="g2-tooltip-value">' +
-            item.value +
-            '</span></td>' +
-            '<td><span class="g2-tooltip-value">' +
-            item.point._origin.edis +
-            '%</span></td>' +
-            '</tr>'
-          listDom += itemDom
-        }
-        listDom += '</tbody></table>'
-        return html + listDom + '</div>'
+        return setToolTipTable({
+          title: [title, '访问次数', '占比'],
+          items,
+          key: 'edis',
+          suffix: '%'
+        })
+      },
+      tooltipContent (title, items) {
+        return setToolTipContent({
+          title: title,
+          label: items[0].name,
+          values:
+            ['次均使用时长', '人均使用时长'].indexOf(items[0].name) > -1
+              ? moment(items[0].value * 1000 - 28800000).format('HH:mm:ss')
+              : items[0].value
+        })
       }
     }
   },
@@ -244,6 +220,11 @@ export default {
     this.getsum()
     this.gettimesharing()
     this.getsumpic()
+  },
+  computed: {
+    sharingPosition () {
+      return `name*${this.sumTitle[this.ordertype - 1].key}`
+    }
   },
   methods: {
     // 获取汇总数据
@@ -326,14 +307,22 @@ export default {
     },
     // 汇总对比图表数据转换(天)
     transformDaySharing (list) {
+      const key = this.sumTitle[this.ordertype - 1].key
       this.sharingLineScale = [
         {
-          dataKey: 'startusers',
-          alias: this.alias,
-          min: 0
+          dataKey: 'value',
+          alias: this.alias
         }
       ]
-      this.sharingData = list
+      this.sharingData =
+        list && list.length > 0
+          ? list.map(obj => {
+              return {
+                name: obj.name,
+                value: obj[key]
+              }
+            })
+          : []
     },
     // 下半部分图表数据
     getsumpic () {
@@ -380,14 +369,13 @@ export default {
 }
 .data-card-container {
   .data-card-title {
-    margin-top: 10px;
     .data-card-condition {
       font-size: 12px;
       color: #808492;
     }
   }
   /deep/ .ant-col-12 {
-    padding: 10px 20px;
+    padding: 30px 40px;
     border: 1px solid #e7e9f0;
     border-top: none;
     border-bottom: none;
@@ -397,6 +385,22 @@ export default {
 /deep/ .v-container {
   .ant-card-body {
     padding: 0;
+  }
+}
+/deep/ .ant-table-small {
+  border: none;
+}
+/deep/ .ant-table-thead > tr > th {
+  border-bottom: none;
+}
+/deep/ .color-table-container .color-table-tr .color-td,
+/deep/ .color-table-container .row-header {
+  height: 36px;
+  line-height: 25px;
+}
+.page-line {
+  /deep/ .ant-empty-normal {
+    margin: 115px 0;
   }
 }
 </style>

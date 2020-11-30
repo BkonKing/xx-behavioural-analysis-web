@@ -12,7 +12,9 @@
           <v-tooltip :htmlContent="tooltipContent" />
         </template>
         <v-tooltip v-else />
-        <v-axis />
+        <slot name="axis">
+          <v-axis />
+        </slot>
         <template v-if="showLegend">
           <v-legend />
         </template>

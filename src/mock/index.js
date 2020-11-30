@@ -7,15 +7,15 @@ if (process.env.NODE_ENV !== 'production' || process.env.VUE_APP_PREVIEW === 'tr
   }
   // 使用同步加载依赖
   // 防止 vuex 中的 GetInfo 早于 mock 运行，导致无法 mock 请求返回结果
-  console.log('[antd-pro] mock mounting')
-  const Mock = require('mockjs2')
-  require('./services/auth')
-  require('./services/user')
-  require('./services/userAnalyse')
-  require('./services/using')
+  // console.log('[antd-pro] mock mounting')
+  // const Mock = require('mockjs2')
+  // require('./services/auth')
+  // require('./services/user')
+  // require('./services/userAnalyse')
+  // require('./services/using')
 
-  Mock.setup({
-    timeout: 800 // setter delay time
-  })
+  // Mock.setup({
+  //   timeout: 800 // setter delay time
+  // })
   console.log('[antd-pro] mock mounted')
 }

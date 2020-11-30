@@ -29,6 +29,7 @@
 <script>
 import geoDatas from './Map'
 import { Empty } from 'ant-design-vue'
+import { setToolTipContent } from '@/utils/domUtil'
 const DataSet = require('@antv/data-set')
 
 const scale = [
@@ -96,27 +97,13 @@ export default {
       view2Opts,
       ChinaMap: null,
       htmlContent: function htmlContent (title, items) {
-        var html = '<div class="g2-tooltip">'
-        var listDom = '<ul class="g2-tooltip-list">'
-        var itemDom =
-          '<li style="border-bottom: 1px solid #eee;">' +
-          items[0].value +
-          '</li>' +
-          '<li>' +
-          '<span style="background-color:' +
-          items[0].color +
-          ';width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>' +
-          '启动次数' +
-          '<span class="g2-tooltip-value">' +
-          items[2].value +
-          '%</span>' +
-          '<span class="g2-tooltip-value">' +
-          items[1].value +
-          '</span>' +
-          '</li>'
-        listDom += itemDom
-        listDom += '</ul>'
-        return html + listDom + '</div>'
+        return setToolTipContent({
+          title: items[0].value,
+          color: items[0].color,
+          label: '启动次数',
+          values: [items[2].value, items[1].value],
+          suffix: ['%', '']
+        })
       }
     }
   },
@@ -167,31 +154,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.g2-tooltip-list {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-}
-
-.g2-tooltip-value {
-  margin-left: 30px;
-  display: inline;
-  float: right;
-}
-
-.g2-tooltip-statistic {
-  font-size: 14px;
-  padding-bottom: 10px;
-  margin-top: 10px;
-  list-style-type: none;
-}
-
-.g2-tooltip-statistic-value {
-  font-weight: 'bold';
-  display: 'inline-block';
-  float: right;
-  margin-left: 30px;
-}
-</style>

@@ -6,11 +6,11 @@
           {{ mobileType[os_type].name }} <a-icon type="down" />
         </a>
         <a-menu slot="overlay">
-          <a-menu-item v-for="(item, i) in mobileType" :key="item.value" v-if="i==0" @click="menuSelect(item.value)">
+          <a-menu-item v-for="(item, i) in mobileType" :key="item.value" v-if="i == 0" @click="menuSelect(item.value)">
             <a href="javascript:;">{{ item.name }}</a>
           </a-menu-item>
           <template v-else>
-            <a-menu-divider v-if="i==1" />
+            <a-menu-divider v-if="i == 1" />
             <a-menu-item :key="item.value" @click="menuSelect(i)">
               {{ item.name }}
             </a-menu-item>
@@ -58,20 +58,20 @@ export default {
       os_type: storage.get('os_type') || 0,
       mobileType: [
         {
-          'name': '美好生活家园',
-          'value': 0
+          name: '美好生活家园',
+          value: 0
         },
         {
-          'name': '美好生活家园(Android)',
-          'value': 1
+          name: '美好生活家园(Android)',
+          value: 1
         },
         {
-          'name': '美好生活家园(IOS)',
-          'value': 2
+          name: '美好生活家园(IOS)',
+          value: 2
         },
         {
-          'name': '我的应用',
-          'value': 3
+          name: '我的应用',
+          value: 3
         }
       ]
     }
@@ -80,17 +80,15 @@ export default {
     wrpCls () {
       return {
         'ant-pro-global-header-index-right': true,
-        [`ant-pro-global-header-index-${(this.isMobile || !this.topMenu) ? 'light' : this.theme}`]: true
+        [`ant-pro-global-header-index-${this.isMobile || !this.topMenu ? 'light' : this.theme}`]: true
       }
     },
     ...mapGetters(['nickname'])
   },
   mounted () {
-    setTimeout(() => {
-      this.currentUser = {
-        name: this.nickname
-      }
-    }, 1500)
+    this.currentUser = {
+      name: this.nickname
+    }
   },
   methods: {
     menuSelect (i) {

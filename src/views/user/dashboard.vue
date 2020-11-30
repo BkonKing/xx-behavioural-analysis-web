@@ -3,46 +3,39 @@
     <div class="antd-pro-pages-dashboard-analysis-twoColLayout">
       <a-card>
         <div class="table-lsit dashboard-container">
-          <div v-for="(item, i) in tableList" :key="i" v-if="i == 0" class="table-item">
-            <div class="item-line1">
-              <popover-tip :tip-name="tipName" :tip-list="tipList"><div slot="upload"></div></popover-tip>
-            </div>
-            <div class="item-line2">{{ item.today }}</div>
-            <div class="item-line3">{{ item.yesterday }}</div>
-          </div>
-          <div v-else class="table-item">
-            <div class="item-line1">{{ item.text }}</div>
-            <div class="item-line2">{{ item.today }}</div>
-            <div class="item-line3">{{ item.yesterday }}</div>
+          <div v-for="(item, i) in tableList" :key="i" class="table-item">
+            <template v-if="i == 0">
+              <div class="item-line1">
+                <popover-tip :tip-name="tipName" :tip-list="tipList"><div slot="upload"></div></popover-tip>
+              </div>
+              <div class="item-line2">{{ item.today }}</div>
+              <div class="item-line3">{{ item.yesterday }}</div>
+            </template>
+            <template v-else class="table-item">
+              <div class="item-line1">{{ item.text }}</div>
+              <div class="item-line2">{{ item.today }}</div>
+              <div class="item-line3">{{ item.yesterday }}</div>
+            </template>
           </div>
         </div>
         <div class="dashboard-container">
           <div>
-            <span>指标：</span>
-            <a-select class="select-indicator" v-model="indicator" size="small" style="width: 120px" @change="loadChartData">
+            <span class="select-label">指标：</span>
+            <a-select
+              class="select-indicator"
+              v-model="indicator"
+              size="small"
+              :dropdownMatchSelectWidth="false"
+              @change="loadChartData"
+            >
               <a-select-option v-for="(item, i) in indicatorList" :key="i" :value="item.value">
                 {{ item.text }}
               </a-select-option>
             </a-select>
-            <a-range-picker
-              v-model="rangeDate"
-              size="small"
-              :inputReadOnly="true"
-              :disabled-date="disabledDate"
-              :ranges="{
-                今天: [moment(), moment()],
-                昨天: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                最近7天: [moment().subtract(6, 'days'), moment()],
-                最近30天: [moment().subtract(29, 'days'), moment()],
-                最近60天: [moment().subtract(59, 'days'), moment()]
-              }"
-              format="YYYY-MM-DD"
-              style="width: 220px;"
-              @change="loadChartData"
-            />
+            <range-picker v-model="date" @change="loadChartData"></range-picker>
           </div>
           <a-line :data="chartData" :scale="scale" :height="height" :padding="paddingVal"></a-line>
-          <div class="toggle-btn" @click="toggleChart"><a-icon :type="isDown ? 'down' : 'up'" /></div>
+          <!-- <div class="toggle-btn" @click="toggleChart"><a-icon :type="isDown ? 'down' : 'up'" /></div> -->
         </div>
       </a-card>
 
@@ -63,7 +56,7 @@
       </div>
       <div class="dashboard-container">
         <div class="flex-list flex-list-c">
-          <div class="flex-name">美好生活家园</div>
+          <div class="flex-name">用户行为数据分析系统</div>
           <div class="flex-right">
             <div class="list-flex">
               <div class="text-center">
@@ -92,7 +85,7 @@
                 <span>{{ dashboardJson.yesdaycumulativestartand }}</span>
               </div>
               <div class="text-center">
-                <a-button type="primary" ghost @click="goLink(1,2)">查看报告</a-button>
+                <a-button type="primary" ghost @click="goLink(1, 2)">查看报告</a-button>
               </div>
             </div>
             <div class="list-flex">
@@ -122,7 +115,7 @@
                 <span>{{ dashboardJson.yesdaycumulativestartios }}</span>
               </div>
               <div class="text-center">
-                <a-button type="primary" ghost @click="goLink(2,2)">查看报告</a-button>
+                <a-button type="primary" ghost @click="goLink(2, 2)">查看报告</a-button>
               </div>
             </div>
           </div>
@@ -133,8 +126,7 @@
 </template>
 
 <script>
-import { PopoverTip, aLine } from '@/components'
-import moment from 'moment'
+import { PopoverTip, aLine, RangePicker } from '@/components'
 import store from '@/store'
 import { DASHBOARD_TIP } from '../userAnalyse/const'
 import { getDashboardJson, getDashboardChart } from '@/api/using'
@@ -142,7 +134,8 @@ export default {
   name: 'Dashboard',
   components: {
     PopoverTip,
-    aLine
+    aLine,
+    RangePicker
   },
   data () {
     return {
@@ -177,12 +170,12 @@ export default {
       ],
       indicator: 1,
       indicatorList: [],
-      rangeDate: [moment().subtract(2, 'days'), moment()], // 时间范围，默认为近三天
+      date: '',
       isDown: true,
       chartData: [],
       scale: [],
-      height: 200,
-      paddingVal: [50, 20, 30, 50],
+      height: 350,
+      paddingVal: [50, 40, 30, 50],
       dashboardJson: {}
     }
   },
@@ -204,11 +197,6 @@ export default {
         this.tableList[4].yesterday = res.data.yesdaycumulativestart
       })
     },
-    moment,
-    // 不能选择今天之后的日期
-    disabledDate (current) {
-      return current && current > moment().endOf('day')
-    },
     // 获取汇总数据
     getSummary () {
       this.indicatorList = [
@@ -229,12 +217,9 @@ export default {
     },
     // 刷新图表数据
     loadChartData (index) {
-      const param = Object.assign(
-      {
-        'date': this.rangeDate.map(obj => {
-            return obj.format('YYYY/MM/DD')
-          }).join('~'),
-        'ordertype': this.indicator
+      const param = Object.assign({
+        date: this.date,
+        ordertype: this.indicator
       })
       getDashboardChart(param).then(res => {
         this.scale = [
@@ -304,10 +289,11 @@ export default {
 }
 .body-cont {
   min-height: 100%;
-  background-color: #F3F4F9;
+  background-color: #f3f4f9;
+  margin: -25px;
 }
 .dashboard-container {
-  width: 1180px;
+  max-width: 1180px;
   margin: 0 auto;
   overflow: hidden;
 }
@@ -315,7 +301,7 @@ export default {
   display: flex;
   .table-item {
     flex: 1;
-    text-align: right
+    text-align: right;
   }
   .table-item:nth-child(1) {
     text-align: left;
@@ -388,7 +374,7 @@ export default {
     border-left: 1px solid #f3f4f9;
   }
   .list-flex {
-    >div {
+    > div {
       color: @color343437;
       font-size: @fontSize;
       .flex-end();

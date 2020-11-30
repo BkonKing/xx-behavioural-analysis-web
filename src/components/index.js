@@ -22,6 +22,7 @@ import Summary from '@/components/Summary'
 
 import Dialog from '@/components/Dialog'
 import PopoverTip from '@/components/PopoverTip'
+import RangePicker from '@/components/RangePicker'
 
 export {
   aMap,
@@ -43,5 +44,6 @@ export {
   AnalysisHeader,
   Dialog,
   Summary,
-  PopoverTip
+  PopoverTip,
+  RangePicker
 }

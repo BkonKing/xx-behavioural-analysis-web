@@ -23,7 +23,7 @@ export default {
   menu: {
     locale: false
   },
-  title: '美好生活家园',
+  title: '行为分析系统',
   pwa: false,
   iconfontUrl: '',
   production: process.env.NODE_ENV === 'production' && process.env.VUE_APP_PREVIEW !== 'true'

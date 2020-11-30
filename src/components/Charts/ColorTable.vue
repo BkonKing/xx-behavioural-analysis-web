@@ -188,23 +188,22 @@ export default {
     .ant-table-tbody > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected) > td {
       background: #fff;
     }
+    > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th {
+      padding-left: 3px;
+    }
   }
-  .row-header {
+  .row-header,.color-table-tr .color-td {
     height: 48px;
-    line-height: 30px;
+    line-height: 37px;
     border: 3px solid #fff;
-    border-top-width: 15px;
+    border-top-width: 8px;
   }
   .color-table-tr .color-td {
-    height: 48px;
-    line-height: 30px;
     padding-left: 10px;
     overflow: hidden;
     text-overflow: ellipsis;
     color: #fff;
     background: #f7f7fa;
-    border: 3px solid #fff;
-    border-top-width: 15px;
   }
 }
 </style>

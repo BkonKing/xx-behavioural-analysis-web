@@ -8,8 +8,13 @@
       :scale="scale"
       :padding="padding">
       <slot>
-        <v-tooltip />
-        <v-axis />
+        <template v-if="htmlContent">
+          <v-tooltip :htmlContent="tooltipContent" />
+        </template>
+        <v-tooltip v-else />
+        <slot name="axis">
+          <v-axis />
+        </slot>
         <v-bar :position="position" />
       </slot>
     </v-chart>
@@ -22,6 +27,15 @@ import loadingMixin from './mixin'
 
 export default {
   name: 'Bar',
-  mixins: [loadingMixin]
+  mixins: [loadingMixin],
+  props: {
+    // eslint-disable-next-line vue/require-default-prop
+    htmlContent: Function
+  },
+  methods: {
+    tooltipContent (title, items) {
+      return this.htmlContent(title, items, this.alias)
+    }
+  }
 }
 </script>

@@ -3,7 +3,7 @@
     <div class="v-container" style="padding: 20px;background: #fff;">
       <div>
         <span>指标：</span>
-        <a-select v-model="ordertype" size="small" style="width: 120px" @change="loadChartData">
+        <a-select v-model="ordertype" size="small" :dropdownMatchSelectWidth="false" @change="loadChartData">
           <a-select-option v-for="(item, i) in ordertypeList" :key="i" :value="item.value">
             {{ item.text }}
           </a-select-option>

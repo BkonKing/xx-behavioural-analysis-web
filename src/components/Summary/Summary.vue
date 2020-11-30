@@ -4,7 +4,7 @@
       <h3 class="summary-title">{{ title }}</h3>
     </slot>
     <div id="Summary" ref="Summary" class="summary-container">
-      <a-tabs class="summary data-link" v-model="activeIndex" @change="handleChange">
+      <a-tabs class="summary data-link" v-model="active" @change="handleChange">
         <a-tab-pane v-for="(item, index) in data" :key="index">
           <span slot="tab">
             <div class="summary-item">
@@ -38,24 +38,24 @@ export default {
   },
   data () {
     return {
-      active: this.value,
+      active: this.value || 0,
       activeIndex: ''
     }
   },
   created () {
-    this.findIndex()
+    // this.findIndex()
   },
   methods: {
     // 获取active所在的index
-    findIndex () {
-      if (this.value !== undefined || this.value !== null) {
-        this.activeIndex = this.data.findIndex(obj => {
-          return obj.value === this.value
-        })
-      }
-    },
+    // findIndex () {
+    //   if (this.value !== undefined || this.value !== null) {
+    //     this.activeIndex = this.data.findIndex(obj => {
+    //       return obj.value === this.value
+    //     })
+    //   }
+    // },
     handleChange (activeIndex) {
-      this.active = this.data[activeIndex].value
+      // this.active = this.data[activeIndex].value
       this.$nextTick(() => {
         this.$emit('change', this.active, activeIndex)
       })
@@ -67,7 +67,7 @@ export default {
     },
     value (val) {
       this.active = val
-      this.findIndex()
+      // this.findIndex()
     }
   }
 }

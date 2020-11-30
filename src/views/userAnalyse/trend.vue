@@ -2,17 +2,30 @@
   <analysis-header ref="AnalysisHeader" :reportTip="reportTip" @change="getusertrend">
     <template v-slot:condition>
       <div style="display: inline-block;margin-left: 20px;">
-        <a-select size="small" v-model="type" style="width: 100px" @change="getusertrend">
+        <a-select size="small" v-model="type" @change="getusertrend">
           <a-select-option :key="1">按日</a-select-option>
           <a-select-option :key="2">按时</a-select-option>
         </a-select>
       </div>
     </template>
-    <div style="background: #fff;">
+    <div class="v-container" style="background: #fff;">
       <Summary v-model="summary" :data="summaryList" @change="handleChange"></Summary>
       <div style="padding: 0 20px 20px;">
         <a-divider style="margin-top: 0;"></a-divider>
-        <a-line :data="data" :scale="scale"></a-line>
+        <a-line :data="data" :scale="scale" :htmlContent="tooltipContent">
+          <template v-slot:axis>
+            <v-axis
+              dataKey="value"
+              :title="{
+                autoRotate: false,
+                offset: 0,
+                text: [2,4].indexOf(summary) > -1 ? '%' : ' ',
+                position: 'end',
+                textStyle: { rotate: 0, fill: '#666' }
+              }"
+            />
+          </template>
+        </a-line>
         <a-divider></a-divider>
         <popover-tip :tip-name="tipName" :tip-list="tipList"></popover-tip>
         <a-table
@@ -36,6 +49,7 @@
 <script>
 import { AnalysisHeader, Summary, PopoverTip, aLine } from '@/components'
 import { getusertrend } from '@/api/userAnalyse'
+import { setToolTipContent } from '@/utils/domUtil'
 import { TREND_TIP } from './const'
 
 const columns = [
@@ -96,14 +110,22 @@ export default {
       tipName: TREND_TIP.tipName,
       tipList: TREND_TIP.tipList,
       type: 1,
-      summary: '',
+      summary: 0,
       summaryList: [],
       summaryType: ['everystartusers', 'everynewusers', 'newusersdis', 'oldusers', 'oldusersdis', 'estarttimes'],
       params: {},
       columns,
       tableData: [],
       data: [],
-      scale: []
+      scale: [],
+      tooltipContent (title, items) {
+        return setToolTipContent({
+          title: items[0].title,
+          label: items[0].name,
+          values: items[0].value,
+          suffix: ['新用户占比', '老用户占比'].indexOf(items[0].name) > -1 ? '%' : ''
+        })
+      }
     }
   },
   mounted () {
@@ -145,7 +167,6 @@ export default {
             value: summary.starttimes || 0
           }
         ]
-        this.summary = this.summaryList[0].value
         this.tableData = list
         this.loadChartData(0)
       })
@@ -163,12 +184,15 @@ export default {
           min: 0
         }
       ]
-      this.data = this.tableData && this.tableData.length > 0 ? this.tableData.map(obj => {
-        return {
-          name: obj.name,
-          value: obj[this.summaryType[index]]
-        }
-      }) : []
+      this.data =
+        this.tableData && this.tableData.length > 0
+          ? this.tableData.map(obj => {
+              return {
+                name: obj.name,
+                value: obj[this.summaryType[index]]
+              }
+            })
+          : []
     }
   }
 }
