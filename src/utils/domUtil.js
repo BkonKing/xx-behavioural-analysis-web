@@ -23,9 +23,9 @@ export const setToolTipContent = function ({
   color = '#1890ff',
   label,
   values,
-  suffix = ''
+  suffix = '',
+  hasContainer = true
 }) {
-  var html = '<div class="g2-tooltip">'
   var listDom = '<ul class="g2-tooltip-list">'
   var itemDom =
     '<li>' +
@@ -46,7 +46,7 @@ export const setToolTipContent = function ({
   }
   listDom += itemDom + '</li>'
   listDom += '</ul>'
-  return html + listDom + '</div>'
+  return hasContainer ? ('<div class="g2-tooltip">' + listDom + '</div>') : listDom
 }
 
 export const setToolTipTable = function ({

@@ -13,9 +13,12 @@
         <template v-slot:axis>
           <v-axis
             dataKey="value"
+            :label="{
+              offset: 20
+            }"
             :title="{
               autoRotate: false,
-              offset: -1,
+              offset: 10,
               text: ordertype === 2 ? '%' : ' ',
               position: 'end',
               textStyle: { rotate: 0, fill: '#666' }

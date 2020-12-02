@@ -33,7 +33,7 @@ export const asyncRouterMap = [{
         component: BlankLayout,
         meta: {
           title: '应用概况',
-          icon: 'https://test.tosolomo.com//library/bootstrap/img/logo/logo-bs4.png'
+          icon: 'appstore'
         },
         hideChildrenInMenu: true,
         redirect: '/overview/index',
@@ -52,7 +52,7 @@ export const asyncRouterMap = [{
         component: BlankLayout,
         meta: {
           title: '用户分析',
-          icon: 'https://test.tosolomo.com//library/bootstrap/img/logo/logo-bs4.png'
+          icon: 'user'
         },
         children: [{
           path: '/userAnalyse/trend',
@@ -104,7 +104,7 @@ export const asyncRouterMap = [{
         component: BlankLayout,
         meta: {
           title: '使用行为',
-          icon: 'https://test.tosolomo.com//library/bootstrap/img/logo/logo-bs4.png'
+          icon: 'bar-chart'
         },
         children: [{
             path: '/usingBehavior/event',
@@ -163,7 +163,7 @@ export const asyncRouterMap = [{
         component: BlankLayout,
         meta: {
           title: '留存分析',
-          icon: 'https://test.tosolomo.com//library/bootstrap/img/logo/logo-bs4.png'
+          icon: 'table'
         },
         children: [{
           path: '/retain/user/newfirst',

@@ -54,7 +54,9 @@
       <a-row class="data-card-container" style="padding: 30px 40px;">
         <a-col :span="24">
           <h3 class="data-card-title">地域分布<span class="data-card-condition">（近7日）</span></h3>
-          <a-map :data="regiontData" :width="500"></a-map>
+          <div class="map-container">
+            <a-map :data="regiontData"></a-map>
+          </div>
         </a-col>
       </a-row>
     </div>
@@ -361,6 +363,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.map-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 /deep/ .ant-table td {
   white-space: nowrap;
 }

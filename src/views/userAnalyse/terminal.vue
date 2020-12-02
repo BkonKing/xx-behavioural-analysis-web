@@ -32,9 +32,9 @@
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
-        <!-- <span slot="percent" slot-scope="text">
-          {{ text }}
-        </span> -->
+        <span slot="percent" slot-scope="text">
+          {{ text }}%
+        </span>
       </s-table>
     </div>
   </analysis-header>
@@ -60,18 +60,18 @@ const columns = [
   },
   {
     title: '启动次数分布',
-    dataIndex: 'estarttimedis'
-    // scopedSlots: { customRender: 'percent' }
+    dataIndex: 'estarttimedis',
+    scopedSlots: { customRender: 'percent' }
   },
   {
     title: '新用户分布',
-    dataIndex: 'enewusersdis'
-    // scopedSlots: { customRender: 'percent' }
+    dataIndex: 'enewusersdis',
+    scopedSlots: { customRender: 'percent' }
   },
   {
     title: '启动用户分布',
-    dataIndex: 'estartusersdis'
-    // scopedSlots: { customRender: 'percent' }
+    dataIndex: 'estartusersdis',
+    scopedSlots: { customRender: 'percent' }
   },
   {
     title: '次平均使用时长',

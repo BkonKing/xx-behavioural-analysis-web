@@ -2,10 +2,10 @@
   <analysis-header ref="AnalysisHeader" :reportTip="reportTip" @change="getdistribution">
     <a-card>
       <a-row type="flex" :gutter="20">
-        <a-col flex="650px">
+        <a-col class="map-container" flex="auto">
           <a-map :data="chartData"></a-map>
         </a-col>
-        <a-col flex="auto">
+        <a-col flex="320px">
           <a-table size="small" rowKey="name" :columns="columns" :data-source="tableData" :pagination="false">
             <span slot="serial" slot-scope="text, record, index">
               {{ index + 1 }}
@@ -106,3 +106,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.map-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
