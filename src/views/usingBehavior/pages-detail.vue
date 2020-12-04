@@ -1,14 +1,15 @@
 <template>
   <analysis-header ref="AnalysisHeader" @change="loadAllData">
     <template v-slot:eventlist>
-      <div style="display: inline-block;">
+      <div>
         <a-select
+          class="page-select"
           show-search
           placeholder="请选择"
           v-model="pagesId"
-          size="small"
+          size="large"
           option-filter-prop="children"
-          style="width: 200px"
+          :dropdownMatchSelectWidth="false"
           :filter-option="filterOption"
           @focus="handleFocus"
           @blur="handleBlur"
@@ -162,9 +163,11 @@ export default {
     loadChartData (index) {
       const requestParameters = { ...this.getHeaderData(), ...this.queryParam }
       const param = Object.assign(
-      {
-        'pageid': this.pagesId
-      }, requestParameters)
+        {
+          pageid: this.pagesId
+        },
+        requestParameters
+      )
       console.log('-----图表------')
       console.log({ ...this.getHeaderData() })
       console.log('-----图表------')
@@ -186,9 +189,9 @@ export default {
           this.chartData = res.data.list.map(obj => {
             let value = ''
             switch (this.summaryIndex) {
-                case 0:
+              case 0:
                 value = obj.epagecount
-              break
+                break
               case 1:
                 value = obj.eusetime
                 break
@@ -213,9 +216,7 @@ export default {
       })
     },
     // 刷新表格数据
-    loadTableData (page) {
-
-    },
+    loadTableData (page) {},
     pagesChange (value) {
       console.log(`selected ${value}`)
       this.loadAllData()
@@ -227,9 +228,7 @@ export default {
       console.log('focus')
     },
     filterOption (input, option) {
-      return (
-        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      )
+      return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
     }
   }
 }
@@ -243,11 +242,20 @@ export default {
   .ant-tabs-nav {
     width: 100%;
     > div {
-    width: 100%;
-    .ant-tabs-tab {
-      width: calc((100% - 64px) / 5);
+      width: 100%;
+      .ant-tabs-tab {
+        width: calc((100% - 64px) / 5);
+      }
     }
   }
+}
+.page-select {
+  /deep/ .ant-select-selection__rendered {
+    margin-left: 0;
+  }
+  /deep/ .ant-select-selection-selected-value {
+    color: #222;
+    padding-right: 8px;
   }
 }
 </style>
