@@ -11,7 +11,7 @@ const user = {
     welcome: '',
     avatar: '',
     info: {},
-    os_type: storage.get('os_type') || 0,
+    os_type: storage.get('os_type'),
     versions: []
   },
 
@@ -59,6 +59,7 @@ const user = {
       return new Promise((resolve, reject) => {
         logout().then((res) => {
           commit('SET_TOKEN', '')
+          commit('setOs_type', '')
           Cookies.remove('tokenid')
           Cookies.remove('logintime')
           Cookies.remove('keystr')

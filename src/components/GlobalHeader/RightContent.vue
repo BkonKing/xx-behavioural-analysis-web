@@ -3,7 +3,7 @@
     <div style="display: inline-block;color: #333;">
       <a-dropdown :trigger="['click']">
         <a class="ant-dropdown-link" @click="e => e.preventDefault()" style="color: #333;">
-          {{ mobileType[os_type].name }} <a-icon type="down" />
+          {{ os_name }} <a-icon type="down" />
         </a>
         <a-menu slot="overlay">
           <a-menu-item v-for="(item, i) in mobileType" :key="item.value" v-if="i == 0" @click="menuSelect(item.value)">
@@ -83,7 +83,14 @@ export default {
         [`ant-pro-global-header-index-${this.isMobile || !this.topMenu ? 'light' : this.theme}`]: true
       }
     },
-    ...mapGetters(['nickname', 'os_type'])
+    ...mapGetters(['nickname', 'os_type']),
+    os_name () {
+      const osType = this.os_type
+      if (osType !== '' && osType !== undefined) {
+        return this.mobileType[osType].name
+      }
+      return '请选择'
+    }
   },
   mounted () {
     this.currentUser = {
