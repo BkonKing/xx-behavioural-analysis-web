@@ -21,7 +21,7 @@ import moment from 'moment'
 export default {
   name: 'RangePicker',
   props: {
-    data: {
+    value: {
       type: [String, Array],
       default: ''
     },
@@ -50,7 +50,7 @@ export default {
   data () {
     return {
       first: true,
-      rangeDate: this.data || [moment().subtract(2, 'days'), moment()] // 时间范围，默认为近三天
+      rangeDate: this.value || [moment().subtract(2, 'days'), moment()] // 时间范围，默认为近三天
     }
   },
   methods: {
@@ -65,14 +65,14 @@ export default {
     handleChange (value) {}
   },
   watch: {
-    data (val) {
+    value (val) {
       if (Array.isArray(val)) {
-        this.$emit('input', this.transform(val))
+        this.rangeDate = val
       }
     },
     rangeDate: {
       handler (val) {
-        const value = this.transform(val)
+        const value = Array.isArray(val) ? this.transform(val) : val
         this.$emit('input', value)
         if (!this.first) {
           this.$emit('change', value)

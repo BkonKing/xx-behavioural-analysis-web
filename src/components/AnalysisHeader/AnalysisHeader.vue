@@ -157,7 +157,10 @@ export default {
       const data = {}
       this.showSearchList.forEach(obj => {
         if (obj === 'date') {
-          data[obj] = this.date
+          data[obj] = Array.isArray(this.date) ? this.date.map(obj => {
+          return obj.format('YYYY/MM/DD')
+        })
+        .join('~') : this.date
         } else if (this[obj].length !== 1 || this[obj][0] !== 0) {
           data[obj] = this[obj].join('、')
         }
@@ -166,7 +169,7 @@ export default {
     },
     // 重置搜索条件
     resetSearchData () {
-      this.date = [moment().subtract(2, 'days').format('YYYY/MM/DD'), moment().format('YYYY/MM/DD')].join('~') // 时间范围，默认为近三天
+      this.date = [moment().subtract(2, 'days'), moment()] // 时间范围，默认为近三天
       this.version = [0] // 选中的版本
     }
   },
