@@ -169,6 +169,7 @@ export default {
     // 刷新图表和表格数据
     loadAllData (params) {
       this.loadChartData()
+      this.columns[1].title = this.tabList[this.active].title
       this.$refs.table.refresh(true)
     },
     // 刷新图表数据
