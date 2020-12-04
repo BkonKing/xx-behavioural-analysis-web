@@ -330,8 +330,10 @@ export default {
     getsumpic () {
       getsumpic().then(({ data }) => {
         this.retainData = data.retainlist
-        this.regiontData = data.geolist
         this.pageData = this.pageTransform(data.pagelist)
+        setTimeout(() => {
+          this.regiontData = data.geolist
+        }, 10)
       })
     },
     // 页面分析数据转换

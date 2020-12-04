@@ -9,7 +9,8 @@ const getters = {
   welcome: state => state.user.welcome,
   userInfo: state => state.user.info,
   multiTab: state => state.app.multiTab,
-  versions: state => state.user.versions
+  versions: state => state.user.versions,
+  os_type: state => state.user.os_type
 }
 
 export default getters

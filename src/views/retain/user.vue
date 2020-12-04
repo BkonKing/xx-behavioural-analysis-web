@@ -9,7 +9,7 @@
     <a-card>
       <a-tabs v-if="isNewFirst" v-model="active" @change="handleTabChange">
         <a-tab-pane key="1" tab="新用户首次使用留存">
-          <chart-box key="new-chart" ref="new-chart" :data="data" @change="handleChartChange"></chart-box>
+          <chart-box key="new-chart" ref="new-chart" :type="1" :data="data" @change="handleChartChange"></chart-box>
         </a-tab-pane>
         <a-tab-pane key="2" tab="新用户自定义留存">
           <a-row style="margin-top: 20px;">
@@ -46,7 +46,14 @@
         </a-tab-pane>
       </a-tabs>
       <template v-else>
-        <chart-box key="active-chart" ref="active-chart" :data="data" @change="handleChartChange" style="margin-top: 20px;"></chart-box>
+        <chart-box
+          key="active-chart"
+          ref="active-chart"
+          :data="data"
+          :type="0"
+          @change="handleChartChange"
+          style="margin-top: 20px;"
+        ></chart-box>
       </template>
     </a-card>
   </analysis-header>

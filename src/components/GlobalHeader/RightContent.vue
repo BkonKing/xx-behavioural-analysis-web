@@ -24,7 +24,7 @@
 
 <script>
 import AvatarDropdown from './AvatarDropdown'
-import storage from 'store'
+// import storage from 'store'
 import store from '@/store'
 import { mapGetters } from 'vuex'
 
@@ -55,7 +55,7 @@ export default {
     return {
       showMenu: true,
       currentUser: {},
-      os_type: storage.get('os_type') || 0,
+      // os_type: storage.get('os_type') || 0,
       mobileType: [
         {
           name: '美好生活家园',
@@ -83,7 +83,7 @@ export default {
         [`ant-pro-global-header-index-${this.isMobile || !this.topMenu ? 'light' : this.theme}`]: true
       }
     },
-    ...mapGetters(['nickname'])
+    ...mapGetters(['nickname', 'os_type'])
   },
   mounted () {
     this.currentUser = {
@@ -92,11 +92,14 @@ export default {
   },
   methods: {
     menuSelect (i) {
+      store.commit('setOs_type', i)
       if (i === 3) {
         this.$router.push('/dashboard/index')
+      } else if (this.$route.name === 'dashboard') {
+        this.$router.push({
+          path: '/overview/index'
+        })
       } else {
-        this.os_type = i
-        store.commit('setOs_type', i)
         this.$router.go(0)
       }
     }

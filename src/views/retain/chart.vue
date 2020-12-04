@@ -83,6 +83,10 @@ export default {
     data: {
       type: Object,
       default: () => ({})
+    },
+    type: {
+      type: Number,
+      default: 1
     }
   },
   data () {
@@ -117,6 +121,9 @@ export default {
       datetype: 1,
       retainColumns: lodash.cloneDeep(retainColumns)
     }
+  },
+  created () {
+    this.retainColumns[1].title = this.type === 1 ? '新用户数' : '活跃用户数'
   },
   methods: {
     handleRetainClick (value) {

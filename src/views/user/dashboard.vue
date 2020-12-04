@@ -244,7 +244,6 @@ export default {
             // value: this.indicator === 0 ? obj.numberevents : obj.userevents
           }
         })
-        console.log(22, this.chartData)
       })
     },
     // 图表高度修改

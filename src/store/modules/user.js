@@ -11,7 +11,7 @@ const user = {
     welcome: '',
     avatar: '',
     info: {},
-    os_type: storage.get('os_type'),
+    os_type: storage.get('os_type') || 0,
     versions: []
   },
 
