@@ -1,6 +1,7 @@
 <template>
   <a-spin :spinning="loading" class="v-container" tip="数据正在加载中...">
-    <div id="container"></div>
+    <div v-show="data && data.length" id="container"></div>
+    <a-empty v-show="(!data || !data.length) && !loading" :image="simpleImage" />
   </a-spin>
 </template>
 
@@ -8,6 +9,7 @@
 import geoDatas from './Map'
 import { Chart } from '@antv/g2'
 import { setToolTipContent } from '@/utils/domUtil'
+import { Empty } from 'ant-design-vue'
 const DataSet = require('@antv/data-set')
 
 export default {
@@ -38,6 +40,9 @@ export default {
       ChinaMap: null,
       userView: null
     }
+  },
+  beforeCreate () {
+    this.simpleImage = Empty.PRESENTED_IMAGE_SIMPLE
   },
   mounted () {
     this.initMap()
@@ -167,6 +172,13 @@ export default {
 </script>
 
 <style scoped>
+.v-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 480px;
+  min-height: 480px;
+}
 #container {
   width: 480px;
   height: 400px;
