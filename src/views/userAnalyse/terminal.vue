@@ -19,7 +19,7 @@
             :title="{
               autoRotate: false,
               offset: -1,
-              text: [1,2,3].indexOf(ordertype) > -1 ? '%' : ' ',
+              text: [1, 2, 3].indexOf(ordertype) > -1 ? '%' : ' ',
               position: 'end',
               textStyle: { rotate: 0, fill: '#666' }
             }"
@@ -32,9 +32,7 @@
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
-        <span slot="percent" slot-scope="text">
-          {{ text }}%
-        </span>
+        <span slot="percent" slot-scope="text"> {{ text }}% </span>
       </s-table>
     </div>
   </analysis-header>
@@ -194,8 +192,8 @@ export default {
       })
     },
     // 刷新表格数据
-    loadTableData () {
-      const params = { ...this.getHeaderData(), terminal: this.active + 1 }
+    loadTableData (page) {
+      const params = { ...this.getHeaderData(), ...page, terminal: this.active + 1 }
       return getterminaldata(params)
     }
   }
