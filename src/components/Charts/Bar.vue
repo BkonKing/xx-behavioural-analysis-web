@@ -1,61 +1,40 @@
 <template>
-  <div :style="{ padding: '0 0 32px 32px' }">
-    <h4 :style="{ marginBottom: '20px' }">{{ title }}</h4>
+  <a-spin :spinning="loading" tip="数据正在加载中..." :style="spinStyle">
     <v-chart
-      height="254"
-      :data="data"
+      v-if="data.length > 0"
       :forceFit="true"
-      :padding="['auto', 'auto', '40', '50']">
-      <v-tooltip />
-      <v-axis />
-      <v-bar position="x*y"/>
+      :height="height"
+      :data="data"
+      :scale="scale"
+      :padding="padding">
+      <slot>
+        <template v-if="htmlContent">
+          <v-tooltip :htmlContent="tooltipContent" />
+        </template>
+        <v-tooltip v-else />
+        <slot name="axis">
+          <v-axis />
+        </slot>
+        <v-bar :position="position" />
+      </slot>
     </v-chart>
-  </div>
+    <a-empty v-else-if="!loading" :image="simpleImage" />
+  </a-spin>
 </template>
 
 <script>
+import loadingMixin from './mixin'
+
 export default {
   name: 'Bar',
+  mixins: [loadingMixin],
   props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    data: {
-      type: Array,
-      default: () => {
-        return []
-      }
-    },
-    scale: {
-      type: Array,
-      default: () => {
-        return [{
-          dataKey: 'x',
-          min: 2
-        }, {
-          dataKey: 'y',
-          title: '时间',
-          min: 1,
-          max: 22
-        }]
-      }
-    },
-    tooltip: {
-      type: Array,
-      default: () => {
-        return [
-          'x*y',
-          (x, y) => ({
-            name: x,
-            value: y
-          })
-        ]
-      }
-    }
+    // eslint-disable-next-line vue/require-default-prop
+    htmlContent: Function
   },
-  data () {
-    return {
+  methods: {
+    tooltipContent (title, items) {
+      return this.htmlContent(title, items, this.alias)
     }
   }
 }

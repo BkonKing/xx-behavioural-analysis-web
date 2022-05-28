@@ -39,6 +39,7 @@ const assetsCDN = {
 
 // vue.config.js
 const vueConfig = {
+  publicPath: process.env.NODE_ENV !== 'production' || process.env.VUE_APP_PREVIEW === 'true' ? '/' : './',
   configureWebpack: {
     // webpack plugins
     plugins: [
@@ -103,15 +104,21 @@ const vueConfig = {
   devServer: {
     // development server port 8000
     port: 8000,
+    open: true,
     // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
     proxy: {
       '/api': {
-        target: 'https://test.tosolomo.com/nsolid/spi/v1',
+        target: 'https://tj.mhshjy.com/backstage/api/v1',
         ws: false,
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
         }
+      },
+      'https://webapi.amap.com': {
+        target: 'https://webapi.amap.com',
+        ws: false,
+        changeOrigin: true
       }
     }
   },

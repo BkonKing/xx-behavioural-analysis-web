@@ -1,15 +1,10 @@
 // chart
+import ColorPiece from '@/components/Charts/ColorPiece'
+import ColorTable from '@/components/Charts/ColorTable'
+import aMap from '@/components/Charts/Map.vue'
+import aLine from '@/components/Charts/Line'
 import Bar from '@/components/Charts/Bar'
-import ChartCard from '@/components/Charts/ChartCard'
-import Liquid from '@/components/Charts/Liquid'
-import MiniArea from '@/components/Charts/MiniArea'
-import MiniSmoothArea from '@/components/Charts/MiniSmoothArea'
-import MiniBar from '@/components/Charts/MiniBar'
-import MiniProgress from '@/components/Charts/MiniProgress'
-import Radar from '@/components/Charts/Radar'
-import RankList from '@/components/Charts/RankList'
-import TransferBar from '@/components/Charts/TransferBar'
-import TagCloud from '@/components/Charts/TagCloud'
+import StackedArea from '@/components/Charts/StackedArea'
 
 // pro components
 import Ellipsis from '@/components/Ellipsis'
@@ -23,21 +18,19 @@ import IconSelector from '@/components/IconSelector'
 import TagSelect from '@/components/TagSelect'
 import StandardFormRow from '@/components/StandardFormRow'
 import AnalysisHeader from '@/components/AnalysisHeader'
+import Summary from '@/components/Summary'
 
 import Dialog from '@/components/Dialog'
+import PopoverTip from '@/components/PopoverTip'
+import RangePicker from '@/components/RangePicker'
 
 export {
+  aMap,
+  aLine,
+  StackedArea,
   Bar,
-  ChartCard,
-  Liquid,
-  MiniArea,
-  MiniSmoothArea,
-  MiniBar,
-  MiniProgress,
-  Radar,
-  TagCloud,
-  RankList,
-  TransferBar,
+  ColorPiece,
+  ColorTable,
   Trend,
   Ellipsis,
   FooterToolbar,
@@ -49,5 +42,8 @@ export {
   TagSelect,
   StandardFormRow,
   AnalysisHeader,
-  Dialog
+  Dialog,
+  Summary,
+  PopoverTip,
+  RangePicker
 }

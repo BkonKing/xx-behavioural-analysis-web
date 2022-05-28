@@ -5,22 +5,17 @@
         <div class="header">
           <a href="/">
             <img src="~@/assets/logo.png" class="logo" alt="logo">
-            <span class="title">美好生活家园后台管理系统</span>
+            <span class="title">用户行为数据分析系统</span>
           </a>
         </div>
         <div class="desc">
-          美好生活家园集养老、安家、教育、生活一体的社区
+          用户行为数据分析系统
         </div>
       </div>
 
       <router-view />
 
       <div class="footer">
-        <div class="links">
-          <a href="_self">帮助</a>
-          <a href="_self">隐私</a>
-          <a href="_self">条款</a>
-        </div>
         <div class="copyright">
           Copyright &copy; 2018 mhsh
         </div>
